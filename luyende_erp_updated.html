@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Đề - ERP System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div class="fixed left-0 top-0 w-64 h-screen bg-white border-r border-gray-200 overflow-y-auto z-20 shadow-sm">
+            <div class="p-6 border-b border-gray-200">
+                <h1 class="text-2xl font-bold text-orange-500">Luyện Đề</h1>
+                <p class="text-sm text-gray-500 mt-2">ERP System v1.0</p>
+            </div>
+
+            <nav class="p-4 space-y-2">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition">
+                    <span class="text-xl">📊</span>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition">
+                    <span class="text-xl">👥</span>
+                    <span class="text-sm font-medium">Học Sinh</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition">
+                    <span class="text-xl">📈</span>
+                    <span class="text-sm font-medium">Báo Cáo</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition">
+                    <span class="text-xl">⚙️</span>
+                    <span class="text-sm font-medium">Cài Đặt</span>
+                </a>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4 bg-orange-50 border-t border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">PO</div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-900">Admin PO</p>
+                        <p class="text-xs text-gray-500">Luyện Đề</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 flex-1">
+            <!-- Header -->
+            <div class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                <div class="p-6">
+                    <div class="flex justify-between items-start gap-4 mb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Lịch Sử Học Tập Học Sinh</h2>
+                            <p class="text-sm text-gray-500 mt-2">
+                                Học sinh: <span class="text-orange-600 font-semibold">Nguyễn Văn A</span> (USR_12345)
+                            </p>
+                        </div>
+                        <button class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition font-medium shadow-sm">
+                            📥 Export
+                        </button>
+                    </div>
+
+                    <!-- Student Info Card -->
+                    <div class="bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-200 rounded-lg p-4">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-sm">
+                            <div>
+                                <p class="text-gray-600 font-medium">Họ Tên</p>
+                                <p class="text-gray-900 font-semibold mt-1">Nguyễn Văn A</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Năm Sinh</p>
+                                <p class="text-gray-900 font-semibold mt-1">2007</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Số Điện Thoại</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-gray-900 font-semibold" id="phoneDisplay">***********</span>
+                                    <button onclick="togglePhone()" class="text-orange-600 hover:text-orange-700 cursor-pointer">
+                                        <span id="phoneIcon">👁️</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Dự Đoán</p>
+                                <p class="text-orange-600 font-bold text-lg mt-1">68.5%</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Độ Tin Cậy</p>
+                                <p class="text-orange-600 font-semibold mt-1">Trung bình</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Stats Cards - Section 1: Thống Kê Chung -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Thống Kê Chung</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-blue-100 text-blue-600 p-3 rounded-lg">⏱️</div>
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Tổng Thời Gian</p>
+                                    <p class="text-2xl font-bold text-gray-900 mt-1">4h 32m</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-green-100 text-green-600 p-3 rounded-lg">📄</div>
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Tổng Đề</p>
+                                    <p class="text-2xl font-bold text-gray-900 mt-1">40 đề</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-orange-100 text-orange-600 p-3 rounded-lg">✅</div>
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Tỷ Lệ Đúng</p>
+                                    <p class="text-2xl font-bold text-gray-900 mt-1">78%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weekly Progress - Section 2: Tiến độ theo tuần -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">Tiến Độ Học Tập Theo Tuần</h3>
+                        <select id="weekSelector" onchange="updateWeekStats()" class="px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-orange-500 text-sm font-medium">
+                            <option value="current">Tuần Hiện Tại (14/11 - 20/11)</option>
+                            <option value="week1">Tuần 1 (7/11 - 13/11)</option>
+                            <option value="week2">Tuần 2 (31/10 - 6/11)</option>
+                            <option value="week3">Tuần 3 (24/10 - 30/10)</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <p class="text-sm text-gray-600 font-medium">Thời Gian Tuần</p>
+                            <p class="text-2xl font-bold text-blue-600 mt-1" id="weekTime">14/11 - 20/11</p>
+                        </div>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <p class="text-sm text-gray-600 font-medium">Bài Đã Hoàn Thành</p>
+                            <p class="text-2xl font-bold text-green-600 mt-1" id="weekCompleted">6/8 bài</p>
+                        </div>
+                        <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                            <p class="text-sm text-gray-600 font-medium">Tỷ Lệ Hoàn Thành</p>
+                            <p class="text-2xl font-bold text-orange-600 mt-1" id="weekPercentage">75%</p>
+                        </div>
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                            <p class="text-sm text-gray-600 font-medium">Tỷ Lệ Đúng</p>
+                            <p class="text-2xl font-bold text-purple-600 mt-1" id="weekAccuracy">82%</p>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Task Breakdown by Level -->
+                    <div class="mt-4">
+                        <p class="text-sm font-semibold text-gray-700 mb-3">Phân Bố Bài Tập Theo Cấp Độ</p>
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                                <p class="text-xs text-gray-600 font-medium">Cần Cung Cố</p>
+                                <p class="text-lg font-bold text-red-600 mt-1">1 bài</p>
+                                <p class="text-xs text-gray-500 mt-1">(&lt;40%)</p>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                                <p class="text-xs text-gray-600 font-medium">Hiểu Bài</p>
+                                <p class="text-lg font-bold text-amber-600 mt-1">1 bài</p>
+                                <p class="text-xs text-gray-500 mt-1">(40-65%)</p>
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <p class="text-xs text-gray-600 font-medium">Đạt Chuẩn</p>
+                                <p class="text-lg font-bold text-blue-600 mt-1">2 bài</p>
+                                <p class="text-xs text-gray-500 mt-1">(65-85%)</p>
+                            </div>
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                <p class="text-xs text-gray-600 font-medium">Thành Thạo</p>
+                                <p class="text-lg font-bold text-green-600 mt-1">1 bài</p>
+                                <p class="text-xs text-gray-500 mt-1">(85-95%)</p>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                                <p class="text-xs text-gray-600 font-medium">Tinh Thông</p>
+                                <p class="text-lg font-bold text-emerald-600 mt-1">1 bài</p>
+                                <p class="text-xs text-gray-500 mt-1">(≥95%)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs & Filters -->
+                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+                    <!-- Tabs Header -->
+                    <div class="border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="flex">
+                                <button onclick="setTab('overview')" id="tab-overview" class="px-6 py-4 text-sm font-semibold transition border-b-2 border-orange-500 text-orange-600 bg-orange-50">
+                                    TỔNG QUAN
+                                </button>
+                                <button onclick="setTab('tasks')" id="tab-tasks" class="px-6 py-4 text-sm font-semibold transition border-b-2 border-transparent text-gray-600 hover:text-gray-900">
+                                    DANH SÁCH NHIỆM VỤ
+                                </button>
+                                <button onclick="setTab('skills')" id="tab-skills" class="px-6 py-4 text-sm font-semibold transition border-b-2 border-transparent text-gray-600 hover:text-gray-900">
+                                    BẢN ĐỒ KỸ NĂNG
+                                </button>
+                            </div>
+                            <button id="filterBtn" onclick="toggleFilters()" class="mr-4 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center gap-2 transition text-sm font-medium" style="display: none;">
+                                🔍 BỘ LỌC
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filters Panel -->
+                    <div id="filterPanel" class="bg-gray-50 border-b border-gray-200 p-4" style="display: none;">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="text-xs font-semibold text-gray-700 mb-2 block">Tìm Kiếm</label>
+                                <input type="text" id="searchInput" placeholder="Tên bài, kỹ năng..." onkeyup="applyFilters()" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-700 mb-2 block">Cấp Độ Kỹ Năng</label>
+                                <select id="levelFilter" onchange="applyFilters()" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-orange-500 text-sm">
+                                    <option value="all">Tất cả</option>
+                                    <option value="5">Tinh Thông (≥95%)</option>
+                                    <option value="4">Thành Thạo (85-95%)</option>
+                                    <option value="3">Đạt Chuẩn (65-85%)</option>
+                                    <option value="2">Hiểu Bài (40-65%)</option>
+                                    <option value="1">Cần Cung Cố (<40%)</option>
+                                </select>
+                            </div>
+                            <div id="statusFilterDiv" style="display: none;">
+                                <label class="text-xs font-semibold text-gray-700 mb-2 block">Trạng Thái</label>
+                                <select id="statusFilter" onchange="applyFilters()" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-orange-500 text-sm">
+                                    <option value="all">Tất cả</option>
+                                    <option value="Hoan thanh">Hoàn thành</option>
+                                    <option value="Dang lam">Đang làm</option>
+                                    <option value="Chua lam">Chưa làm</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-700 mb-2 block">Môn Học</label>
+                                <select id="subjectFilter" onchange="applyFilters()" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-orange-500 text-sm">
+                                    <option value="all">Tất cả môn</option>
+                                    <option value="Toan 12">Toán 12</option>
+                                    <option value="Xac suat">Xác suất</option>
+                                    <option value="Gioi han">Giới hạn</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="resetFilters()" class="px-4 py-2 text-sm bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg transition font-medium">
+                                ↻ Đặt lại bộ lọc
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="p-6">
+                        <!-- Overview Tab -->
+                        <div id="overview-content" class="space-y-6">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <p class="text-sm text-blue-900">
+                                    <strong>📊 Tóm Tắt:</strong> Học sinh có năng lực ở mức trung bình cao (68.5%). Điểm mạnh: Hình học, Lượng giác. Cần tập trung: Xác suất, Giới hạn.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900 mb-4">⭐ Thành Thạo & Tinh Thông (Cấp Độ Cao)</h3>
+                                    <div class="space-y-3">
+                                        <div class="bg-white p-4 rounded-lg border border-green-200 shadow-sm">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <p class="font-semibold text-gray-900">Hình Học Không Gian</p>
+                                                <span class="px-2 py-1 rounded text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">Tinh Thông</span>
+                                            </div>
+                                            <div class="flex items-center gap-4 text-sm">
+                                                <span class="text-emerald-600 font-bold">95%</span>
+                                                <span class="text-gray-500">12 đề</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-green-200 shadow-sm">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <p class="font-semibold text-gray-900">Nguyên Hàm</p>
+                                                <span class="px-2 py-1 rounded text-xs font-bold bg-green-100 text-green-700 border border-green-300">Thành Thạo</span>
+                                            </div>
+                                            <div class="flex items-center gap-4 text-sm">
+                                                <span class="text-green-600 font-bold">92%</span>
+                                                <span class="text-gray-500">10 đề</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900 mb-4">🔧 Cần Cung Cố & Hiểu Bài (Cấp Độ Thấp)</h3>
+                                    <div class="space-y-3">
+                                        <div class="bg-white p-4 rounded-lg border border-amber-200 shadow-sm">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <p class="font-semibold text-gray-900">Xác Suất</p>
+                                                <span class="px-2 py-1 rounded text-xs font-bold bg-amber-100 text-amber-700 border border-amber-300">Hiểu Bài</span>
+                                            </div>
+                                            <div class="flex items-center gap-4 text-sm">
+                                                <span class="text-amber-600 font-bold">45%</span>
+                                                <span class="text-gray-500">3 đề</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-red-200 shadow-sm">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <p class="font-semibold text-gray-900">Giới Hạn</p>
+                                                <span class="px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-700 border border-red-300">Cần Cung Cố</span>
+                                            </div>
+                                            <div class="flex items-center gap-4 text-sm">
+                                                <span class="text-red-600 font-bold">40%</span>
+                                                <span class="text-gray-500">2 đề</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tasks Tab -->
+                        <div id="tasks-content" class="space-y-4" style="display: none;">
+                            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                                <p class="text-sm text-amber-900">
+                                    <strong>📋 Danh sách:</strong> Tìm được <span class="font-bold" id="taskCount">8</span> nhiệm vụ
+                                </p>
+                            </div>
+
+                            <div class="overflow-x-auto bg-white rounded-lg border border-gray-200 shadow-sm">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-gray-50 border-b border-gray-200">
+                                            <th class="px-4 py-3 text-left font-semibold text-gray-700">STT</th>
+                                            <th class="px-4 py-3 text-left font-semibold text-gray-700">Tên Bài Tập</th>
+                                            <th class="px-4 py-3 text-left font-semibold text-gray-700">Môn Học</th>
+                                            <th class="px-4 py-3 text-center font-semibold text-gray-700">Cấp Độ</th>
+                                            <th class="px-4 py-3 text-left font-semibold text-gray-700">Trạng Thái</th>
+                                            <th class="px-4 py-3 text-center font-semibold text-gray-700">Điểm</th>
+                                            <th class="px-4 py-3 text-center font-semibold text-gray-700">Hành Động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tasksTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Skills Tab -->
+                        <div id="skills-content" class="space-y-4" style="display: none;">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <p class="text-sm text-blue-900">
+                                    <strong>📊 Thống kê:</strong> Tìm được <span class="font-bold" id="skillCount">6</span> kỹ năng
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="font-bold text-gray-900 mb-4">📚 Danh Sách Kỹ Năng</h3>
+                                    <div class="space-y-2" id="skillsList">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="font-bold text-gray-900 mb-4">📈 Phân Bố Theo Cấp Độ</h3>
+                                    <div class="space-y-3">
+                                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <p class="font-semibold text-gray-900">Tinh Thông (≥95%)</p>
+                                                <span class="bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-bold">1</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded h-2 overflow-hidden">
+                                                <div class="bg-emerald-500 h-full" style="width: 17%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <p class="font-semibold text-gray-900">Thành Thạo (85-95%)</p>
+                                                <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">1</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded h-2 overflow-hidden">
+                                                <div class="bg-green-500 h-full" style="width: 17%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <p class="font-semibold text-gray-900">Đạt Chuẩn (65-85%)</p>
+                                                <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">1</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded h-2 overflow-hidden">
+                                                <div class="bg-blue-500 h-full" style="width: 17%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <p class="font-semibold text-gray-900">Hiểu Bài (40-65%)</p>
+                                                <span class="bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-bold">2</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded h-2 overflow-hidden">
+                                                <div class="bg-amber-500 h-full" style="width: 33%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <p class="font-semibold text-gray-900">Cần Cung Cố (<40%)</p>
+                                                <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">1</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded h-2 overflow-hidden">
+                                                <div class="bg-red-500 h-full" style="width: 17%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup Chi Tiết Bài Tập -->
+    <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-screen overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 flex justify-between items-start">
+                <div>
+                    <h2 class="text-2xl font-bold" id="modalTaskName">Tên Bài Tập</h2>
+                    <p class="text-sm text-orange-100 mt-2" id="modalTaskSubject">Môn Học</p>
+                </div>
+                <button onclick="closeTaskDetail()" class="text-white hover:bg-orange-700 rounded-full p-2 transition">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 space-y-6">
+                <!-- Thông Tin Cơ Bản -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <p class="text-xs text-gray-600 font-medium">Cấp Độ</p>
+                        <p class="text-lg font-bold text-gray-900 mt-1" id="modalLevel">Đạt Chuẩn</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <p class="text-xs text-gray-600 font-medium">Trạng Thái</p>
+                        <p class="text-lg font-bold text-gray-900 mt-1" id="modalStatus">Hoàn thành</p>
+                    </div>
+                    <div class="border-l-4 border-orange-500 pl-4">
+                        <p class="text-xs text-gray-600 font-medium">Điểm</p>
+                        <p class="text-lg font-bold text-orange-600 mt-1" id="modalScore">85%</p>
+                    </div>
+                    <div class="border-l-4 border-purple-500 pl-4">
+                        <p class="text-xs text-gray-600 font-medium">Thời Gian Làm</p>
+                        <p class="text-lg font-bold text-gray-900 mt-1">20 phút</p>
+                    </div>
+                </div>
+
+                <!-- Chi Tiết Câu Hỏi -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">📋 Chi Tiết Câu Hỏi</h3>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Tổng Số Câu Hỏi</span>
+                            <span class="font-bold text-gray-900">20 câu</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Câu Trả Lời Đúng</span>
+                            <span class="font-bold text-green-600">17 câu</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Câu Trả Lời Sai</span>
+                            <span class="font-bold text-red-600">3 câu</span>
+                        </div>
+                        <div class="flex justify-between pt-3 border-t border-gray-200">
+                            <span class="text-gray-600">Tỷ Lệ Đúng</span>
+                            <span class="font-bold text-lg text-orange-600">85%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phân Tích Từng Phần -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">📊 Phân Tích Chi Tiết</h3>
+                    <div class="space-y-2">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-600">Phần Dễ (Level 1)</span>
+                                <span class="text-sm font-bold text-gray-900">5/5 ✓</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-600">Phần Trung Bình (Level 2)</span>
+                                <span class="text-sm font-bold text-gray-900">8/10 ✓</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-600">Phần Khó (Level 3)</span>
+                                <span class="text-sm font-bold text-gray-900">4/5 ✓</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-orange-500 h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lời Khuyên -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                    <p class="text-sm text-blue-900">
+                        <strong>💡 Lời Khuyên:</strong> Bạn làm tốt phần dễ. Hãy tập trung vào phần khó để nâng điểm lên 90%+.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-4 border-t border-gray-200">
+                    <button onclick="closeTaskDetail()" class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold rounded-lg transition">
+                        Đóng
+                    </button>
+                    <button class="flex-1 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition">
+                        🔄 Làm Lại
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allTasksData = [
+            { id: 1, name: 'Quan Hệ Song Song', subject: 'Toán 12', status: 'Hoan thanh', score: 85, levelScore: 3 },
+            { id: 2, name: 'Phương Trình Bậc 2', subject: 'Toán 12', status: 'Chua lam', score: null, levelScore: 2 },
+            { id: 3, name: 'Xác Suất', subject: 'Toán 12', status: 'Chua lam', score: null, levelScore: 2 },
+            { id: 4, name: 'Giới Hạn', subject: 'Toán 12', status: 'Chua lam', score: null, levelScore: 1 },
+            { id: 5, name: 'Hình Học Không Gian', subject: 'Toán 12', status: 'Chua lam', score: null, levelScore: 5 },
+            { id: 6, name: 'Tích Phân', subject: 'Toán 12', status: 'Hoan thanh', score: 92, levelScore: 5 },
+            { id: 7, name: 'Lượng Giác Cơ Bản', subject: 'Toán 12', status: 'Hoan thanh', score: 88, levelScore: 4 },
+            { id: 8, name: 'Phương Trình Mũ', subject: 'Toán 12', status: 'Dang lam', score: 65, levelScore: 3 }
+        ];
+
+        const skillsData = [
+            { name: 'Hình Học Không Gian', levelScore: 5, currentLevel: 5, targetLevel: 5, score: 95, attempts: 12, subject: 'Toán 12' },
+            { name: 'Nguyên Hàm', levelScore: 4, currentLevel: 4, targetLevel: 4, score: 92, attempts: 10, subject: 'Toán 12' },
+            { name: 'Lượng Giác', levelScore: 3, currentLevel: 3, targetLevel: 3, score: 88, attempts: 9, subject: 'Toán 12' },
+            { name: 'Xác Suất', levelScore: 2, currentLevel: 2, targetLevel: 3, score: 45, attempts: 3, subject: 'Xác suất' },
+            { name: 'Giới Hạn', levelScore: 1, currentLevel: 1, targetLevel: 3, score: 40, attempts: 2, subject: 'Giới hạn' },
+            { name: 'Phương Trình Bậc 2', levelScore: 2, currentLevel: 2, targetLevel: 4, score: 60, attempts: 4, subject: 'Toán 12' }
+        ];
+
+        let currentTab = 'overview';
+
+        function getLevelName(levelScore) {
+            const levels = {
+                5: 'Tinh Thông',
+                4: 'Thành Thạo',
+                3: 'Đạt Chuẩn',
+                2: 'Hiểu Bài',
+                1: 'Cần Cung Cố'
+            };
+            return levels[levelScore] || 'Chưa Đánh Giá';
+        }
+
+        function getLevelColor(levelScore) {
+            const colors = {
+                5: 'bg-emerald-100 text-emerald-700 border-emerald-300',
+                4: 'bg-green-100 text-green-700 border-green-300',
+                3: 'bg-blue-100 text-blue-700 border-blue-300',
+                2: 'bg-amber-100 text-amber-700 border-amber-300',
+                1: 'bg-red-100 text-red-700 border-red-300'
+            };
+            return colors[levelScore] || 'bg-gray-100 text-gray-700 border-gray-300';
+        }
+
+        function setTab(tab) {
+            currentTab = tab;
+            
+            document.getElementById('overview-content').style.display = 'none';
+            document.getElementById('tasks-content').style.display = 'none';
+            document.getElementById('skills-content').style.display = 'none';
+            
+            document.getElementById('tab-overview').classList.remove('border-orange-500', 'text-orange-600', 'bg-orange-50');
+            document.getElementById('tab-overview').classList.add('border-transparent', 'text-gray-600');
+            document.getElementById('tab-tasks').classList.remove('border-orange-500', 'text-orange-600', 'bg-orange-50');
+            document.getElementById('tab-tasks').classList.add('border-transparent', 'text-gray-600');
+            document.getElementById('tab-skills').classList.remove('border-orange-500', 'text-orange-600', 'bg-orange-50');
+            document.getElementById('tab-skills').classList.add('border-transparent', 'text-gray-600');
+            
+            if (tab === 'overview') {
+                document.getElementById('overview-content').style.display = 'block';
+                document.getElementById('tab-overview').classList.remove('border-transparent', 'text-gray-600');
+                document.getElementById('tab-overview').classList.add('border-orange-500', 'text-orange-600', 'bg-orange-50');
+                document.getElementById('filterBtn').style.display = 'none';
+            } else if (tab === 'tasks') {
+                document.getElementById('tasks-content').style.display = 'block';
+                document.getElementById('tab-tasks').classList.remove('border-transparent', 'text-gray-600');
+                document.getElementById('tab-tasks').classList.add('border-orange-500', 'text-orange-600', 'bg-orange-50');
+                document.getElementById('filterBtn').style.display = 'flex';
+                document.getElementById('statusFilterDiv').style.display = 'block';
+                renderTasks();
+            } else if (tab === 'skills') {
+                document.getElementById('skills-content').style.display = 'block';
+                document.getElementById('tab-skills').classList.remove('border-transparent', 'text-gray-600');
+                document.getElementById('tab-skills').classList.add('border-orange-500', 'text-orange-600', 'bg-orange-50');
+                document.getElementById('filterBtn').style.display = 'flex';
+                document.getElementById('statusFilterDiv').style.display = 'none';
+                renderSkills();
+            }
+        }
+
+        function toggleFilters() {
+            const filterPanel = document.getElementById('filterPanel');
+            filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function applyFilters() {
+            if (currentTab === 'tasks') {
+                renderTasks();
+            } else if (currentTab === 'skills') {
+                renderSkills();
+            }
+        }
+
+        function renderTasks() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const level = document.getElementById('levelFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const subject = document.getElementById('subjectFilter').value;
+
+            const filtered = allTasksData.filter(task => {
+                const matchSearch = task.name.toLowerCase().includes(search) || task.subject.toLowerCase().includes(search);
+                const matchLevel = level === 'all' || task.levelScore === parseInt(level);
+                const matchStatus = status === 'all' || task.status === status;
+                const matchSubject = subject === 'all' || task.subject === subject;
+                
+                return matchSearch && matchLevel && matchStatus && matchSubject;
+            });
+
+            document.getElementById('taskCount').textContent = filtered.length;
+
+            const tbody = document.getElementById('tasksTableBody');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-8 text-center text-gray-500">Không tìm thấy kết quả phù hợp</td></tr>';
+                return;
+            }
+
+            filtered.forEach((task, idx) => {
+                const levelColors = {
+                    5: 'bg-emerald-100 text-emerald-700',
+                    4: 'bg-green-100 text-green-700',
+                    3: 'bg-blue-100 text-blue-700',
+                    2: 'bg-amber-100 text-amber-700',
+                    1: 'bg-red-100 text-red-700'
+                };
+
+                const statusColors = {
+                    'Hoan thanh': 'bg-green-100 text-green-700',
+                    'Dang lam': 'bg-blue-100 text-blue-700',
+                    'Chua lam': 'bg-gray-100 text-gray-700'
+                };
+
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-50 transition';
+                row.innerHTML = '<td class="px-4 py-3 text-gray-500 font-medium">' + (idx + 1) + '</td>' +
+                    '<td class="px-4 py-3 font-semibold text-gray-900">' + task.name + '</td>' +
+                    '<td class="px-4 py-3 text-gray-600">' + task.subject + '</td>' +
+                    '<td class="px-4 py-3 text-center"><span class="px-2 py-1 rounded text-xs font-bold inline-block ' + levelColors[task.levelScore] + '">' + getLevelName(task.levelScore) + '</span></td>' +
+                    '<td class="px-4 py-3"><span class="px-3 py-1 rounded-full text-xs font-bold inline-block ' + statusColors[task.status] + '">' + task.status + '</span></td>' +
+                    '<td class="px-4 py-3 text-center font-bold text-orange-600">' + (task.score ? task.score + '%' : '-') + '</td>' +
+                    '<td class="px-4 py-3 text-center"><button class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded transition">👁️ Chi Tiết</button></td>';
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderSkills() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const level = document.getElementById('levelFilter').value;
+            const subject = document.getElementById('subjectFilter').value;
+
+            const filtered = skillsData.filter(skill => {
+                const matchSearch = skill.name.toLowerCase().includes(search);
+                const matchLevel = level === 'all' || skill.levelScore === parseInt(level);
+                const matchSubject = subject === 'all' || skill.subject === subject;
+                
+                return matchSearch && matchLevel && matchSubject;
+            });
+
+            document.getElementById('skillCount').textContent = filtered.length;
+
+            const skillsList = document.getElementById('skillsList');
+            skillsList.innerHTML = '';
+
+            if (filtered.length === 0) {
+                skillsList.innerHTML = '<div class="text-center py-8 text-gray-500">Không tìm thấy kỹ năng phù hợp</div>';
+                return;
+            }
+
+            filtered.forEach(skill => {
+                const currentColor = getLevelColor(skill.currentLevel);
+                const targetColor = getLevelColor(skill.targetLevel);
+
+                const div = document.createElement('div');
+                div.className = 'bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md transition shadow-sm';
+                div.innerHTML = '<div class="flex justify-between items-center mb-3">' +
+                    '<p class="font-semibold text-gray-900 text-sm">' + skill.name + '</p>' +
+                    '<span class="text-xs text-gray-500">(' + skill.attempts + ' đề)</span>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-2 gap-2">' +
+                    '<div class="bg-gray-50 p-2 rounded border border-gray-200">' +
+                    '<p class="text-xs text-gray-600 font-medium mb-1">Hiện Tại</p>' +
+                    '<span class="px-2 py-1 rounded text-xs font-bold border inline-block ' + currentColor + '">' + getLevelName(skill.currentLevel) + '</span>' +
+                    '</div>' +
+                    '<div class="bg-gray-50 p-2 rounded border border-gray-200">' +
+                    '<p class="text-xs text-gray-600 font-medium mb-1">Mục Tiêu</p>' +
+                    '<span class="px-2 py-1 rounded text-xs font-bold border inline-block ' + targetColor + '">' + getLevelName(skill.targetLevel) + '</span>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="w-full bg-gray-200 rounded h-2 overflow-hidden mt-2">' +
+                    '<div class="bg-orange-500 h-full" style="width: ' + skill.score + '%"></div>' +
+                    '</div>' +
+                    '<div class="text-right text-xs text-gray-600 font-bold mt-1">' + skill.score + '%</div>';
+                skillsList.appendChild(div);
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('levelFilter').value = 'all';
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('subjectFilter').value = 'all';
+            applyFilters();
+        }
+
+        function togglePhone() {
+            const phoneDisplay = document.getElementById('phoneDisplay');
+            const phoneIcon = document.getElementById('phoneIcon');
+            
+            if (phoneDisplay.textContent === '***********') {
+                phoneDisplay.textContent = '0123456789';
+                phoneIcon.textContent = '🔒';
+            } else {
+                phoneDisplay.textContent = '***********';
+                phoneIcon.textContent = '👁️';
+            }
+        }
+
+        function updateWeekStats() {
+            const week = document.getElementById('weekSelector').value;
+            const stats = {
+                current: { time: '14/11 - 20/11', completed: '6/8 bài', percentage: '75%', accuracy: '82%' },
+                week1: { time: '7/11 - 13/11', completed: '5/7 bài', percentage: '71%', accuracy: '78%' },
+                week2: { time: '31/10 - 6/11', completed: '4/6 bài', percentage: '67%', accuracy: '75%' },
+                week3: { time: '24/10 - 30/10', completed: '3/5 bài', percentage: '60%', accuracy: '70%' }
+            };
+            
+            const s = stats[week] || stats.current;
+            document.getElementById('weekTime').textContent = s.time;
+            document.getElementById('weekCompleted').textContent = s.completed;
+            document.getElementById('weekPercentage').textContent = s.percentage;
+            document.getElementById('weekAccuracy').textContent = s.accuracy;
+        }
+
+        function openTaskDetail(task) {
+            document.getElementById('modalTaskName').textContent = task.name;
+            document.getElementById('modalTaskSubject').textContent = task.subject;
+            document.getElementById('modalLevel').textContent = getLevelName(task.levelScore);
+            document.getElementById('modalStatus').textContent = task.status === 'Hoan thanh' ? 'Hoàn thành' : task.status === 'Dang lam' ? 'Đang làm' : 'Chưa làm';
+            document.getElementById('modalScore').textContent = task.score ? task.score + '%' : '-';
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+
+        function closeTaskDetail() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        renderTasks();
+        renderSkills();
+    </script>
+</body>
+</html>
