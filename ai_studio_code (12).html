@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Học Tập - ERP System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* TAB STYLES */
+        .tab-btn {
+            position: relative; font-weight: 600; font-size: 14px; transition: all 0.2s;
+            padding: 1rem 1.5rem;
+        }
+        .tab-active { color: #ea580c; background-color: #fff7ed; border-bottom: 3px solid #f97316; }
+        .tab-inactive { color: #6b7280; background-color: transparent; border-bottom: 3px solid transparent; }
+        .tab-inactive:hover { color: #374151; background-color: #f9fafb; }
+
+        /* Pagination & Filter */
+        .pagination-btn {
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; font-weight: 600; font-size: 13px; border: 1px solid #e5e7eb; background: white; color: #374151;
+        }
+        .pagination-btn.active { background-color: #f97316; border-color: #f97316; color: white; }
+        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .filter-card { cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+        .filter-card.active { border-color: #f97316; background-color: #fff7ed; }
+
+        /* Specific Styles for Quiz Detail Mockup */
+        .quiz-table th { background-color: #fdba74; color: #7c2d12; font-weight: 600; padding: 8px 12px; text-align: left; font-size: 13px; }
+        .quiz-table td { padding: 8px 12px; border-bottom: 1px solid #fed7aa; font-size: 13px; }
+        .quiz-table tr:last-child td { border-bottom: none; }
+        
+        .q-grid-item { width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #374151; cursor: pointer; }
+        .q-grid-item:hover { background: #d1d5db; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="flex min-h-screen">
+        <!-- SIDEBAR -->
+        <div class="fixed left-0 top-0 w-64 h-screen bg-white border-r border-gray-200 overflow-y-auto z-30 shadow-sm hidden lg:block">
+            <div class="p-6 border-b border-gray-200">
+                <h1 class="text-2xl font-bold text-orange-600"><i class="fa-solid fa-graduation-cap mr-2"></i>Luyện Đề</h1>
+                <p class="text-xs text-gray-500 mt-1">ERP Module v2.8</p>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> <span class="font-medium">Tổng Quan</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-orange-50 text-orange-700 font-medium transition">
+                    <i class="fa-solid fa-user-clock w-5 text-center"></i> <span>Lịch Sử Học Sinh</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="lg:ml-64 flex-1 w-full">
+            <!-- HEADER & PROFILE -->
+            <div class="bg-white border-b border-gray-200 p-6 sticky top-0 z-20 shadow-sm">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Hồ Sơ Học Tập</h2>
+                        <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
+                            <i class="fa-solid fa-download mr-2"></i>Xuất Báo Cáo
+                        </button>
+                    </div>
+                    <div class="bg-orange-50 border border-orange-200 rounded-xl p-6">
+                        <div class="flex flex-col md:flex-row items-start md:items-center gap-8">
+                            <div class="flex items-center gap-4 pr-8 md:border-r border-orange-200 min-w-[280px]">
+                                <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-3xl border-4 border-white shadow-sm">👨‍🎓</div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900">Nguyễn Văn A</h3>
+                                    <p class="text-sm text-gray-600 mb-1">ID: HS_2024_001</p>
+                                    <div class="flex gap-3 text-xs text-gray-500">
+                                        <span title="Năm sinh"><i class="fa-solid fa-cake-candles mr-1"></i>2007</span>
+                                        <span title="Số điện thoại"><i class="fa-solid fa-phone mr-1"></i>0988***123</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pr-8 md:border-r border-orange-200 flex-1">
+                                <div class="mb-2">
+                                    <p class="text-xs text-gray-500 font-bold uppercase mb-0.5">Mục Tiêu Trường</p>
+                                    <p class="text-lg font-bold text-gray-900"><i class="fa-solid fa-university text-orange-500 mr-2"></i>ĐH Ngoại Thương</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-bold uppercase mb-0.5">Ngành Học</p>
+                                    <p class="text-sm font-semibold text-gray-800"><i class="fa-solid fa-briefcase text-blue-500 mr-2"></i>Kinh Tế Đối Ngoại</p>
+                                </div>
+                            </div>
+                            <div class="min-w-[150px]">
+                                <p class="text-xs text-gray-500 font-bold uppercase mb-1">Dự Đoán Kết Quả</p>
+                                <div class="flex flex-col">
+                                    <span class="text-3xl font-bold text-gray-900">26.5đ</span>
+                                    <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded mt-1 w-fit"><i class="fa-solid fa-arrow-trend-up mr-1"></i>85% Đỗ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCROLLABLE CONTENT -->
+            <div class="p-6 max-w-7xl mx-auto space-y-8 pb-20">
+                <!-- Tiến độ học tập -->
+                <section>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-900 border-l-4 border-orange-500 pl-3">Tiến Độ Học Tập Theo Tuần</h3>
+                         <select class="border border-gray-300 rounded-lg text-sm px-3 py-1.5 focus:outline-none">
+                            <option>Tháng 11/2025</option>
+                            <option>Tháng 10/2025</option>
+                        </select>
+                    </div>
+                    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50 text-gray-700 font-semibold uppercase text-xs border-b border-gray-200">
+                                <tr>
+                                    <th class="px-6 py-3">Tuần</th>
+                                    <th class="px-6 py-3">Thời Gian</th>
+                                    <th class="px-6 py-3 text-center">Tiến Độ (Bài/Tổng)</th>
+                                    <th class="px-6 py-3 text-center">Tỷ Lệ Hoàn Thành</th>
+                                    <th class="px-6 py-3 text-center">Tỷ Lệ Đúng</th>
+                                    <th class="px-6 py-3 text-center">Dự Đoán Đỗ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 font-medium text-gray-900">Tuần 25 (Hiện tại)</td>
+                                    <td class="px-6 py-4 text-gray-600">14/11 - 20/11</td>
+                                    <td class="px-6 py-4 text-center font-medium">12/15 bài</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <div class="w-16 bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 80%"></div></div>
+                                            <span class="text-xs font-medium text-gray-700">80%</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center font-bold text-green-600">85%</td>
+                                    <td class="px-6 py-4 text-center text-orange-600 font-bold">86%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Tabs -->
+                <section>
+                    <div class="flex border-b border-gray-200 mb-6 bg-white rounded-t-lg pt-2 px-2">
+                        <button onclick="switchTab('skills')" id="btn-skills" class="tab-btn tab-active flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> Bản Đồ Kỹ Năng</button>
+                        <button onclick="switchTab('missions')" id="btn-missions" class="tab-btn tab-inactive flex items-center gap-2"><i class="fa-solid fa-gift"></i> Lịch Sử Nhiệm Vụ Tuần</button>
+                    </div>
+
+                    <!-- Tab 1: Skills -->
+                    <div id="tab-skills" class="block space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
+                            <div class="flex gap-4 text-sm flex-wrap">
+                                <div onclick="applySkillFilter('all')" id="filter-all" class="filter-card active bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                                    <span class="text-gray-600">Tổng: <strong class="text-gray-900" id="count-all">0</strong></span>
+                                </div>
+                                <div onclick="applySkillFilter('achieved')" id="filter-achieved" class="filter-card bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    <span class="text-gray-700">Đã đạt: <strong class="font-bold text-green-700" id="count-achieved">0</strong></span>
+                                </div>
+                                <div onclick="applySkillFilter('weak')" id="filter-weak" class="filter-card bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <span class="text-gray-700">Còn yếu: <strong class="font-bold text-red-700" id="count-weak">0</strong></span>
+                                </div>
+                            </div>
+                            <div class="relative w-full md:w-72">
+                                <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                                <input type="text" id="skillSearch" onkeyup="renderSkills(1)" placeholder="Tìm kiếm chuyên đề..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm flex flex-col min-h-[500px]">
+                            <div class="grid grid-cols-12 bg-gray-50 text-gray-600 font-bold text-xs uppercase border-b border-gray-200 py-3 px-6">
+                                <div class="col-span-6">Tên Chuyên Đề / Kỹ Năng</div>
+                                <div class="col-span-2 text-center">Hiện Tại</div>
+                                <div class="col-span-2 text-center">Mục Tiêu</div>
+                                <div class="col-span-2 text-center">Chi Tiết</div>
+                            </div>
+                            <div id="skillsContainer" class="flex-1"></div>
+                            <div class="bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-between">
+                                <span class="text-sm text-gray-500" id="skillsInfo">--</span>
+                                <div class="flex gap-2" id="skillsPagination"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Missions -->
+                    <div id="tab-missions" class="hidden space-y-4">
+                        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm flex flex-col min-h-[500px]">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-50 text-gray-700 font-bold uppercase text-xs border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-3 w-1/4">Nhiệm Vụ / Tuần</th>
+                                        <th class="px-6 py-3 text-center">Số NV Tham Gia</th>
+                                        <th class="px-6 py-3 text-center">Trạng Thái</th>
+                                        <th class="px-6 py-3 text-center">Điểm Thưởng</th>
+                                        <th class="px-6 py-3 text-center">Xếp Hạng</th>
+                                        <th class="px-6 py-3 text-center">Mã Voucher</th>
+                                        <th class="px-6 py-3 text-center">Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" id="missionsContainer"></tbody>
+                            </table>
+                            <div class="bg-gray-50 border-t border-gray-200 px-6 py-3 flex items-center justify-between mt-auto">
+                                <span class="text-sm text-gray-500" id="missionsInfo">--</span>
+                                <div class="flex gap-2" id="missionsPagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: POPUP TÓM TẮT (Click vào đây sẽ mở trang Full Detail) -->
+    <div id="summaryModal" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full transform transition-all scale-100 overflow-hidden">
+            <div class="bg-orange-600 text-white p-5 relative">
+                <button onclick="closeSummaryModal()" class="absolute top-4 right-4 text-white hover:text-orange-200 transition"><i class="fa-solid fa-times text-xl"></i></button>
+                <h3 class="text-xl font-bold" id="summaryTitle">Tiêu đề</h3>
+                <p class="text-orange-100 text-sm mt-1" id="summaryTopic">Chuyên đề</p>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-2 text-sm text-gray-500 mb-6 pb-4 border-b border-gray-100">
+                    <i class="fa-regular fa-clock text-orange-500"></i> <span>Làm bài lúc: <strong class="text-gray-700">14:30 - 20/11/2025</strong></span>
+                </div>
+                <div class="grid grid-cols-4 gap-4 mb-6 text-center">
+                    <div class="border-r border-gray-100"><p class="text-xs text-gray-400 font-bold uppercase">Kết quả</p><p class="text-3xl font-bold text-orange-600 mt-2">8.25</p></div>
+                    <div class="border-r border-gray-100"><p class="text-xs text-gray-400 font-bold uppercase">Câu Đúng</p><p class="text-3xl font-bold text-green-600 mt-2">15</p></div>
+                    <div class="border-r border-gray-100"><p class="text-xs text-gray-400 font-bold uppercase">Câu Sai</p><p class="text-3xl font-bold text-red-600 mt-2">5</p></div>
+                    <div><p class="text-xs text-gray-400 font-bold uppercase">Thời Gian</p><p class="text-xl font-bold text-gray-800 mt-2">35p</p></div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="closeSummaryModal()" class="flex-1 py-3 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">Đóng</button>
+                    <button onclick="openFullDetail()" class="flex-1 py-3 text-white bg-orange-600 hover:bg-orange-700 rounded-lg font-bold shadow-md transition">Xem đáp án chi tiết</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: FULL PAGE DETAIL - VIEW ĐƯỢC VẼ BẰNG HTML (Mô phỏng Vuihoc) -->
+    <div id="fullDetailView" class="fixed inset-0 bg-gray-100 z-50 hidden overflow-y-auto">
+        <!-- Navbar Navigation Mockup -->
+        <div class="bg-orange-600 text-white text-sm py-2 px-4 flex justify-between items-center sticky top-0 z-50">
+            <div class="flex items-center gap-4 font-bold">
+                <span class="cursor-pointer" onclick="closeFullDetail()"><i class="fa-solid fa-chevron-left mr-2"></i> QUAY LẠI</span>
+                <span>Đáp án đề thi Môn Toán - 08/01/2023</span>
+            </div>
+            <div class="flex items-center gap-2 text-orange-200 text-xs">
+                <i class="fa-solid fa-history"></i> Lịch sử làm bài
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto p-6 flex gap-6">
+            <!-- LEFT COLUMN: Main Content -->
+            <div class="flex-1 space-y-6">
+                
+                <!-- Score & Stats Board (Beige) -->
+                <div class="bg-[#fff7ed] rounded-lg p-4 border border-orange-100">
+                    <div class="flex justify-between items-start border-b border-orange-200 pb-4 mb-4">
+                        <div>
+                            <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded uppercase">Điểm</span>
+                            <div class="text-4xl font-bold text-green-600 mt-2">8.25<span class="text-lg text-gray-500 font-normal">/10</span></div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-600">Thời gian làm: <span class="font-bold text-gray-900">35/60 phút</span></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-8 text-sm">
+                        <div>Tổng số câu hỏi: <span class="font-bold">50 câu</span></div>
+                        <div>Số câu trả lời đúng: <span class="font-bold text-green-600">15 câu</span></div>
+                    </div>
+                </div>
+
+                <!-- Table 1: Competency Matrix -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="bg-orange-100 px-4 py-2 font-bold text-orange-800 text-sm">Bảng đánh giá năng lực và mức độ tư duy</div>
+                    <table class="w-full quiz-table">
+                        <thead>
+                            <tr>
+                                <th>Năng lực</th>
+                                <th>Câu đúng</th>
+                                <th>Câu sai</th>
+                                <th>Chưa làm</th>
+                                <th>Hoàn thành</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white"><td>Nhận biết</td><td>10</td><td>10</td><td>10</td><td class="text-green-600 font-bold">100%</td></tr>
+                            <tr class="bg-gray-50"><td>Thông hiểu</td><td>4</td><td>4</td><td>4</td><td class="text-green-600 font-bold">100%</td></tr>
+                            <tr class="bg-white"><td>Vận dụng</td><td>3</td><td>3</td><td>3</td><td class="text-red-500 font-bold">30%</td></tr>
+                            <tr class="bg-gray-50"><td>Vận dụng cao</td><td>3</td><td>3</td><td>3</td><td class="text-red-500 font-bold">50%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table 2: Topics Result -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="bg-orange-100 px-4 py-2 font-bold text-orange-800 text-sm">Kết quả kiểm tra theo chủ đề</div>
+                    <table class="w-full quiz-table">
+                        <thead>
+                            <tr>
+                                <th>Chuyên đề</th>
+                                <th>Câu đúng</th>
+                                <th>Câu sai</th>
+                                <th>Chưa làm</th>
+                                <th>Hoàn thành</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white"><td>Đường thẳng và mặt phẳng trong không gian</td><td>10</td><td>10</td><td>10</td><td class="text-green-600 font-bold">100%</td></tr>
+                            <tr class="bg-gray-50"><td>Tên chuyên đề dài thì cứ xuống dòng như này</td><td>4</td><td>4</td><td>4</td><td class="text-green-600 font-bold">100%</td></tr>
+                            <tr class="bg-white"><td>Quan hệ song song</td><td>3</td><td>3</td><td>3</td><td class="text-red-500 font-bold">30%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- QUESTIONS LIST -->
+                <div class="space-y-8">
+                    <!-- Q1: Correct -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <div class="flex justify-between">
+                            <div class="font-bold text-sm mb-2">Câu 1 <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-xs ml-2">VH-TH</span></div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-800 mb-4">Một lớp có 8 học sinh được bầu chọn vào 3 chức vụ khác nhau: lớp trưởng, lớp phó và bí thư. Số cách lựa chọn khác nhau sẽ là:</p>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-green-600"></i> <span>A. Đã chọn</span></div>
+                                    <div class="flex items-center gap-2 text-gray-500"><div class="w-4 h-4 border rounded-full"></div> <span>B. Chưa chọn</span></div>
+                                    <div class="flex items-center gap-2 text-gray-500"><div class="w-4 h-4 border rounded-full"></div> <span>C. Chưa chọn</span></div>
+                                    <div class="flex items-center gap-2 text-gray-500"><div class="w-4 h-4 border rounded-full"></div> <span>D. Chưa chọn</span></div>
+                                </div>
+                            </div>
+                            <div class="w-48">
+                                <img src="https://placehold.co/200x150/png?text=H%C3%ACnh+ch%C3%B3p+S.ABCD" class="w-full rounded border">
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-green-50 p-3 rounded text-sm text-green-800 border border-green-100 flex justify-between items-center cursor-pointer">
+                            <span><strong>Bạn đã chọn đúng</strong> - Đáp án đúng: A</span>
+                            <span class="text-xs flex items-center gap-1 text-green-700"><i class="fa-solid fa-thumbs-up"></i> Xem lời giải ngay <i class="fa-solid fa-caret-down"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Q2: Skipped (Bỏ trống) -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <div class="font-bold text-sm mb-2">Câu 2</div>
+                        <p class="text-sm text-gray-800 mb-4">Một lớp có 8 học sinh được bầu chọn vào 3 chức vụ khác nhau. Số cách lựa chọn khác nhau sẽ là:</p>
+                        <div class="mb-2"><input type="text" disabled placeholder="" class="border p-2 rounded w-48 bg-gray-50"></div>
+                        <div class="mt-2 bg-red-50 p-3 rounded text-sm text-red-800 border border-red-100 flex justify-between items-center cursor-pointer">
+                            <span><strong>Bạn đã bỏ trống câu hỏi này</strong> - Đáp án đúng: 3</span>
+                            <span class="text-xs flex items-center gap-1 text-gray-600"><i class="fa-solid fa-book"></i> Xem lời giải ngay <i class="fa-solid fa-caret-down"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Q3: Fill in correct -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <div class="font-bold text-sm mb-2">Câu 3</div>
+                        <p class="text-sm text-gray-800 mb-4">Tính thể tích khối chóp S.ABC biết...</p>
+                        <div class="relative w-48 mb-2">
+                            <input type="text" value="3" disabled class="border border-green-500 p-2 rounded w-full bg-white text-gray-800">
+                            <i class="fa-solid fa-check text-green-600 absolute right-3 top-3"></i>
+                        </div>
+                        <div class="mt-2 bg-green-50 p-3 rounded text-sm text-green-800 border border-green-100 flex justify-between items-center cursor-pointer">
+                            <span><strong>Bạn đã trả lời đúng</strong> - Đáp án đúng: 3</span>
+                            <span class="text-xs flex items-center gap-1 text-green-700"><i class="fa-solid fa-thumbs-up"></i> Xem lời giải ngay <i class="fa-solid fa-caret-down"></i></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Q4: Fill in wrong -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <div class="font-bold text-sm mb-2">Câu 4</div>
+                        <p class="text-sm text-gray-800 mb-4">Một lớp có 8 học sinh được bầu chọn...</p>
+                        <div class="relative w-48 mb-2">
+                            <input type="text" value="9232" disabled class="border border-red-300 p-2 rounded w-full bg-white text-red-600">
+                            <i class="fa-solid fa-xmark text-red-500 absolute right-3 top-3"></i>
+                        </div>
+                        <div class="mt-2 bg-red-50 p-3 rounded text-sm text-red-800 border border-red-100 flex justify-between items-center cursor-pointer">
+                            <span><strong>Bạn đã trả lời sai</strong> - Đáp án đúng: 3</span>
+                            <span class="text-xs flex items-center gap-1 text-gray-600"><i class="fa-solid fa-book"></i> Xem lời giải ngay <i class="fa-solid fa-caret-down"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Q5: MCQ Wrong -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <div class="font-bold text-sm mb-2">Câu 5</div>
+                        <p class="text-sm text-gray-800 mb-4">Chọn đáp án đúng nhất về hàm số...</p>
+                        <div class="flex gap-6 text-sm mb-4">
+                            <div class="flex items-center gap-2 text-gray-500"><div class="w-4 h-4 border rounded-full"></div> A. Chưa chọn</div>
+                            <div class="flex items-center gap-2 text-red-600 font-bold"><i class="fa-solid fa-circle-xmark"></i> B. Đã chọn</div>
+                            <div class="flex items-center gap-2 text-gray-500"><div class="w-4 h-4 border rounded-full"></div> C. Chưa chọn</div>
+                            <div class="flex items-center gap-2 text-gray-500"><div class="w-4 h-4 border rounded-full"></div> D. Chưa chọn</div>
+                        </div>
+                        <div class="bg-red-50 p-3 rounded text-sm text-red-800 border border-red-100 flex justify-between items-center cursor-pointer">
+                            <span><strong>Bạn đã chọn sai</strong> - Đáp án đúng là A</span>
+                            <span class="text-xs flex items-center gap-1 text-gray-600"><i class="fa-solid fa-book"></i> Xem lời giải ngay <i class="fa-solid fa-caret-down"></i></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Navigation Sidebar -->
+            <div class="w-72 space-y-6">
+                <div class="bg-[#ffedd5] p-4 rounded-lg text-center border border-orange-200">
+                    <h3 class="font-bold text-gray-800 mb-4 text-sm">Câu hỏi</h3>
+                    <div class="grid grid-cols-5 gap-2 mb-6">
+                        <div class="q-grid-item">1</div><div class="q-grid-item">2</div><div class="q-grid-item">3</div><div class="q-grid-item">4</div><div class="q-grid-item">5</div>
+                        <div class="q-grid-item">6</div><div class="q-grid-item">7</div><div class="q-grid-item">8</div><div class="q-grid-item">9</div><div class="q-grid-item">10</div>
+                        <div class="q-grid-item">11</div><div class="q-grid-item">12</div><div class="q-grid-item">13</div><div class="q-grid-item">14</div><div class="q-grid-item">15</div>
+                        <div class="q-grid-item">16</div><div class="q-grid-item">17</div><div class="q-grid-item">18</div><div class="q-grid-item">19</div><div class="q-grid-item">20</div>
+                        <div class="q-grid-item">21</div><div class="q-grid-item">22</div><div class="q-grid-item">23</div><div class="q-grid-item">24</div><div class="q-grid-item">25</div>
+                    </div>
+                    <button class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded transition">Làm Lại</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA GENERATION ---
+        const ITEMS_PER_PAGE = 10;
+        const levelMap = { 'Cần Củng Cố': 1, 'Hiểu Bài': 2, 'Đạt Chuẩn': 3, 'Thành Thạo': 4, 'Tinh Thông': 5 };
+        
+        const topicsList = ['Hàm Số & Đồ Thị', 'Mũ & Logarit', 'Nguyên Hàm & Tích Phân', 'Hình Học Không Gian'];
+        const skillsData = [];
+        for(let i=1; i<=25; i++) {
+            const topic = topicsList[Math.floor(Math.random() * topicsList.length)];
+            const levels = ['Cần Củng Cố', 'Đạt Chuẩn', 'Thành Thạo', 'Tinh Thông'];
+            const current = levels[Math.floor(Math.random() * levels.length)];
+            const target = levels[Math.floor(Math.random() * levels.length)];
+            skillsData.push({
+                id: i, topic: topic, name: `Kỹ năng chuyên sâu ${i} của ${topic}`,
+                isImportant: Math.random() > 0.7, current, target,
+                cClass: getBadgeClass(current), tClass: getBadgeClass(target)
+            });
+        }
+
+        const missionsData = [];
+        for(let i=30; i>=1; i--) {
+            missionsData.push({
+                name: `Nhiệm Vụ Tuần ${i}`,
+                date: `14/11 - 20/11/2025`,
+                count: '10/10',
+                status: i === 30 ? 'Đang làm' : (Math.random()>0.3 ? 'Hoàn thành' : 'Chưa đạt'),
+                points: i === 30 ? 80 : (Math.random()>0.3 ? 100 : 50),
+                voucher: (i < 30 && Math.random()>0.8) ? 'VOUCHER50K' : '-',
+                rank: (i < 30) ? `#${Math.floor(Math.random()*50+1)}` : '--'
+            });
+        }
+
+        function getBadgeClass(level) {
+            switch(level) {
+                case 'Tinh Thông': return 'bg-purple-100 text-purple-700';
+                case 'Thành Thạo': return 'bg-green-100 text-green-700';
+                case 'Đạt Chuẩn': return 'bg-blue-100 text-blue-700';
+                default: return 'bg-red-100 text-red-700';
+            }
+        }
+
+        // State
+        let currentFilter = 'all';
+        let currentSkillsPage = 1;
+        let currentMissionsPage = 1;
+
+        // Functions
+        function calculateStats() {
+            const total = skillsData.length;
+            const achieved = skillsData.filter(s => levelMap[s.current] >= levelMap[s.target]).length;
+            const weak = total - achieved;
+            document.getElementById('count-all').innerText = total;
+            document.getElementById('count-achieved').innerText = achieved;
+            document.getElementById('count-weak').innerText = weak;
+        }
+
+        function applySkillFilter(type) {
+            currentFilter = type; currentSkillsPage = 1;
+            ['all', 'achieved', 'weak'].forEach(t => {
+                const el = document.getElementById(`filter-${t}`);
+                if(t === type) { el.classList.add('active', 'border-orange-500', 'bg-orange-50'); el.classList.remove('border-gray-200', 'bg-white'); } 
+                else { el.classList.remove('active', 'border-orange-500', 'bg-orange-50'); el.classList.add('border-gray-200', 'bg-white'); }
+            });
+            renderSkills(1);
+        }
+
+        function getFilteredSkills() {
+            const search = document.getElementById('skillSearch').value.toLowerCase();
+            return skillsData.filter(s => {
+                const matchText = s.name.toLowerCase().includes(search) || s.topic.toLowerCase().includes(search);
+                if(!matchText) return false;
+                if(currentFilter === 'all') return true;
+                const curLvl = levelMap[s.current];
+                const tarLvl = levelMap[s.target];
+                return currentFilter === 'achieved' ? curLvl >= tarLvl : curLvl < tarLvl;
+            });
+        }
+
+        function renderSkills(page) {
+            currentSkillsPage = page;
+            const filtered = getFilteredSkills();
+            const start = (page - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const items = filtered.slice(start, end);
+            const container = document.getElementById('skillsContainer');
+            let html = '';
+            let currentTopic = '';
+
+            if(items.length === 0) html = '<div class="p-8 text-center text-gray-500">Không tìm thấy dữ liệu</div>';
+            else {
+                items.forEach(s => {
+                    if(s.topic !== currentTopic) { html += `<div class="bg-gray-50 border-b border-gray-100 px-6 py-3 font-bold text-gray-700">${s.topic}</div>`; currentTopic = s.topic; }
+                    html += `
+                        <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition">
+                            <div class="col-span-6 flex items-center gap-3">
+                                ${ levelMap[s.current] >= levelMap[s.target] ? '<i class="fa-solid fa-circle-check text-green-500 text-lg"></i>' : '<i class="fa-solid fa-circle-exclamation text-red-500 text-lg"></i>' }
+                                <div><p class="font-medium text-gray-900 flex items-center gap-2">${s.name}${s.isImportant ? '<span class="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold uppercase rounded">Quan trọng</span>' : ''}</p></div>
+                            </div>
+                            <div class="col-span-2 text-center"><span class="px-3 py-1 rounded text-xs font-bold ${s.cClass}">${s.current}</span></div>
+                            <div class="col-span-2 text-center"><span class="px-3 py-1 rounded text-xs font-bold ${s.tClass}">${s.target}</span></div>
+                            <div class="col-span-2 text-center"><button onclick="openSummaryModal('${s.name}', '${s.topic}')" class="text-blue-600 font-bold text-sm hover:underline">Xem chi tiết <i class="fa-solid fa-arrow-right ml-1"></i></button></div>
+                        </div>
+                    `;
+                });
+            }
+            container.innerHTML = html;
+            document.getElementById('skillsInfo').innerText = items.length > 0 ? `Hiển thị ${start+1}-${Math.min(end, filtered.length)} trên ${filtered.length}` : '--';
+            renderPagination(filtered.length, page, 'skillsPagination', 'renderSkills');
+        }
+
+        function renderMissions(page) {
+            currentMissionsPage = page;
+            const start = (page - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const items = missionsData.slice(start, end);
+            const container = document.getElementById('missionsContainer');
+            let html = '';
+            
+            items.forEach(m => {
+                let statusClass = m.status === 'Hoàn thành' ? 'bg-green-100 text-green-700' : (m.status === 'Đang làm' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600');
+                html += `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4"><p class="font-bold text-gray-900 text-base">${m.name}</p><p class="text-xs text-gray-500 mt-1">${m.date}</p></td>
+                        <td class="px-6 py-4 text-center font-medium text-gray-700">${m.count}</td>
+                        <td class="px-6 py-4 text-center"><span class="${statusClass} px-3 py-1 rounded-full text-xs font-bold">${m.status}</span></td>
+                        <td class="px-6 py-4 text-center font-bold text-orange-500">${m.points} pts</td>
+                        <td class="px-6 py-4 text-center font-bold text-gray-900">${m.rank}</td>
+                        <td class="px-6 py-4 text-center">${m.voucher !== '-' ? `<span class="font-mono bg-gray-100 border border-gray-300 px-2 py-1 rounded text-xs text-gray-600 select-all">${m.voucher}</span>` : '<span class="text-gray-400">-</span>'}</td>
+                        <td class="px-6 py-4 text-center"><button onclick="openFullDetail()" class="text-gray-500 hover:text-orange-600 transition w-8 h-8 rounded-full hover:bg-orange-50 flex items-center justify-center" title="Xem chi tiết"><i class="fa-solid fa-eye text-lg"></i></button></td>
+                    </tr>
+                `;
+            });
+            container.innerHTML = html;
+            document.getElementById('missionsInfo').innerText = `Hiển thị ${start+1}-${Math.min(end, missionsData.length)} trên ${missionsData.length}`;
+            renderPagination(missionsData.length, page, 'missionsPagination', 'renderMissions');
+        }
+
+        function renderPagination(total, curr, containerId, cb) {
+            const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+            const el = document.getElementById(containerId);
+            el.innerHTML = '';
+            if(totalPages <= 1) return;
+
+            const prev = document.createElement('button'); prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>'; prev.className = 'pagination-btn'; prev.disabled = curr === 1; prev.onclick = () => window[cb](curr - 1); el.appendChild(prev);
+            for(let i=1; i<=totalPages; i++) {
+                if(totalPages > 7 && Math.abs(curr - i) > 2 && i !== 1 && i !== totalPages) continue;
+                const btn = document.createElement('button'); btn.innerText = i; btn.className = `pagination-btn ${i === curr ? 'active' : ''}`; btn.onclick = () => window[cb](i); el.appendChild(btn);
+            }
+            const next = document.createElement('button'); next.innerHTML = '<i class="fa-solid fa-chevron-right"></i>'; next.className = 'pagination-btn'; next.disabled = curr === totalPages; next.onclick = () => window[cb](curr + 1); el.appendChild(next);
+        }
+
+        function switchTab(tab) {
+            const tabs = ['skills', 'missions'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`btn-${t}`);
+                const content = document.getElementById(`tab-${t}`);
+                if(t === tab) { btn.classList.add('tab-active'); btn.classList.remove('tab-inactive'); content.classList.remove('hidden'); } 
+                else { btn.classList.remove('tab-active'); btn.classList.add('tab-inactive'); content.classList.add('hidden'); }
+            });
+        }
+
+        // Modals
+        function openSummaryModal(title, topic) {
+            document.getElementById('summaryTitle').innerText = title;
+            document.getElementById('summaryTopic').innerText = topic;
+            document.getElementById('summaryModal').classList.remove('hidden');
+            document.getElementById('summaryModal').classList.add('flex');
+        }
+        function closeSummaryModal() {
+            document.getElementById('summaryModal').classList.add('hidden');
+            document.getElementById('summaryModal').classList.remove('flex');
+        }
+        function openFullDetail() {
+            closeSummaryModal();
+            document.getElementById('fullDetailView').classList.remove('hidden');
+        }
+        function closeFullDetail() {
+            document.getElementById('fullDetailView').classList.add('hidden');
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateStats();
+            renderSkills(1);
+            renderMissions(1);
+        });
+
+        // Expose
+        window.renderSkills = renderSkills;
+        window.renderMissions = renderMissions;
+        window.switchTab = switchTab;
+        window.applySkillFilter = applySkillFilter;
+        window.openSummaryModal = openSummaryModal;
+        window.closeSummaryModal = closeSummaryModal;
+        window.openFullDetail = openFullDetail;
+        window.closeFullDetail = closeFullDetail;
+    </script>
+</body>
+</html>
