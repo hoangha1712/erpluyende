@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Teacher Feedback - Full English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; font-size: 14px; color: #333; }
+        
+        /* TABS */
+        .tab-btn { padding: 12px 24px; font-weight: 600; color: #6b7280; background: #fff; border-bottom: 3px solid transparent; cursor: pointer; transition: 0.2s; }
+        .tab-btn:hover { color: #374151; background: #f9fafb; }
+        .tab-btn.active { color: #2563eb; border-bottom: 3px solid #2563eb; background: #eff6ff; }
+        
+        /* BOXES */
+        .criteria-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); overflow: hidden; }
+        .box-header { padding: 12px 16px; font-weight: 700; text-transform: uppercase; font-size: 13px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f3f4f6; letter-spacing: 0.5px; }
+        .box-body { padding: 16px; }
+
+        /* COLORS per Section */
+        .header-skills { color: #0284c7; background-color: #f0f9ff; border-left: 4px solid #0284c7; }
+        .header-knowledge { color: #059669; background-color: #ecfdf5; border-left: 4px solid #059669; }
+        .header-homework { color: #7c3aed; background-color: #f5f3ff; border-left: 4px solid #7c3aed; }
+        .header-support { color: #dc2626; background-color: #fef2f2; border-left: 4px solid #dc2626; }
+        .header-next { color: #0d9488; background-color: #f0fdfa; border-left: 4px solid #0d9488; }
+        .header-internal { color: #d97706; background-color: #fffbeb; border-left: 4px solid #d97706; }
+
+        /* Titles inside boxes */
+        .sub-section-title { font-weight: 700; color: #374151; margin-bottom: 10px; font-size: 14px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 4px; display: flex; justify-content: space-between; }
+        
+        /* CHECKBOXES */
+        .custom-checkbox { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; cursor: pointer; color: #4b5563; line-height: 1.4; transition: 0.2s; }
+        .custom-checkbox:hover { color: #111; }
+        .custom-checkbox input { margin-top: 3px; width: 16px; height: 16px; accent-color: #2563eb; flex-shrink: 0; }
+        
+        /* ALERTS / WARNINGS TEXT */
+        .text-alert { color: #c2410c; /* dark orange */ } 
+        .text-danger { color: #dc2626; }
+        
+        /* INPUTS */
+        .input-field { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; margin-top: 5px; transition: 0.2s; }
+        .input-field:focus { border-color: #2563eb; outline: none; ring: 2px solid #bfdbfe; }
+
+        /* Internal Tag Style */
+        .internal-tag { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; margin-right: 6px; margin-bottom: 8px; border: 1px solid #d1d5db; color: #4b5563; background: white; transition: 0.2s; }
+        .internal-tag:hover { border-color: #9ca3af; background: #f9fafb; }
+        .internal-tag.selected { background: #eff6ff; border-color: #2563eb; color: #1d4ed8; font-weight: 600; }
+        .internal-tag.alert.selected { background: #fef2f2; border-color: #dc2626; color: #b91c1c; }
+
+        /* BUTTONS */
+        .btn-generate { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(37,99,235,0.2); }
+        .btn-send { background: #db2777; color: white; border: none; padding: 12px 40px; border-radius: 6px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(219, 39, 119, 0.3); transition: 0.2s; }
+        .btn-send:hover { background: #be185d; transform: translateY(-1px); }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="w-72 bg-white border-r border-gray-200 flex flex-col shrink-0 z-20">
+        <div class="p-4 font-bold text-lg border-b text-gray-800">Class List</div>
+        <div class="flex-1 overflow-y-auto">
+            <div class="p-4 border-b bg-blue-50 border-l-4 border-l-blue-600 cursor-pointer flex justify-between items-center">
+                <div>
+                    <div class="font-bold text-gray-800">Le Thanh Truc</div>
+                    <div class="text-xs text-gray-500">ID: 202401</div>
+                </div>
+                <i class="fas fa-check-circle text-green-500 text-lg"></i>
+            </div>
+            <div class="p-4 border-b hover:bg-gray-50 cursor-pointer flex justify-between items-center group">
+                <div>
+                    <div class="font-medium text-gray-600 group-hover:text-gray-900">Nguyen The Truc</div>
+                </div>
+                <i class="fas fa-circle text-gray-200 group-hover:text-gray-300"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 flex flex-col bg-gray-100 relative">
+        <!-- TOP NAVIGATION TABS -->
+        <div class="bg-white border-b px-6 flex items-center justify-between shadow-sm z-10 sticky top-0">
+            <div class="flex">
+                <button class="tab-btn active" onclick="switchTab('feedback')"><i class="fas fa-comment-alt mr-2"></i>FEEDBACK TO PARENT</button>
+                <button class="tab-btn" onclick="switchTab('internal')"><i class="fas fa-user-shield mr-2"></i>INTERNAL NOTES</button>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 1: FEEDBACK FORM (Visible by default) -->
+        <!-- ============================================================== -->
+        <div class="flex-1 overflow-y-auto p-8 pb-32" id="tab-feedback">
+            
+            <!-- LESSON INFO -->
+            <div class="bg-white border border-blue-200 rounded-lg p-5 mb-6 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-blue-700 font-bold uppercase text-xs tracking-wider"><i class="fas fa-info-circle mr-1"></i> Lesson Information</h3>
+                    <label class="text-xs text-blue-600 font-semibold flex items-center gap-2 cursor-pointer bg-blue-50 px-2 py-1 rounded">
+                        <input type="checkbox" checked> Apply to all students
+                    </label>
+                </div>
+                <div class="grid grid-cols-1 gap-3">
+                    <input type="text" class="input-field font-semibold" value="Unit 3: My Daily Routine">
+                    <input type="text" class="input-field" placeholder="Key Vocab & Grammar (e.g., wake up, present simple)..." value="Vocab: Morning routine. Grammar: Present Simple (I/You/We/They).">
+                </div>
+            </div>
+
+            <!-- I. SKILLS ASSESSMENT -->
+            <div class="criteria-box">
+                <div class="box-header header-skills"><i class="fas fa-layer-group"></i> I. Skills Assessment</div>
+                <div class="box-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Listening -->
+                        <div>
+                            <div class="sub-section-title text-blue-700">1. Listening Skill</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Understood main ideas</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Caught keywords & details</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Answered correctly</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Needs help with linking sounds</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Struggled with audio speed</label>
+                        </div>
+                        <!-- Speaking -->
+                        <div>
+                            <div class="sub-section-title text-blue-700">2. Speaking Skill</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Used simple sentences/patterns</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Clear pronunciation & stress</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Used new vocab in speech</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Confident in communication</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Needs prompts to answer</label>
+                        </div>
+                        <!-- Reading -->
+                        <div>
+                            <div class="sub-section-title text-blue-700">3. Reading Skill</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Understood main ideas</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Found specific details</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Fluent reading (intonation/stress)</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Needs help with new words</label>
+                        </div>
+                        <!-- Writing -->
+                        <div>
+                            <div class="sub-section-title text-blue-700">4. Writing Skill</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Correct sentence structure</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Clear expression/ideas</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Used new vocab in writing</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Spelling/Grammar errors</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- II. KNOWLEDGE -->
+            <div class="criteria-box">
+                <div class="box-header header-knowledge"><i class="fas fa-book"></i> II. Knowledge (Vocab & Grammar)</div>
+                <div class="box-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Vocab -->
+                        <div>
+                            <div class="sub-section-title text-green-700">5. Vocabulary</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Remembered & used correctly</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Good pronunciation of new words</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Applied words in context</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Often forgets meaning/sound</label>
+                        </div>
+                        <!-- Grammar -->
+                        <div>
+                            <div class="sub-section-title text-green-700">6. Grammar</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Understood structures</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Completed exercises correctly</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Applied grammar in Speaking/Writing</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Confused / Needs guidance</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- III. HOMEWORK CHECK -->
+            <div class="criteria-box">
+                <div class="box-header header-homework"><i class="fas fa-tasks"></i> III. Previous Homework Check</div>
+                <div class="box-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Quantity -->
+                        <div>
+                            <div class="sub-section-title">1. Quantity (Completion)</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Completed all assigned tasks</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Missed some parts/questions</label>
+                            <label class="custom-checkbox text-danger"><input type="checkbox"> Did not do homework</label>
+                        </div>
+                        <!-- Quality -->
+                        <div>
+                            <div class="sub-section-title">2. Quality (Accuracy)</div>
+                            <label class="custom-checkbox"><input type="checkbox"> High accuracy / Well done</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Good, but careless mistakes</label>
+                            <label class="custom-checkbox text-alert"><input type="checkbox"> Many errors (Knowledge gap)</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Auto Grading Placeholder -->
+                    <div class="mt-5 pt-4 border-t border-dashed border-gray-200">
+                        <div class="flex items-center gap-2 mb-2 text-xs font-bold text-gray-400 uppercase">
+                            <i class="fas fa-robot"></i> System Auto-Grading Features (Go-Live)
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 opacity-60">
+                            <div>
+                                <div class="sub-section-title text-gray-500 text-sm">3. Presentation</div>
+                                <label class="custom-checkbox cursor-not-allowed"><input type="checkbox" disabled> Clean & Organized</label>
+                                <label class="custom-checkbox cursor-not-allowed"><input type="checkbox" disabled> Messy / Hard to read</label>
+                            </div>
+                            <div>
+                                <div class="sub-section-title text-gray-500 text-sm">4. Procedure / Steps</div>
+                                <label class="custom-checkbox cursor-not-allowed"><input type="checkbox" disabled> Followed correct steps</label>
+                                <label class="custom-checkbox cursor-not-allowed"><input type="checkbox" disabled> Skipped steps / Guessed</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IV. SUPPORT NEEDED -->
+            <div class="criteria-box">
+                <div class="box-header header-support"><i class="fas fa-headset"></i> IV. Issues & Support Needed</div>
+                <div class="box-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Technical -->
+                        <div class="bg-red-50 p-4 rounded border border-red-100">
+                            <div class="sub-section-title text-red-700" style="border:none; margin-bottom:5px;"><i class="fas fa-wifi mr-1"></i> Technical Issues</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Microphone broken / Low audio</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Camera not working</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Unstable Internet</label>
+                        </div>
+                        <!-- Environment -->
+                        <div class="bg-red-50 p-4 rounded border border-red-100">
+                            <div class="sub-section-title text-red-700" style="border:none; margin-bottom:5px;"><i class="fas fa-volume-up mr-1"></i> Environment</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Noisy background</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Distracting environment</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Poor lighting</label>
+                        </div>
+                        <!-- Attitude -->
+                        <div class="bg-red-50 p-4 rounded border border-red-100">
+                            <div class="sub-section-title text-red-700" style="border:none; margin-bottom:5px;"><i class="fas fa-user-clock mr-1"></i> Psychology / Attitude</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Tired / Low energy</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Demotivated / Bored</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Frustrated / Uncooperative</label>
+                        </div>
+                        <!-- Preparation -->
+                        <div class="bg-red-50 p-4 rounded border border-red-100">
+                            <div class="sub-section-title text-red-700" style="border:none; margin-bottom:5px;"><i class="fas fa-book-open mr-1"></i> Preparation</div>
+                            <label class="custom-checkbox"><input type="checkbox"> Forgot materials/textbook</label>
+                            <label class="custom-checkbox"><input type="checkbox"> Did not prepare lesson</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- V. NEXT LESSON -->
+            <div class="criteria-box">
+                <div class="box-header header-next"><i class="fas fa-forward"></i> V. Preparation for Next Lesson</div>
+                <div class="box-body">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Link to next lesson content (LMS Link):</label>
+                    <div class="flex gap-2">
+                        <input type="text" class="input-field" style="margin-top:0;" placeholder="Paste URL here...">
+                        <button class="bg-teal-600 text-white px-4 rounded text-sm font-medium hover:bg-teal-700">Attach</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI COMMENT GENERATOR -->
+            <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-4">
+                        <span class="font-bold text-gray-700">Writing Tone:</span>
+                        <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="tone" checked> Professional</label>
+                        <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="tone"> Encouraging/Friendly</label>
+                    </div>
+                    <button class="btn-generate"><i class="fas fa-magic mr-2"></i>Generate Comment</button>
+                </div>
+                <textarea class="w-full border p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 transition" rows="5" placeholder="Teacher's comment will appear here..."></textarea>
+            </div>
+
+            <div class="text-center pb-10">
+                <button class="btn-send">SEND REPORT TO PARENT</button>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 2: INTERNAL NOTES (Hidden by default) -->
+        <!-- ============================================================== -->
+        <div class="flex-1 overflow-y-auto p-8 pb-32 hidden" id="tab-internal">
+            
+            <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded mb-6 flex items-start gap-3">
+                <i class="fas fa-lock mt-1"></i>
+                <div class="text-sm">
+                    <strong>Internal Note:</strong> This information is visible ONLY to the Academic Team and Center Admins. Parents/Students will NOT see this.
+                </div>
+            </div>
+
+            <!-- INTERNAL: ATTENDANCE & INCIDENTS -->
+            <div class="criteria-box">
+                <div class="box-header header-internal"><i class="fas fa-exclamation-triangle"></i> Attendance & Incidents</div>
+                <div class="box-body">
+                    <p class="mb-2 text-sm font-semibold text-gray-600">Attendance Issues:</p>
+                    <div class="flex flex-wrap mb-4">
+                        <span class="internal-tag" onclick="toggleTag(this)">Student Late (>15 mins)</span>
+                        <span class="internal-tag" onclick="toggleTag(this)">Left Early</span>
+                        <span class="internal-tag alert" onclick="toggleTag(this)">No-Show (Unexcused)</span>
+                    </div>
+
+                    <p class="mb-2 text-sm font-semibold text-gray-600">Technical/Behavioral Incidents:</p>
+                    <div class="flex flex-wrap">
+                        <span class="internal-tag" onclick="toggleTag(this)">Major Tech Failure (Class cancelled)</span>
+                        <span class="internal-tag" onclick="toggleTag(this)">Disruptive Behavior</span>
+                        <span class="internal-tag" onclick="toggleTag(this)">Parent interrupted class</span>
+                        <span class="internal-tag" onclick="toggleTag(this)">Student cried/refused to learn</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERNAL: ACADEMIC EVALUATION -->
+            <div class="criteria-box">
+                <div class="box-header header-internal"><i class="fas fa-graduation-cap"></i> Academic Level Check</div>
+                <div class="box-body">
+                    <p class="mb-2 text-sm font-semibold text-gray-600">Is the current level appropriate?</p>
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        <label class="flex items-center gap-2 cursor-pointer p-2 border rounded hover:bg-gray-50">
+                            <input type="radio" name="level_check" checked> Appropriate Level
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer p-2 border rounded hover:bg-gray-50 text-red-600">
+                            <input type="radio" name="level_check"> Too Difficult (Student struggles)
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer p-2 border rounded hover:bg-gray-50 text-orange-600">
+                            <input type="radio" name="level_check"> Too Easy (Student bored)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERNAL: ACTION REQUIRED -->
+            <div class="criteria-box">
+                <div class="box-header header-internal"><i class="fas fa-phone"></i> Follow-up Action</div>
+                <div class="box-body">
+                    <div class="flex flex-wrap mb-4">
+                        <span class="internal-tag alert" onclick="toggleTag(this)">Call Parent (Urgent)</span>
+                        <span class="internal-tag" onclick="toggleTag(this)">Academic Support Needed</span>
+                        <span class="internal-tag" onclick="toggleTag(this)">Check Tech Setup Next Class</span>
+                    </div>
+                    <textarea class="input-field" rows="4" placeholder="Specific details for Admin/CS team (e.g., Parent complained about homework load, suggest moving to lower level)..."></textarea>
+                </div>
+            </div>
+
+            <div class="text-right">
+                <button class="bg-gray-600 text-white px-6 py-2 rounded font-semibold hover:bg-gray-700">Save Internal Note</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // TAB SWITCHER
+        function switchTab(tabName) {
+            const feedbackTab = document.getElementById('tab-feedback');
+            const internalTab = document.getElementById('tab-internal');
+            const btns = document.querySelectorAll('.tab-btn');
+
+            if (tabName === 'feedback') {
+                feedbackTab.classList.remove('hidden');
+                internalTab.classList.add('hidden');
+                btns[0].classList.add('active');
+                btns[1].classList.remove('active');
+            } else {
+                feedbackTab.classList.add('hidden');
+                internalTab.classList.remove('hidden');
+                btns[0].classList.remove('active');
+                btns[1].classList.add('active');
+            }
+        }
+
+        // TAG TOGGLE FOR INTERNAL NOTES
+        function toggleTag(element) {
+            element.classList.toggle('selected');
+        }
+    </script>
+</body>
+</html>
