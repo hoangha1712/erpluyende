@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Flow - Chia Sẻ Kết Quả Facebook (Đường Đua Sĩ Tử)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            color: #1a2035;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        
+        .header .subtitle {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .header .event-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+        
+        .info-box {
+            background: #FFF3CD;
+            border-left: 5px solid #FF8E53;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .info-box h3 {
+            color: #1a2035;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .info-box p {
+            color: #334155;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        
+        .info-box strong {
+            color: #FF6B6B;
+        }
+        
+        .info-box ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .info-box li {
+            color: #334155;
+            line-height: 1.8;
+            margin-bottom: 5px;
+        }
+        
+        /* Flow Steps */
+        .flow-section {
+            margin: 60px 0;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #1a2035;
+            font-weight: 800;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FF8E53;
+        }
+        
+        .step-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .step-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: #FF8E53;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .step-title {
+            font-size: 22px;
+            color: #1a2035;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .step-description {
+            color: #475569;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .step-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .step-list li {
+            padding: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #334155;
+            line-height: 1.6;
+        }
+        
+        .step-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #FF8E53;
+            font-weight: 700;
+        }
+        
+        /* Phone Mockups */
+        .phone-mockup {
+            background: #1a2035;
+            border-radius: 40px;
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            margin: 30px auto;
+            max-width: 380px;
+        }
+        
+        .phone-screen {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .phone-notch {
+            background: #1a2035;
+            height: 30px;
+            width: 150px;
+            margin: 0 auto;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .phone-content {
+            padding: 30px 20px;
+            min-height: 600px;
+        }
+        
+        .mockup-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a2035;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .mockup-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Result Card Preview */
+        .result-preview {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .result-university {
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .result-confidence {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+        
+        .result-gauge {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .gauge-value {
+            font-size: 48px;
+            font-weight: 900;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .gauge-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .result-progress {
+            display: flex;
+            gap: 10px;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        
+        .progress-item {
+            text-align: center;
+            font-size: 11px;
+        }
+        
+        .result-suggestion {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .warning-box {
+            background: #FFF3CD;
+            border: 2px solid #FFB020;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .warning-box span {
+            font-size: 24px;
+        }
+        
+        .warning-box p {
+            font-size: 13px;
+            color: #334155;
+            font-weight: 600;
+        }
+        
+        .mockup-button {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        .fb-dialog-mockup {
+            background: white;
+            border: 2px solid #1877F2;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .fb-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .fb-icon {
+            width: 40px;
+            height: 40px;
+            background: #1877F2;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .fb-text {
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.6;
+            margin: 15px 0;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        
+        .fb-preview-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .fb-preview-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .fb-preview-content {
+            padding: 12px;
+            background: #f8fafc;
+        }
+        
+        .fb-preview-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a2035;
+            margin-bottom: 5px;
+        }
+        
+        .fb-preview-desc {
+            font-size: 11px;
+            color: #64748b;
+        }
+        
+        .fb-preview-url {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+        
+        .fb-privacy {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .fb-privacy select {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .fb-post-btn {
+            background: #1877F2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            width: 100%;
+        }
+        
+        .input-mockup {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            margin: 15px 0;
+        }
+        
+        .input-mockup:focus {
+            outline: none;
+            border-color: #FF8E53;
+        }
+        
+        /* Popup Success */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .popup-container {
+            background: #1a2035;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FFD93D;
+            animation: confettiFall 3s linear infinite;
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100%) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(600px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #FF6B6B; }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #4ECDC4; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #FFD93D; }
+        .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #95E1D3; }
+        .confetti:nth-child(5) { left: 50%; animation-delay: 0.3s; background: #F38181; }
+        .confetti:nth-child(6) { left: 60%; animation-delay: 0.8s; background: #AA96DA; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: 1.3s; background: #FCBAD3; }
+        .confetti:nth-child(8) { left: 80%; animation-delay: 1.8s; background: #FFFFD2; }
+        .confetti:nth-child(9) { left: 90%; animation-delay: 0.6s; background: #A8D8EA; }
+        .confetti:nth-child(10) { left: 15%; animation-delay: 1.1s; background: #FFB6B9; }
+        
+        .popup-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        
+        .popup-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #FF8E53;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        
+        .popup-points-display {
+            margin: 30px 0;
+        }
+        
+        .popup-points-number {
+            font-size: 72px;
+            font-weight: 900;
+            color: #FFD93D;
+            text-shadow: 0 4px 12px rgba(255, 217, 61, 0.5);
+            line-height: 1;
+        }
+        
+        .popup-points-label {
+            font-size: 18px;
+            color: #cbd5e1;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .popup-task-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .popup-task-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .popup-task-desc {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        
+        .popup-cta {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .popup-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+        
+        /* Tables */
+        .table-container {
+            margin: 40px 0;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        th {
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        td strong {
+            color: #1a2035;
+            font-weight: 700;
+        }
+        
+        code {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #FF6B6B;
+        }
+        
+        /* Summary */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            font-size: 32px;
+            font-weight: 900;
+        }
+        
+        /* Flow Arrows */
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .flow-arrow-line {
+            width: 100%;
+            max-width: 300px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            position: relative;
+        }
+        
+        .flow-arrow-line::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid #764ba2;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+        
+        .flow-arrow-text {
+            position: absolute;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .step-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .phone-mockup {
+                max-width: 100%;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏆 User Flow: Chia Sẻ Kết Quả Facebook</h1>
+            <p class="subtitle">NV-5: Hoàn thành nhiệm vụ trong ~60 giây</p>
+            <span class="event-tag">Đường Đua Sĩ Tử - Phase 1</span>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h3>🎯 Lưu Ý Quan Trọng</h3>
+            <ul>
+                <li><strong>Điều kiện hiển thị:</strong> User đã làm ít nhất 1 bài tập → Nhiệm vụ hiển thị. Nếu chưa làm bài → Nhiệm vụ ẩn hoàn toàn</li>
+                <li><strong>Cơ chế:</strong> Share Link với Preview - Facebook OG:image</li>
+                <li><strong>Reward:</strong> +100 điểm ⚡ sau khi submit link hợp lệ</li>
+            </ul>
+        </div>
+
+        <!-- Overview Flow -->
+        <div class="flow-section">
+            <h2 class="section-title">📋 Tổng Quan Flow</h2>
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Bước 1: Chia Sẻ Kết Quả</h3>
+                    <p class="step-description">Preview kết quả → Click "Chia sẻ ngay" → Facebook SDK mở</p>
+                    <ul class="step-list">
+                        <li>Xem preview kết quả học tập (như ảnh mẫu)</li>
+                        <li>Warning: Chọn chế độ "Công khai"</li>
+                        <li>Click CTA "🏆 Chia sẻ kết quả ngay"</li>
+                        <li>Facebook Share Dialog mở</li>
+                        <li>Caption sẵn: "Cùng nhau học tập..."</li>
+                        <li>Preview: Ảnh kết quả OG:image</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Bước 2: Xác Nhận Link</h3>
+                    <p class="step-description">Paste link → Validate → Nhận điểm</p>
+                    <ul class="step-list">
+                        <li>User chọn "Public" + click "Đăng"</li>
+                        <li>Bài viết lên Facebook thành công</li>
+                        <li>Copy link bài viết</li>
+                        <li>Close Facebook → về màn "Nhập link"</li>
+                        <li>Paste link → Frontend validation</li>
+                        <li>Click "Xác nhận" → Nhận 100 điểm ⚡</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Flow with Mockups -->
+        <div class="flow-section">
+            <h2 class="section-title">📱 Chi Tiết Flow - Phone Mockups</h2>
+            
+            <!-- Step 0: Hidden State -->
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="phone-notch"></div>
+                    <div class="phone-content">
+                        <h4 class="mockup-title">❌ Trạng Thái: Ẩn Nhiệm Vụ</h4>
+                        <p class="mockup-subtitle">Dành cho user chưa làm bài tập</p>
+                        
+                        <div style="background: #f8fafc; padding: 30px; border-radius: 12px; text-align: center; margin: 40px 0;">
+                            <div style="font-size: 48px; margin-bottom: 15px;">🔒</div>
+                            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">
+                                <strong>Nhiệm vụ "Chia sẻ kết quả" không hiển thị</strong><br><br>
+                                Bạn cần làm ít nhất 1 bài tập để mở khóa nhiệm vụ này.
+                            </p>
+                        </div>
+                        
+                        <div style="background: #DCFCE7; border: 2px solid #10B981; border-radius: 10px; padding: 12px;">
+                            <p style="font-size: 12px; color: #065F46; line-height: 1.6; margin: 0;">
+                                <strong>✅ Backend check:</strong> <code>has_completed_tasks = false</code> → Nhiệm vụ ẩn
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arrow: Complete task first -->
+            <div class="flow-arrow">
+                <div class="flow-arrow-line"></div>
+                <div class="flow-arrow-text">Làm bài tập → Mở khóa nhiệm vụ 🔓</div>
+            </div>
+            
+            <!-- Step 1 Mockup -->
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="phone-notch"></div>
+                    <div class="phone-content">
+                        <h4 class="mockup-title">🏆 Chia Sẻ Kết Quả Lên Facebook</h4>
+                        <p class="mockup-subtitle">Khoe kết quả học tập với bạn bè để nhận 100 điểm ⚡</p>
+                        
+                        <!-- Result Preview Card -->
+                        <div class="result-preview">
+                            <div class="result-header">
+                                <div>
+                                    <div class="result-university">Cơ hội trúng tuyển ĐH</div>
+                                    <div style="font-size: 11px; opacity: 0.9; margin-top: 3px;">Đại học Ngoại Thương Hà Nội</div>
+                                </div>
+                                <div class="result-confidence">Độ tin cậy: Thấp</div>
+                            </div>
+                            
+                            <div class="result-gauge">
+                                <div class="gauge-value">60%</div>
+                                <div class="gauge-label">Khả năng đạt</div>
+                            </div>
+                            
+                            <div class="result-progress">
+                                <div class="progress-item">
+                                    <div style="font-weight: 700;">Thấp</div>
+                                    <div style="color: #ef4444;">●</div>
+                                </div>
+                                <div class="progress-item">
+                                    <div style="font-weight: 700;">TB 🔒</div>
+                                </div>
+                                <div class="progress-item">
+                                    <div style="font-weight: 700;">Cao 🔒</div>
+                                </div>
+                            </div>
+                            
+                            <div class="result-suggestion">
+                                <span>✨</span>
+                                <span>Bạn cần tăng thêm <strong>1,5 điểm</strong> để đạt ngưỡng an toàn</span>
+                            </div>
+                        </div>
+                        
+                        <div class="warning-box">
+                            <span>⚠️</span>
+                            <p>Nhớ chọn chế độ "Công khai" (Public) khi đăng bài nhé!</p>
+                        </div>
+                        
+                        <button class="mockup-button">🏆 Chia sẻ kết quả ngay</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arrow 1 -->
+            <div class="flow-arrow">
+                <div class="flow-arrow-line"></div>
+                <div class="flow-arrow-text">Click "Chia sẻ kết quả ngay" 🏆</div>
+            </div>
+            
+            <!-- Facebook Dialog Mockup -->
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="phone-notch"></div>
+                    <div class="phone-content">
+                        <div class="fb-dialog-mockup">
+                            <div class="fb-header">
+                                <div class="fb-icon">f</div>
+                                <div>
+                                    <div style="font-weight: 700; font-size: 14px;">Chia sẻ lên Facebook</div>
+                                    <div style="font-size: 12px; color: #64748b;">Luyende.vn</div>
+                                </div>
+                            </div>
+                            
+                            <div class="fb-text">
+                                Cùng nhau học tập để nâng cao khả năng đỗ đại học 🎓 Mình vừa kiểm tra kết quả trên Luyende.vn, các bạn cũng thử xem nhé!
+                            </div>
+                            
+                            <!-- Preview Card -->
+                            <div class="fb-preview-card">
+                                <div class="fb-preview-image">
+                                    📊 Preview Kết Quả<br>60% - ĐHNT Hà Nội
+                                </div>
+                                <div class="fb-preview-content">
+                                    <div class="fb-preview-title">Nguyễn Văn A - Kết quả học tập</div>
+                                    <div class="fb-preview-desc">Độ tin cậy đỗ ĐHNT Hà Nội: 60% - Làm thêm 1.5 điểm để đạt ngưỡng an toàn</div>
+                                    <div class="fb-preview-url">luyende.vn/result/share/user123</div>
+                                </div>
+                            </div>
+                            
+                            <div class="fb-privacy">
+                                <span style="font-size: 12px; font-weight: 600; color: #334155;">Đối tượng:</span>
+                                <select>
+                                    <option>🌍 Công khai</option>
+                                    <option>👥 Bạn bè</option>
+                                    <option>🔒 Chỉ mình tôi</option>
+                                </select>
+                            </div>
+                            
+                            <button class="fb-post-btn">Đăng</button>
+                        </div>
+                        
+                        <p style="text-align: center; font-size: 12px; color: #64748b; margin-top: 15px;">
+                            ✅ Sau khi đăng, nhấn "..." → "Sao chép liên kết"
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arrow 2 -->
+            <div class="flow-arrow">
+                <div class="flow-arrow-line"></div>
+                <div class="flow-arrow-text">Đăng bài + Copy link + Close 📋</div>
+            </div>
+            
+            <!-- Step 2 Mockup -->
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="phone-notch"></div>
+                    <div class="phone-content">
+                        <h4 class="mockup-title">📝 Nhập Link Bài Viết</h4>
+                        <p class="mockup-subtitle">Dán link bài viết Facebook của bạn vào đây</p>
+                        
+                        <input 
+                            type="text" 
+                            class="input-mockup" 
+                            placeholder="link bài chia sẻ FB của bạn"
+                            value="https://www.facebook.com/share/p/abc123xyz"
+                        />
+                        
+                        <div style="background: #DCFCE7; border: 2px solid #10B981; border-radius: 10px; padding: 12px; margin: 15px 0; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 20px;">✅</span>
+                            <p style="font-size: 13px; color: #065F46; font-weight: 600; margin: 0;">
+                                Link hợp lệ! Bài viết ở chế độ Công khai.
+                            </p>
+                        </div>
+                        
+                        <button class="mockup-button">🎁 Xác nhận & Nhận điểm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Arrow 3 -->
+        <div class="flow-arrow">
+            <div class="flow-arrow-line"></div>
+            <div class="flow-arrow-text">Click "Xác nhận" → Nhận điểm 🎉</div>
+        </div>
+
+        <!-- Popup Success -->
+        <div class="flow-section">
+            <h2 class="section-title">🎉 Popup Success Design</h2>
+            
+            <button onclick="showPopup()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                🎉 Xem Demo Popup
+            </button>
+            
+            <div class="popup-overlay" id="successPopup" style="display: none;">
+                <div class="popup-container">
+                    <!-- Confetti Animation -->
+                    <div class="popup-confetti">
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                    </div>
+                    
+                    <button class="popup-close">✕</button>
+                    
+                    <div class="popup-content">
+                        <div class="popup-title">CHÚC MỪNG</div>
+                        
+                        <div class="popup-points-display">
+                            <div class="popup-points-number">
+                                100 ⚡
+                            </div>
+                            <div class="popup-points-label">Bạn nhận được 100 ⚡</div>
+                        </div>
+                        
+                        <div class="popup-task-info">
+                            <div class="popup-task-title">Hoàn thành nhiệm vụ: Chia sẻ kết quả lên Facebook</div>
+                            <div class="popup-task-desc">Cảm ơn bạn đã chia sẻ kết quả học tập! Bạn bè của bạn có thể xem và cùng tham gia học tập trên Luyende.vn.</div>
+                        </div>
+                        
+                        <button class="popup-cta">Nhận ngay (5s)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acceptance Criteria -->
+        <div class="flow-section">
+            <h2 class="section-title">✅ Acceptance Criteria</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%">Mã</th>
+                            <th width="40%">Mô Tả</th>
+                            <th width="50%">Kết Quả Mong Đợi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>AC-1</strong></td>
+                            <td>User chưa làm bài tập</td>
+                            <td>Nhiệm vụ "Chia sẻ kết quả" ẩn hoàn toàn, không hiển thị trong danh sách nhiệm vụ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-2</strong></td>
+                            <td>User đã làm ít nhất 1 bài</td>
+                            <td>Nhiệm vụ hiển thị với preview kết quả (gauge 60%, trường đại học, độ tin cậy)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-3</strong></td>
+                            <td>Click "Chia sẻ kết quả ngay"</td>
+                            <td>Facebook Share Dialog mở với link <code>/result/share/{user_id}</code>, caption sẵn, preview OG:image</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-4</strong></td>
+                            <td>Facebook preview hiển thị</td>
+                            <td>Ảnh kết quả (OG:image) hiển thị trong preview card với title, description, URL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-5</strong></td>
+                            <td>User đăng bài thành công</td>
+                            <td>Có thể copy link bài viết (nhấn "..." → "Sao chép liên kết")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-6</strong></td>
+                            <td>Close Facebook dialog</td>
+                            <td>Tự động chuyển sang màn "Nhập link" - Input box placeholder: "link bài chia sẻ FB của bạn"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-7</strong></td>
+                            <td>Paste link hợp lệ</td>
+                            <td>Link format: <code>facebook.com/share/p/...</code> → validation pass → CTA enabled</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-8</strong></td>
+                            <td>Click "Xác nhận" với link hợp lệ</td>
+                            <td>Popup success hiển thị (100 điểm ⚡, nhiệm vụ "Chia sẻ kết quả lên Facebook")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-9</strong></td>
+                            <td>Landing page: Bạn bè click link</td>
+                            <td>Redirect đến <code>/result/share/{user_id}</code> → Hiển thị 3s → Auto redirect về <code>/signup?ref=share</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-10</strong></td>
+                            <td>Backend check duplicate</td>
+                            <td>Nếu đã submit link này → error: "Bạn đã submit link này rồi"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Corner Cases -->
+        <div class="flow-section">
+            <h2 class="section-title">⚠️ Corner Cases</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%">Mã</th>
+                            <th width="35%">Tình Huống</th>
+                            <th width="55%">Ứng Xử Hệ Thống</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CC-1</strong></td>
+                            <td>User paste link không phải Facebook</td>
+                            <td>Toast: "Link không hợp lệ! Vui lòng paste link từ Facebook."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-2</strong></td>
+                            <td>User chưa làm bài → URL hack</td>
+                            <td>Truy cập trực tiếp URL nhiệm vụ → Backend check <code>has_completed_tasks = false</code> → Redirect về trang nhiệm vụ + Toast: "Bạn cần làm ít nhất 1 bài tập"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-3</strong></td>
+                            <td>OG:image không load (Facebook cache)</td>
+                            <td>Facebook hiển thị placeholder image generic. User có thể dùng Facebook Debugger để force re-scrape</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-4</strong></td>
+                            <td>User submit cùng link 2 lần</td>
+                            <td>Backend check duplicate → error: "Bạn đã submit link này rồi"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-5</strong></td>
+                            <td>User không có internet</td>
+                            <td>API fail → Toast: "Không có kết nối internet" + retry button</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-6</strong></td>
+                            <td>User cancel Facebook dialog</td>
+                            <td>SDK callback error → không chuyển màn → user có thể retry</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-7</strong></td>
+                            <td>Landing page: User chưa đăng ký click link</td>
+                            <td>Hiển thị kết quả summary (không chi tiết) → CTA: "Đăng ký để xem chi tiết" → Redirect <code>/signup?ref=share&from={user_id}</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-8</strong></td>
+                            <td>Backend generate OG:image timeout</td>
+                            <td>Fallback sang generic OG:image (logo Luyende.vn + text "Kết quả học tập")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-9</strong></td>
+                            <td>User paste link không có hashtag #luyende</td>
+                            <td>(Optional) Background verify → trừ điểm + notification nếu thiếu hashtag</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-10</strong></td>
+                            <td>Server API down (500)</td>
+                            <td>Toast: "Lỗi hệ thống, vui lòng thử lại sau" + retry button sau 5s</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Điều Kiện & Cơ Chế Chi Tiết -->
+        <div class="flow-section">
+            <h2 class="section-title">🔧 Điều Kiện & Cơ Chế Chi Tiết</h2>
+            
+            <div class="info-box" style="background: #DCFCE7; border-color: #10B981;">
+                <h3>✅ Điều Kiện Hiển Thị Nhiệm Vụ</h3>
+                <ul>
+                    <li><strong>User đã làm ít nhất 1 bài tập</strong> (có kết quả để chia sẻ) → Nhiệm vụ hiển thị</li>
+                    <li><strong>User chưa làm bài</strong> → Nhiệm vụ ẩn hoàn toàn, không hiển thị trong danh sách</li>
+                    <li>Backend check: <code>has_completed_tasks = true/false</code></li>
+                </ul>
+            </div>
+            
+            <div class="info-box" style="background: #E0E7FF; border-color: #667eea; margin-top: 30px;">
+                <h3>🔗 Cơ Chế: Share Link với Preview - Facebook OG:image</h3>
+                <p style="margin-bottom: 15px;">Không share trực tiếp ảnh lên Facebook, mà share <strong>link</strong> đến landing page. Khi user đăng bài, Facebook sẽ tự động:</p>
+                <ul>
+                    <li><strong>1️⃣ Crawl link:</strong> <code>https://luyende.vn/result/share/{user_id}</code></li>
+                    <li><strong>2️⃣ Đọc OG meta tags:</strong> og:title, og:description, og:image từ HTML response</li>
+                    <li><strong>3️⃣ Hiển thị preview card:</strong> Ảnh kết quả + tiêu đề + mô tả trên Facebook feed</li>
+                    <li><strong>4️⃣ Click vào link:</strong> Bạn bè được redirect về landing page → Show kết quả 3s → Auto redirect signup</li>
+                </ul>
+            </div>
+            
+            <div class="step-container" style="margin-top: 30px;">
+                <div class="step-card">
+                    <h3 class="step-title">💡 Ưu Điểm</h3>
+                    <ul class="step-list">
+                        <li>Không cần Facebook Graph API permission (launch nhanh 3 ngày)</li>
+                        <li>Facebook tự động hiển thị ảnh preview đẹp</li>
+                        <li>Traffic về website → Conversion → Signup</li>
+                        <li>Track được nguồn từ social share (UTM params)</li>
+                        <li>Control được nội dung landing page</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <h3 class="step-title">📊 Landing Page Flow</h3>
+                    <ul class="step-list">
+                        <li>Bạn bè click link từ Facebook</li>
+                        <li>Load: <code>/result/share/{user_id}</code></li>
+                        <li>Hiển thị: Preview kết quả (3 giây)</li>
+                        <li>Auto redirect: <code>/signup?ref=share&from={user_id}</code></li>
+                        <li>Track conversion: UTM source = facebook_share</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="flow-section">
+            <h2 class="section-title">📊 Summary - Key Metrics</h2>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-label">Tổng Thời Gian</div>
+                    <div class="summary-value">~60s</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Số Bước</div>
+                    <div class="summary-value">2 bước</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Số Click</div>
+                    <div class="summary-value">3 clicks</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Điểm Thưởng</div>
+                    <div class="summary-value">100 ⚡</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+        let countdownInterval;
+        
+        function showPopup() {
+            const popup = document.getElementById('successPopup');
+            const ctaButton = popup.querySelector('.popup-cta');
+            popup.style.display = 'flex';
+            
+            let countdown = 5;
+            ctaButton.textContent = `Nhận ngay (${countdown}s)`;
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    ctaButton.textContent = `Nhận ngay (${countdown}s)`;
+                } else {
+                    hidePopup();
+                }
+            }, 1000);
+        }
+        
+        function hidePopup() {
+            const popup = document.getElementById('successPopup');
+            popup.style.display = 'none';
+            clearInterval(countdownInterval);
+        }
+        
+        // Add click event to close button
+        document.addEventListener('DOMContentLoaded', () => {
+            const closeBtn = document.querySelector('.popup-close');
+            const ctaBtn = document.querySelector('.popup-cta');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', hidePopup);
+            }
+            
+            if (ctaBtn) {
+                ctaBtn.addEventListener('click', hidePopup);
+            }
+            
+            // Close on overlay click
+            const popup = document.getElementById('successPopup');
+            if (popup) {
+                popup.addEventListener('click', (e) => {
+                    if (e.target === popup) {
+                        hidePopup();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
