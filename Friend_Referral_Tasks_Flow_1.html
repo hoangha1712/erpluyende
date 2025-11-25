@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NV-2 & NV-3: Mời Bạn Bè - Luyende.vn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #FF8E53;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            color: #1a2035;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .event-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8E53, #FE6B8B);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+            border-left: 6px solid #FF8E53;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(255, 142, 83, 0.2);
+        }
+        
+        .info-box h3 {
+            font-size: 20px;
+            color: #1a2035;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .info-box ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .info-box li {
+            color: #334155;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .info-box strong {
+            color: #FF6B6B;
+        }
+        
+        .info-box code {
+            background: #1a2035;
+            color: #FFD93D;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Section */
+        .flow-section {
+            margin: 60px 0;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #1a2035;
+            font-weight: 800;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FF8E53;
+        }
+        
+        /* Step Cards */
+        .step-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .step-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: #FF8E53;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            color: #1a2035;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .step-description {
+            color: #64748b;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .step-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .step-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #334155;
+            line-height: 1.6;
+        }
+        
+        .step-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #FF8E53;
+            font-weight: 800;
+            font-size: 18px;
+        }
+        
+        /* Phone Mockup */
+        .phone-mockup-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        
+        .phone-mockup {
+            width: 320px;
+            background: #1a2035;
+            border-radius: 40px;
+            padding: 15px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .phone-notch {
+            width: 150px;
+            height: 30px;
+            background: #1a2035;
+            border-radius: 0 0 20px 20px;
+            margin: 0 auto 10px;
+        }
+        
+        .phone-screen {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            min-height: 600px;
+        }
+        
+        .phone-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .phone-header h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .phone-content {
+            padding: 25px;
+        }
+        
+        /* Referral Card */
+        .referral-card {
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #FF8E53;
+        }
+        
+        .referral-link {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .copy-btn {
+            background: #FF8E53;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+        
+        /* Progress Card */
+        .progress-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .progress-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a2035;
+        }
+        
+        .progress-count {
+            font-size: 20px;
+            font-weight: 800;
+            color: #FF8E53;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF8E53, #FE6B8B);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-status {
+            font-size: 12px;
+            color: #64748b;
+        }
+        
+        /* Flow Arrow */
+        .flow-arrow {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .flow-arrow-text {
+            background: #FF8E53;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(255, 142, 83, 0.3);
+        }
+        
+        .flow-arrow:after {
+            content: "↓";
+            display: block;
+            font-size: 40px;
+            color: #FF8E53;
+            margin-top: 10px;
+            font-weight: 800;
+        }
+        
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin: 30px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        td {
+            padding: 18px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        tr:hover {
+            background: #f8fafc;
+        }
+        
+        td strong {
+            color: #FF8E53;
+            font-weight: 700;
+        }
+        
+        td code {
+            background: #1a2035;
+            color: #FFD93D;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .badge-pending {
+            background: #FFF3E0;
+            color: #FF8E53;
+        }
+        
+        .badge-verified {
+            background: #DCFCE7;
+            color: #10B981;
+        }
+        
+        .badge-completed {
+            background: #E0E7FF;
+            color: #667eea;
+        }
+        
+        /* Popup Success */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .popup-container {
+            background: #1a2035;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FFD93D;
+            animation: confettiFall 3s linear infinite;
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(600px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .popup-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .popup-title {
+            font-size: 32px;
+            color: #FF8E53;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .popup-points {
+            font-size: 72px;
+            color: #FFD93D;
+            font-weight: 900;
+            margin: 20px 0;
+            text-shadow: 0 4px 10px rgba(255, 217, 61, 0.3);
+        }
+        
+        .popup-task {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .popup-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        .popup-cta {
+            background: linear-gradient(135deg, #FF8E53, #FE6B8B);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 142, 83, 0.4);
+        }
+        
+        .popup-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 142, 83, 0.5);
+        }
+        
+        /* Engagement Badge */
+        .engagement-badge {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .engagement-badge h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .engagement-badge p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, #E0E7FF, #C7D2FE);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 50px;
+            border: 3px solid #667eea;
+        }
+        
+        .summary-box h3 {
+            font-size: 24px;
+            color: #1a2035;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .summary-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            font-size: 28px;
+            color: #1a2035;
+            font-weight: 800;
+        }
+        
+        /* Download Button */
+        .download-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .step-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .phone-mockup {
+                width: 100%;
+                max-width: 320px;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>👥 NV-2 & NV-3: Mời Bạn Bè</h1>
+            <div class="event-tag">Event: Đường Đua Sĩ Tử 🏆</div>
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+                <button class="download-btn" onclick="downloadHTML()">
+                    ⬇️ Download HTML
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h3>🎯 Thông Tin Nhiệm Vụ</h3>
+            <ul>
+                <li><strong>NV-2:</strong> Mời 3 bạn bè (có xác thực SĐT) → <strong>+300 điểm ⚡</strong></li>
+                <li><strong>NV-3:</strong> Mời 5 bạn bè (có xác thực SĐT) → <strong>+700 điểm ⚡</strong> (tổng 1,000 điểm)</li>
+                <li><strong>Cơ chế:</strong> Referral Link với mã ref code unique → Bạn bè verify OTP → <strong>User login lại</strong> → Popup nhận thưởng</li>
+                <li><strong>Popup Timing:</strong> Popup xuất hiện <strong>ngay sau khi login</strong>, trước khi vào màn nhiệm vụ → Tăng thích thú, không cộng điểm âm thầm</li>
+                <li><strong>Engagement:</strong> Bạn bè click link → <strong>Popup trên trang Luyende.vn</strong> → Highlight người mời → Motivate đăng ký</li>
+            </ul>
+        </div>
+
+        <!-- Overview Flow -->
+        <div class="flow-section">
+            <h2 class="section-title">📋 Tổng Quan Flow</h2>
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">User Chia Sẻ Link</h3>
+                    <p class="step-description">User copy referral link và chia sẻ qua Zalo, Messenger, hoặc mạng xã hội khác</p>
+                    <ul class="step-list">
+                        <li>Link format: <code>luyende.vn/event/si-tu?ref=A123456</code></li>
+                        <li>Copy to clipboard → Share via Zalo/Messenger/Facebook</li>
+                        <li>Có thể share nhiều lần, không giới hạn</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Bạn Bè Signup + OTP</h3>
+                    <p class="step-description">Bạn bè click link → Đăng ký tài khoản → Xác thực SĐT qua OTP</p>
+                    <ul class="step-list">
+                        <li>Click link → Landing page với engagement UI</li>
+                        <li>Signup với ref code embedded</li>
+                        <li>Xác thực OTP → Trạng thái: VERIFIED</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">User Login Lại → Check & Cộng Điểm</h3>
+                    <p class="step-description">User login lại → Hệ thống check số bạn VERIFIED → Popup nhận thưởng</p>
+                    <ul class="step-list">
+                        <li><strong>Điều kiện:</strong> User phải login lại, không cộng điểm âm thầm</li>
+                        <li><strong>Thời điểm popup:</strong> Ngay sau login, trước khi vào màn nhiệm vụ</li>
+                        <li>Đủ 3 bạn VERIFIED → Popup NV-2 (+300đ)</li>
+                        <li>Đủ 5 bạn VERIFIED → Popup NV-3 (+700đ)</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Popup Nhận Thưởng (Khi Login)</h3>
+                    <p class="step-description">Popup xuất hiện ngay sau khi login, trước khi vào màn nhiệm vụ</p>
+                    <ul class="step-list">
+                        <li><strong>Timing:</strong> Login success → Check điều kiện → Popup ngay</li>
+                        <li>NV-2 đủ điều kiện: Popup +300 điểm ⚡</li>
+                        <li>NV-3 đủ điều kiện: Popup +700 điểm ⚡ (riêng biệt)</li>
+                        <li>Confetti animation + auto-dismiss sau 5s</li>
+                        <li><strong>Mục đích:</strong> Tăng thích thú, không cộng điểm âm thầm</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chi Tiết User Flow -->
+        <div class="flow-section">
+            <h2 class="section-title">📱 Chi Tiết User Flow (With Phone Mockups)</h2>
+            
+            <!-- Step 1: User Share -->
+            <div class="phone-mockup-container">
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <h3>📱 Màn 1: Chia Sẻ Link</h3>
+                            <p style="font-size: 13px; opacity: 0.9;">Mời Bạn Bè Popup</p>
+                        </div>
+                        <div class="phone-content">
+                            <!-- Popup Design from Image -->
+                            <div style="background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                                <div style="text-align: center; margin-bottom: 20px;">
+                                    <h3 style="font-size: 20px; color: #1a2035; font-weight: 800; margin-bottom: 5px;">Mời 5 bạn bè (Có xác thực SĐT)</h3>
+                                </div>
+                                
+                                <!-- Referral Link Box -->
+                                <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                    <div style="flex: 1; font-size: 13px; color: #667eea; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        🔗 luyende.vn/event/si-tu?ref=A123456
+                                    </div>
+                                </div>
+                                
+                                <button style="background: #FF8E53; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; width: 100%; font-size: 16px; margin-bottom: 20px; cursor: pointer;">
+                                    📋 Sao chép
+                                </button>
+                                
+                                <!-- Visual Flow -->
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                    <div style="text-align: center; flex: 1;">
+                                        <div style="width: 60px; height: 60px; margin: 0 auto 8px; background: #E0E7FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px;">
+                                            👤
+                                        </div>
+                                        <div style="font-size: 11px; color: #64748b; font-weight: 600;">Mời bạn đăng ký</div>
+                                    </div>
+                                    
+                                    <div style="font-size: 24px; color: #FF8E53; font-weight: 800;">→</div>
+                                    
+                                    <div style="text-align: center; flex: 1;">
+                                        <div style="width: 60px; height: 60px; margin: 0 auto 8px; background: #FFF3E0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px;">
+                                            📱
+                                        </div>
+                                        <div style="font-size: 11px; color: #64748b; font-weight: 600;">Bạn xác thực OTP</div>
+                                    </div>
+                                    
+                                    <div style="font-size: 24px; color: #FF8E53; font-weight: 800;">→</div>
+                                    
+                                    <div style="text-align: center; flex: 1;">
+                                        <div style="width: 60px; height: 60px; margin: 0 auto 8px; background: #FFE0E0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px;">
+                                            🎁
+                                        </div>
+                                        <div style="font-size: 11px; color: #64748b; font-weight: 600;">Nhận thưởng</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Status Message -->
+                                <div style="background: #FFF3E0; border: 2px solid #FF8E53; border-radius: 12px; padding: 15px; text-align: center;">
+                                    <p style="font-size: 13px; color: #1a2035; line-height: 1.6; margin: 0;">
+                                        <strong>3 bạn</strong> đăng ký qua link và xác thực số điện thoại nhận thưởng ngay. Share vào group lớp để mời nhanh nha.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <h3>🎯 Màn 2: Bạn Bè Click Link</h3>
+                            <p style="font-size: 13px; opacity: 0.9;">Popup trên trang Luyende.vn</p>
+                        </div>
+                        <div class="phone-content">
+                            <div class="engagement-badge">
+                                <h4>👋 Bạn được mời bởi</h4>
+                                <p style="font-size: 20px; font-weight: 800; margin-top: 10px;">Nguyễn Văn A</p>
+                            </div>
+                            
+                            <div style="background: #FFF3E0; border-radius: 12px; padding: 20px; margin: 20px 0; border: 2px solid #FF8E53;">
+                                <h4 style="font-size: 16px; color: #1a2035; margin-bottom: 10px;">🏆 Đường Đua Sĩ Tử</h4>
+                                <p style="font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 15px;">
+                                    Tham gia sự kiện cùng bạn mình để nhận thưởng và cạnh tranh trên bảng xếp hạng!
+                                </p>
+                                <div style="display: flex; gap: 10px; font-size: 12px; color: #64748b;">
+                                    <div style="flex: 1; text-align: center; background: white; padding: 10px; border-radius: 8px;">
+                                        <div style="font-size: 20px; font-weight: 800; color: #FF8E53;">9.9M</div>
+                                        <div>Tổng giải thưởng</div>
+                                    </div>
+                                    <div style="flex: 1; text-align: center; background: white; padding: 10px; border-radius: 8px;">
+                                        <div style="font-size: 20px; font-weight: 800; color: #10B981;">50K+</div>
+                                        <div>Đã tham gia</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="copy-btn">🚀 Đăng ký ngay</button>
+                            
+                            <div style="margin-top: 15px; text-align: center;">
+                                <p style="font-size: 12px; color: #64748b;">
+                                    ✓ Miễn phí · ✓ Học cùng bạn bè · ✓ Nhận thưởng
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">
+                <div class="flow-arrow-text">User đăng ký + Xác thực OTP → VERIFIED ✓</div>
+            </div>
+            
+            <!-- Step 3: Popup Success -->
+            <div class="phone-mockup-container">
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <h3>🎉 Màn 3: NV-2 Completed</h3>
+                            <p style="font-size: 13px; opacity: 0.9;">Popup +300 điểm</p>
+                        </div>
+                        <div class="phone-content">
+                            <div style="background: #1a2035; border-radius: 16px; padding: 30px; text-align: center; position: relative; overflow: hidden;">
+                                <!-- Confetti simulation -->
+                                <div style="position: absolute; top: 10px; left: 20%; width: 10px; height: 10px; background: #FFD93D; border-radius: 50%;"></div>
+                                <div style="position: absolute; top: 30px; left: 40%; width: 8px; height: 8px; background: #FF8E53; border-radius: 50%;"></div>
+                                <div style="position: absolute; top: 15px; right: 30%; width: 12px; height: 12px; background: #10B981; border-radius: 50%;"></div>
+                                <div style="position: absolute; top: 40px; right: 20%; width: 10px; height: 10px; background: #667eea; border-radius: 50%;"></div>
+                                
+                                <div style="position: relative; z-index: 1;">
+                                    <h3 style="font-size: 28px; color: #FF8E53; font-weight: 800; margin-bottom: 20px;">CHÚC MỪNG</h3>
+                                    <div style="font-size: 60px; color: #FFD93D; font-weight: 900; margin: 20px 0;">300 ⚡</div>
+                                    <p style="color: white; font-size: 14px; margin-bottom: 10px;">Hoàn thành nhiệm vụ:</p>
+                                    <p style="color: white; font-size: 16px; font-weight: 700; margin-bottom: 20px;">Mời 3 bạn bè (Có xác thực SĐT)</p>
+                                    <p style="color: rgba(255,255,255,0.8); font-size: 13px; line-height: 1.6; margin-bottom: 25px;">
+                                        3 bạn đăng ký qua link và xác thực số điện thoại thành công. Share vào group lớp để mời nhanh nha!
+                                    </p>
+                                    <button style="background: linear-gradient(135deg, #FF8E53, #FE6B8B); color: white; border: none; padding: 14px 30px; border-radius: 10px; font-weight: 700; width: 100%; font-size: 16px;">
+                                        Nhận ngay (5s)
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-card" style="margin-top: 20px;">
+                                <div class="progress-header">
+                                    <span class="progress-title">NV-3: Mời 5 bạn</span>
+                                    <span class="progress-count">3/5</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%;"></div>
+                                </div>
+                                <div class="progress-status">⚡ Còn 2 bạn nữa → +700 điểm</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <h3>🏆 Màn 4: NV-3 Completed</h3>
+                            <p style="font-size: 13px; opacity: 0.9;">Popup +700 điểm</p>
+                        </div>
+                        <div class="phone-content">
+                            <div style="background: #1a2035; border-radius: 16px; padding: 30px; text-align: center; position: relative; overflow: hidden;">
+                                <!-- Confetti simulation -->
+                                <div style="position: absolute; top: 10px; left: 15%; width: 12px; height: 12px; background: #FFD93D; border-radius: 50%;"></div>
+                                <div style="position: absolute; top: 25px; left: 35%; width: 10px; height: 10px; background: #FF8E53; border-radius: 50%;"></div>
+                                <div style="position: absolute; top: 20px; right: 25%; width: 14px; height: 14px; background: #10B981; border-radius: 50%;"></div>
+                                <div style="position: absolute; top: 35px; right: 15%; width: 12px; height: 12px; background: #667eea; border-radius: 50%;"></div>
+                                <div style="position: absolute; top: 50px; left: 50%; width: 10px; height: 10px; background: #FE6B8B; border-radius: 50%;"></div>
+                                
+                                <div style="position: relative; z-index: 1;">
+                                    <h3 style="font-size: 28px; color: #FF8E53; font-weight: 800; margin-bottom: 20px;">TUYỆT VỜI</h3>
+                                    <div style="font-size: 60px; color: #FFD93D; font-weight: 900; margin: 20px 0;">700 ⚡</div>
+                                    <p style="color: white; font-size: 14px; margin-bottom: 10px;">Hoàn thành nhiệm vụ:</p>
+                                    <p style="color: white; font-size: 16px; font-weight: 700; margin-bottom: 20px;">Mời 5 bạn bè (Có xác thực SĐT)</p>
+                                    <p style="color: rgba(255,255,255,0.8); font-size: 13px; line-height: 1.6; margin-bottom: 25px;">
+                                        5 bạn đăng ký qua link và xác thực SĐT. Tổng cộng bạn nhận được 1,000 điểm từ 2 nhiệm vụ mời bạn! 🎉
+                                    </p>
+                                    <button style="background: linear-gradient(135deg, #FF8E53, #FE6B8B); color: white; border: none; padding: 14px 30px; border-radius: 10px; font-weight: 700; width: 100%; font-size: 16px;">
+                                        Nhận ngay (5s)
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #DCFCE7; border-radius: 12px; padding: 20px; margin-top: 20px; border: 2px solid #10B981;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 16px; color: #059669; font-weight: 700; margin-bottom: 5px;">✓ Cả 2 nhiệm vụ đã hoàn thành</div>
+                                    <div style="font-size: 24px; color: #10B981; font-weight: 900;">TỔNG: 1,000 ⚡</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acceptance Criteria -->
+        <div class="flow-section">
+            <h2 class="section-title">✅ Acceptance Criteria</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%">Mã</th>
+                            <th width="40%">Mô Tả</th>
+                            <th width="50%">Kết Quả Mong Đợi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>AC-1</strong></td>
+                            <td>Hiển thị referral link</td>
+                            <td>Link format: <code>luyende.vn/event/si-tu?ref={unique_code}</code> với unique code per user. Có nút "Sao chép" → Copy to clipboard → Toast: "Đã sao chép!"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-2</strong></td>
+                            <td>Progress tracking (khi login)</td>
+                            <td>Hiển thị 2 progress card: NV-2 (X/3) và NV-3 (X/5) với progress bar % chính xác. <strong>Chỉ update khi user login lại</strong>, không real-time. Nếu login sau khi event kết thúc → Không cộng điểm, show message: "Event đã kết thúc"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-3</strong></td>
+                            <td>Bạn bè click link → Landing page</td>
+                            <td>Hiển thị engagement UI: "👋 Bạn được mời bởi {tên người mời}" + thông tin event + CTA "Đăng ký ngay". Ref code embedded trong URL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-4</strong></td>
+                            <td>Bạn bè signup với ref code</td>
+                            <td>Backend lưu: <code>UserReferral(referrer_id, referee_id, status=PENDING, created_at)</code>. Chưa tính điểm ngay</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-5</strong></td>
+                            <td>Bạn bè xác thực OTP</td>
+                            <td>OTP verify success → Backend update <code>status=VERIFIED, verified_at=NOW()</code>. Giờ mới count vào số bạn đủ điều kiện</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-6</strong></td>
+                            <td>Đủ 3 bạn VERIFIED → NV-2</td>
+                            <td>Khi user login lại + đủ 3 bạn VERIFIED + event đang diễn ra → Popup success hiển thị ngay sau login (title: "Mời 3 bạn bè (Có xác thực SĐT)", points: 300 ⚡, confetti animation)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-7</strong></td>
+                            <td>Đủ 5 bạn VERIFIED → NV-3</td>
+                            <td>Khi user login lại + đủ 5 bạn VERIFIED + event đang diễn ra → Popup success hiển thị ngay sau login (title: "Mời 5 bạn bè (Có xác thực SĐT)", points: 700 ⚡, confetti animation)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-8</strong></td>
+                            <td>Popup auto-dismiss</td>
+                            <td>Popup hiển thị 5s với countdown (5s, 4s, 3s, 2s, 1s) → Auto close. User có thể click "Nhận ngay" để close ngay</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC-9</strong></td>
+                            <td>Share via Zalo/Messenger</td>
+                            <td>Nút copy link → User tự paste vào Zalo/Messenger/Facebook. Link format giữ nguyên với ref code, không cần deeplink đặc biệt</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Corner Cases -->
+        <div class="flow-section">
+            <h2 class="section-title">⚠️ Corner Cases</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%">Mã</th>
+                            <th width="35%">Tình Huống</th>
+                            <th width="55%">Ứng Xử Hệ Thống</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CC-1</strong></td>
+                            <td>Bạn bè đăng ký nhưng không verify OTP</td>
+                            <td>Status = PENDING vĩnh viễn → Không count vào progress. Nếu sau 7 ngày vẫn PENDING → Mark as EXPIRED</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-2</strong></td>
+                            <td>User tự mời chính mình (fake account)</td>
+                            <td>Backend check: <code>referrer_id != referee_id</code>. Nếu trùng → reject + Toast: "Không thể tự mời chính mình"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-3</strong></td>
+                            <td>Cùng 1 SĐT đăng ký nhiều lần</td>
+                            <td>Backend check duplicate phone. Chỉ count 1 lần duy nhất (first signup). Signup sau → không count</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-4</strong></td>
+                            <td>User share nhiều ref code khác nhau</td>
+                            <td>Mỗi user chỉ có 1 ref code duy nhất (generate lần đầu). Share bao nhiêu lần cũng dùng code đó</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-5</strong></td>
+                            <td>Bạn bè click link nhưng không signup ngay</td>
+                            <td>Ref code lưu trong localStorage 30 ngày. Khi signup sau → vẫn track được referrer</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-6</strong></td>
+                            <td>User đã complete NV-2, sau đó có thêm bạn verify</td>
+                            <td>Khi đủ 5 bạn → Trigger NV-3 (riêng biệt). Không duplicate NV-2. Total = 300 + 700 = 1,000 điểm</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-7</strong></td>
+                            <td>Bạn bè signup từ nhiều referrer khác nhau</td>
+                            <td>Count cho referrer đầu tiên (first click). Các ref code sau → ignore. Log: "User đã được mời bởi X"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CC-8</strong></td>
+                            <td>Event kết thúc nhưng vẫn có bạn verify</td>
+                            <td>Nếu user login sau khi event đã kết thúc → Không trigger completion popup. Show message trong màn nhiệm vụ: "Event đã kết thúc, cảm ơn bạn đã tham gia!"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Engagement Mechanism -->
+        <div class="flow-section">
+            <h2 class="section-title">🚀 Engagement Mechanism (Landing Page)</h2>
+            
+            <div class="info-box" style="background: #E0E7FF; border-color: #667eea;">
+                <h3>🎯 Mục Tiêu Landing Page</h3>
+                <p style="margin-bottom: 15px; line-height: 1.8;">
+                    Khi bạn bè click vào referral link, họ PHẢI thấy một trang đặc biệt (không phải homepage generic) 
+                    để tạo <strong>động lực mạnh mẽ</strong> đăng ký. Trang này phải highlight:
+                </p>
+                <ul>
+                    <li><strong>Social Proof:</strong> "Bạn được mời bởi {tên người mời}" → Tạo trust</li>
+                    <li><strong>Event Context:</strong> Thông tin sự kiện "Đường Đua Sĩ Tử" với total prize 9.9M</li>
+                    <li><strong>Community:</strong> "50K+ học sinh đã tham gia" → FOMO effect</li>
+                    <li><strong>Clear CTA:</strong> "Đăng ký ngay" button nổi bật → Low friction</li>
+                    <li><strong>Benefit Highlight:</strong> "✓ Miễn phí · ✓ Học cùng bạn · ✓ Nhận thưởng"</li>
+                </ul>
+            </div>
+            
+            <div class="step-container">
+                <div class="step-card">
+                    <h3 class="step-title">📊 Conversion Funnel</h3>
+                    <ul class="step-list">
+                        <li>Click ref link → Popup trên trang Luyende.vn</li>
+                        <li>Read event info → See friend's name → Trust +</li>
+                        <li>Click "Đăng ký ngay" → Signup form</li>
+                        <li>Submit signup → OTP screen</li>
+                        <li>Verify OTP → Welcome screen → VERIFIED ✓</li>
+                    </ul>
+                    <div style="background: #DCFCE7; padding: 15px; border-radius: 10px; margin-top: 15px; border: 2px solid #10B981;">
+                        <p style="color: #059669; font-size: 13px; line-height: 1.6; margin: 0;">
+                            <strong>🎯 Target:</strong> Popup → Signup conversion rate ≥ 40%
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-box">
+            <h3>📊 Tóm Tắt Key Metrics</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-label">NV-2 Reward</div>
+                    <div class="summary-value">300 ⚡</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">NV-3 Reward</div>
+                    <div class="summary-value">700 ⚡</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Total Points</div>
+                    <div class="summary-value">1,000</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Verification</div>
+                    <div class="summary-value">OTP ✓</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Min Friends</div>
+                    <div class="summary-value">3 / 5</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Popup Timing</div>
+                    <div class="summary-value">Khi Login</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Friend_Referral_Tasks_Flow.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
