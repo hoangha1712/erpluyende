@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BXH - 2 Tabs (Tất Cả + Bạn Bè)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .screens-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 32px;
+        }
+        
+        .phone-frame {
+            background: white;
+            border-radius: 32px;
+            padding: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .case-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(102, 126, 234, 0.95);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+        
+        .screen-content {
+            background: #fafafa;
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 700px;
+        }
+        
+        .header {
+            background: white;
+            text-align: center;
+            padding: 32px 20px 20px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px;
+            background: white;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab.hidden {
+            display: none;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            background: #fafafa;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Subtitle Box */
+        .subtitle-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .subtitle-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .subtitle-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+        
+        /* Leaderboard List */
+        .leaderboard-list {
+            padding: 0 16px 24px;
+        }
+        
+        .leaderboard-item {
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .leaderboard-item.highlight {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.12) 0%, rgba(255, 255, 255, 1) 100%);
+            border: 2px solid #667eea;
+        }
+        
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+        
+        .info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .school {
+            font-size: 13px;
+            color: #999;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .points {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .rank {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ccc;
+            min-width: 32px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        
+        .rank.highlight {
+            color: #667eea;
+        }
+        
+        /* Divider */
+        .divider {
+            text-align: center;
+            padding: 12px 0;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .empty-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .empty-desc {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Download Button */
+        .download-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .download-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button class="download-btn" onclick="downloadHTML()">⬇️ Download</button>
+    
+    <div class="screens-wrapper">
+        <!-- ==================== CASE 1: Có bạn cùng trường + Có bạn bè verify ==================== -->
+        <div class="phone-frame">
+            <div class="case-label">Case 1: Có bạn cùng trường + Có bạn bè</div>
+            <div class="screen-content">
+                <div class="header">
+                    <h1>Bảng xếp hạng</h1>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(this, 'c1-all')">🌍 Tất cả</button>
+                    <button class="tab" onclick="switchTab(this, 'c1-friends')">👥 Bạn bè</button>
+                </div>
+                
+                <!-- Tab 1: Tất Cả -->
+                <div id="c1-all" class="tab-content active">
+                    <div class="subtitle-box">
+                        <div class="subtitle-icon">💪</div>
+                        <div class="subtitle-text">Có 12 bạn THPT Kim Liên đang tham gia 💪 Bạn đứng thứ 8/12 trong trường nè!</div>
+                    </div>
+                    
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Văn An</div>
+                                <div class="school">THPT Chu Văn An</div>
+                            </div>
+                            <div class="rank">1</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Trần Thị Bích</div>
+                                <div class="school">THPT Lê Quý Đôn</div>
+                            </div>
+                            <div class="rank">2</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=12" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Phạm Phương Anh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank">3</div>
+                        </div>
+                        
+                        <div class="divider">... 50 người khác ...</div>
+                        
+                        <div class="leaderboard-item highlight">
+                            <img src="https://i.pravatar.cc/150?img=25" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Viễn Minh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank highlight">56</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=60" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Học sinh xx4562</div>
+                                <div class="school">THPT Nguyễn Huệ</div>
+                            </div>
+                            <div class="rank">57</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2: Bạn Bè -->
+                <div id="c1-friends" class="tab-content">
+                    <div class="subtitle-box">
+                        <div class="subtitle-icon">🎉</div>
+                        <div class="subtitle-text">Có bạn xếp cao hơn bạn! Phạm Phương Anh (hạng #3) đang dẫn trước bạn đó!</div>
+                    </div>
+                    
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=12" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Phạm Phương Anh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank">3</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=33" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Lê Minh Tuấn</div>
+                                <div class="school">THPT Lê Quý Đôn</div>
+                            </div>
+                            <div class="rank">12</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=68" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Ngô Thu Hà</div>
+                                <div class="school">THPT Chu Văn An</div>
+                            </div>
+                            <div class="rank">34</div>
+                        </div>
+                        
+                        <div class="leaderboard-item highlight">
+                            <img src="https://i.pravatar.cc/150?img=25" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Viễn Minh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank highlight">56</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=47" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Học sinh xx9876</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank">78</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== CASE 2: Có bạn bè nhưng user đang dẫn đầu ==================== -->
+        <div class="phone-frame">
+            <div class="case-label">Case 2: User dẫn đầu bạn bè</div>
+            <div class="screen-content">
+                <div class="header">
+                    <h1>Bảng xếp hạng</h1>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(this, 'c2-all')">🌍 Tất cả</button>
+                    <button class="tab" onclick="switchTab(this, 'c2-friends')">👥 Bạn bè</button>
+                </div>
+                
+                <!-- Tab 1: Tất Cả -->
+                <div id="c2-all" class="tab-content active">
+                    <div class="subtitle-box">
+                        <div class="subtitle-icon">💪</div>
+                        <div class="subtitle-text">Có 8 bạn THPT Kim Liên đang tham gia 💪 Bạn đang dẫn đầu trường nè!</div>
+                    </div>
+                    
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Văn An</div>
+                                <div class="school">THPT Chu Văn An</div>
+                            </div>
+                            <div class="rank">1</div>
+                        </div>
+                        
+                        <div class="leaderboard-item highlight">
+                            <img src="https://i.pravatar.cc/150?img=25" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Viễn Minh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank highlight">2</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Trần Thị Bích</div>
+                                <div class="school">THPT Lê Quý Đôn</div>
+                            </div>
+                            <div class="rank">3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2: Bạn Bè -->
+                <div id="c2-friends" class="tab-content">
+                    <div class="subtitle-box">
+                        <div class="subtitle-icon">🏆</div>
+                        <div class="subtitle-text">Bạn đang dẫn đầu trong nhóm bạn bè! Giữ vững phong độ nha!</div>
+                    </div>
+                    
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item highlight">
+                            <img src="https://i.pravatar.cc/150?img=25" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Viễn Minh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank highlight">2</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=33" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Lê Minh Tuấn</div>
+                                <div class="school">THPT Lê Quý Đôn</div>
+                            </div>
+                            <div class="rank">12</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=68" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Ngô Thu Hà</div>
+                                <div class="school">THPT Chu Văn An</div>
+                            </div>
+                            <div class="rank">34</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== CASE 3: Không có bạn bè verify ==================== -->
+        <div class="phone-frame">
+            <div class="case-label">Case 3: Không có bạn bè</div>
+            <div class="screen-content">
+                <div class="header">
+                    <h1>Bảng xếp hạng</h1>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(this, 'c3-all')">🌍 Tất cả</button>
+                    <button class="tab hidden">👥 Bạn bè</button>
+                </div>
+                
+                <!-- Tab 1: Tất Cả -->
+                <div id="c3-all" class="tab-content active">
+                    <div class="subtitle-box">
+                        <div class="subtitle-icon">🌟</div>
+                        <div class="subtitle-text">Bạn là người duy nhất từ THPT Kim Liên tham gia 🌟 Mời thêm bạn cùng trường nha!</div>
+                    </div>
+                    
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Văn An</div>
+                                <div class="school">THPT Chu Văn An</div>
+                            </div>
+                            <div class="rank">1</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Trần Thị Bích</div>
+                                <div class="school">THPT Lê Quý Đôn</div>
+                            </div>
+                            <div class="rank">2</div>
+                        </div>
+                        
+                        <div class="divider">... 85 người khác ...</div>
+                        
+                        <div class="leaderboard-item highlight">
+                            <img src="https://i.pravatar.cc/150?img=25" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Viễn Minh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank highlight">89</div>
+                        </div>
+                    </div>
+                    
+                    <div class="empty-state">
+                        <div class="empty-icon">👥</div>
+                        <div class="empty-title">Chưa có bạn bè</div>
+                        <div class="empty-desc">Mời bạn bè tham gia để so sánh điểm số và cùng học tập nha!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== CASE 4: Không có subtitle (không có bạn cùng trường) ==================== -->
+        <div class="phone-frame">
+            <div class="case-label">Case 4: Không có bạn cùng trường</div>
+            <div class="screen-content">
+                <div class="header">
+                    <h1>Bảng xếp hạng</h1>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(this, 'c4-all')">🌍 Tất cả</button>
+                    <button class="tab" onclick="switchTab(this, 'c4-friends')">👥 Bạn bè</button>
+                </div>
+                
+                <!-- Tab 1: Tất Cả (NO SUBTITLE) -->
+                <div id="c4-all" class="tab-content active">
+                    <div class="leaderboard-list" style="padding-top: 20px;">
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Văn An</div>
+                                <div class="school">THPT Chu Văn An</div>
+                            </div>
+                            <div class="rank">1</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Trần Thị Bích</div>
+                                <div class="school">THPT Lê Quý Đôn</div>
+                            </div>
+                            <div class="rank">2</div>
+                        </div>
+                        
+                        <div class="divider">... 20 người khác ...</div>
+                        
+                        <div class="leaderboard-item highlight">
+                            <img src="https://i.pravatar.cc/150?img=25" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Viễn Minh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank highlight">24</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2: Bạn Bè -->
+                <div id="c4-friends" class="tab-content">
+                    <div class="subtitle-box">
+                        <div class="subtitle-icon">👥</div>
+                        <div class="subtitle-text">Có 5 bạn bè đang tham gia! Bạn đứng thứ 3/5 nè!</div>
+                    </div>
+                    
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=12" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Phạm Phương Anh</div>
+                                <div class="school">THPT Lê Quý Đôn</div>
+                            </div>
+                            <div class="rank">1</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=33" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Lê Minh Tuấn</div>
+                                <div class="school">THPT Chu Văn An</div>
+                            </div>
+                            <div class="rank">2</div>
+                        </div>
+                        
+                        <div class="leaderboard-item highlight">
+                            <img src="https://i.pravatar.cc/150?img=25" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Nguyễn Viễn Minh</div>
+                                <div class="school">THPT Kim Liên</div>
+                            </div>
+                            <div class="rank highlight">24</div>
+                        </div>
+                        
+                        <div class="leaderboard-item">
+                            <img src="https://i.pravatar.cc/150?img=68" alt="Avatar" class="avatar">
+                            <div class="info">
+                                <div class="name">Ngô Thu Hà</div>
+                                <div class="school">THPT Trần Phú</div>
+                            </div>
+                            <div class="rank">45</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(button, contentId) {
+            const container = button.closest('.phone-frame');
+            
+            // Update tabs
+            container.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            button.classList.add('active');
+            
+            // Update content
+            container.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            container.querySelector('#' + contentId).classList.add('active');
+        }
+        
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'BXH-2Tabs-Fixed.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
