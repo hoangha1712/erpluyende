@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup: Tạo Giải Thưởng Mới (V5)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e2e8f0; }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Gradient Button */
+        .btn-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s;
+        }
+        .btn-gradient:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center p-4">
+
+    <!-- MODAL CONTAINER -->
+    <div class="bg-white w-full max-w-3xl h-auto max-h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden relative">
+        
+        <!-- 1. HEADER -->
+        <div class="px-8 py-5 border-b border-gray-200 flex justify-between items-center bg-green-50">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                        <i class="fa-solid fa-gift text-xl"></i>
+                    </div>
+                    Tạo Giải Thưởng Mới
+                </h2>
+                <p class="text-xs text-slate-500 mt-1 ml-14">Thiết lập thông tin và điều kiện cho phần thưởng</p>
+            </div>
+            <button class="text-gray-400 hover:text-red-500 transition text-2xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- 2. BODY (SCROLLABLE) -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scroll space-y-8">
+            
+            <!-- BƯỚC 1: THÔNG TIN CƠ BẢN -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-green-500 pl-3">1. Thông tin định danh</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <!-- Mã Giải Thưởng (AUTO) -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Mã giải (SKU Auto)</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-barcode absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" value="RWD-2025-X882" readonly class="w-full pl-10 pr-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-slate-500 font-mono font-bold cursor-not-allowed" title="Hệ thống tự động sinh mã duy nhất">
+                        </div>
+                    </div>
+
+                    <!-- Loại Giải Thưởng -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Phân loại <span class="text-red-500">*</span></label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-green-500 outline-none">
+                            <option value="voucher">🎫 Voucher / Mã giảm giá</option>
+                            <option value="gift">🎁 Hiện vật (Áo, Mũ, Sách...)</option>
+                            <option value="coin">🪙 Xu / Điểm thưởng</option>
+                        </select>
+                    </div>
+
+                    <!-- Tên Giải Thưởng -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tên giải thưởng <span class="text-red-500">*</span></label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none" placeholder="VD: Voucher Shopee 100k">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Giá trị -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Giá trị quy đổi (VNĐ) <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-right font-bold text-slate-700 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none" placeholder="0">
+                            <span class="absolute right-8 top-2 text-gray-400 text-sm">đ</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-1">Dùng để tính tổng ngân sách Marketing.</p>
+                    </div>
+
+                    <!-- Số lượng kho -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Số lượng nhập kho <span class="text-red-500">*</span></label>
+                        <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none" placeholder="1000">
+                        <p class="text-[10px] text-gray-400 mt-1">Tổng số lượng khả dụng ban đầu.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BƯỚC 2: ĐIỀU KIỆN NHẬN GIẢI -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-green-500 pl-3">2. Điều kiện nhận giải</h3>
+                <p class="text-xs text-slate-500 mb-3 -mt-2">Các điều kiện này sẽ được gợi ý khi bạn gán quà vào Event (có thể sửa sau).</p>
+                
+                <div class="space-y-3 border border-gray-200 rounded-xl p-4 bg-white">
+                    <!-- Rule 1 -->
+                    <div class="flex items-center gap-3 pb-3 border-b border-gray-100">
+                        <input type="checkbox" class="w-5 h-5 text-green-600 rounded cursor-pointer" checked>
+                        <div class="flex-1 text-sm text-slate-700">User phải đạt tối thiểu</div>
+                        <div class="flex items-center gap-2">
+                            <input type="number" value="1000" class="w-24 border border-gray-300 rounded-lg px-3 py-1 text-center font-bold text-sm text-slate-700 focus:ring-1 focus:ring-green-500 outline-none">
+                            <span class="text-xs font-bold text-gray-500">điểm</span>
+                        </div>
+                    </div>
+
+                    <!-- Rule 2 -->
+                    <div class="flex items-center gap-3 pb-3 border-b border-gray-100">
+                        <input type="checkbox" class="w-5 h-5 text-green-600 rounded cursor-pointer" checked>
+                        <div class="flex-1 text-sm text-slate-700">Hoàn thành tối thiểu</div>
+                        <div class="flex items-center gap-2">
+                            <input type="number" value="80" class="w-20 border border-gray-300 rounded-lg px-3 py-1 text-center font-bold text-sm text-slate-700 focus:ring-1 focus:ring-green-500 outline-none">
+                            <span class="text-xs font-bold text-gray-500">% task</span>
+                        </div>
+                    </div>
+
+                    <!-- Rule 3: Top Rank -->
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" class="w-5 h-5 text-green-600 rounded cursor-pointer" id="checkRank" onchange="toggleRankInput()">
+                        <div class="flex-1 text-sm text-slate-700">Nằm trong Top Rank</div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-500">Top</span>
+                            <input type="number" id="inputRank" value="10" class="w-20 border border-gray-300 rounded-lg px-3 py-1 text-center font-bold text-sm text-slate-700 focus:ring-1 focus:ring-green-500 outline-none disabled:bg-gray-100 disabled:text-gray-400" disabled>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- 3. FOOTER -->
+        <div class="px-8 py-5 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+            <button class="px-6 py-2.5 border border-gray-300 rounded-lg font-bold text-slate-600 hover:bg-white transition">Hủy bỏ</button>
+            <button class="btn-gradient text-white px-8 py-2.5 rounded-lg font-bold shadow-md flex items-center gap-2">
+                <i class="fa-regular fa-floppy-disk"></i> Lưu
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Script to toggle Rank Input -->
+    <script>
+        function toggleRankInput() {
+            const checkbox = document.getElementById('checkRank');
+            const input = document.getElementById('inputRank');
+            
+            if (checkbox.checked) {
+                input.disabled = false;
+                input.focus();
+            } else {
+                input.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
