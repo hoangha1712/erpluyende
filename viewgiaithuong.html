@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup: Chi Tiết Giải Thưởng (View Mode - Locked)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e2e8f0; }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Read-only Input Style */
+        input:read-only, select:disabled {
+            background-color: #f9fafb;
+            color: #4b5563;
+            cursor: default;
+            border-color: #e5e7eb;
+        }
+        
+        /* Status Badge */
+        .badge-active { background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center p-4">
+
+    <!-- MODAL CONTAINER -->
+    <div class="bg-white w-full max-w-3xl h-auto max-h-[95vh] rounded-xl shadow-2xl flex flex-col overflow-hidden relative">
+        
+        <!-- 1. HEADER (UPDATED: Meta info moved here) -->
+        <div class="px-8 py-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-2xl font-bold text-slate-800">Chi Tiết Giải Thưởng</h2>
+                        <span class="badge-active">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            Đang hoạt động
+                        </span>
+                    </div>
+                    
+                    <!-- Sub-header Info -->
+                    <div class="flex items-center gap-4 text-xs text-slate-500 mt-2">
+                        <div class="flex items-center gap-1.5 bg-white border border-gray-200 px-2 py-1 rounded">
+                            <i class="fa-regular fa-clock text-blue-500"></i> 
+                            Created: <strong>15/09/2025 10:30</strong>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-white border border-gray-200 px-2 py-1 rounded">
+                            <i class="fa-regular fa-user text-blue-500"></i> 
+                            By: <strong>Admin (admin@luyende.vn)</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="text-gray-400 hover:text-red-500 transition text-2xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. BODY (SCROLLABLE) -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scroll space-y-8 relative">
+            
+            <!-- WARNING ALERT (Logic: Active Event = No Edit) -->
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r shadow-sm mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fa-solid fa-triangle-exclamation text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            <span class="font-bold">Chế độ chỉ xem (Read-only):</span> 
+                            Giải thưởng này đang được liên kết với một Event đang hoạt động. Bạn không thể chỉnh sửa thông tin hoặc xóa vào lúc này.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BƯỚC 1: THÔNG TIN ĐỊNH DANH -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">1. Thông tin định danh</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <!-- Mã SKU -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Mã giải (SKU)</label>
+                        <input type="text" value="URB50" readonly class="w-full px-4 py-2 border rounded-lg font-mono font-bold">
+                    </div>
+                    <!-- Phân loại -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Phân loại</label>
+                        <input type="text" value="🎫 Voucher / Mã giảm giá" readonly class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <!-- Tên -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tên giải thưởng</label>
+                        <input type="text" value="Voucher Urbox 50k" readonly class="w-full px-4 py-2 border rounded-lg font-bold text-slate-700">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Giá trị -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Giá trị quy đổi</label>
+                        <input type="text" value="50,000 VNĐ" readonly class="w-full px-4 py-2 border rounded-lg text-right font-bold text-slate-700">
+                    </div>
+                    <!-- Số lượng -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Số lượng nhập kho</label>
+                        <input type="text" value="1,250" readonly class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                </div>
+            </section>
+
+            <!-- BƯỚC 2: LIÊN KẾT EVENT (TITLE UPDATED) -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">2. Event :</h3>
+                
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-white flex items-center justify-center text-xl shadow-sm border border-green-100">
+                            🎯
+                        </div>
+                        <div>
+                            <p class="text-xs text-green-600 font-bold uppercase mb-1">Đang liên kết với</p>
+                            <h4 class="font-bold text-slate-800 text-lg">Đường Đua Sĩ Tử 1 (DDST1)</h4>
+                            <p class="text-xs text-slate-500">Thời gian: 01/10/2025 - 31/10/2025</p>
+                        </div>
+                    </div>
+                    <button class="text-blue-600 hover:text-blue-800 text-sm font-bold px-4 py-2 bg-white rounded border border-blue-200 hover:shadow-sm">
+                        Xem Event <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- BƯỚC 3: ĐIỀU KIỆN -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">3. Điều kiện nhận giải</h3>
+                <div class="space-y-3 border border-gray-200 rounded-xl p-4 bg-gray-50">
+                    <div class="flex items-center gap-3 pb-3 border-b border-gray-200">
+                        <i class="fa-solid fa-check-circle text-green-600"></i>
+                        <div class="flex-1 text-sm text-slate-700">User phải đạt tối thiểu</div>
+                        <span class="font-bold text-sm bg-white px-3 py-1 rounded border">1000 điểm</span>
+                    </div>
+                    <div class="flex items-center gap-3 pb-3 border-b border-gray-200">
+                        <i class="fa-solid fa-check-circle text-green-600"></i>
+                        <div class="flex-1 text-sm text-slate-700">Hoàn thành tối thiểu</div>
+                        <span class="font-bold text-sm bg-white px-3 py-1 rounded border">80 % task</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-check-circle text-green-600"></i>
+                        <div class="flex-1 text-sm text-slate-700">Nằm trong Top Rank</div>
+                        <span class="font-bold text-sm bg-white px-3 py-1 rounded border">Top 10</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. FOOTER (DISABLED EDIT) -->
+        <div class="px-8 py-5 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+            <button class="px-6 py-2 border border-gray-300 rounded-lg font-bold text-slate-600 hover:bg-white bg-white transition">Đóng</button>
+            
+            <!-- Disabled Button Style -->
+            <button class="bg-gray-300 text-white px-6 py-2 rounded-lg font-bold shadow-none cursor-not-allowed flex items-center gap-2 opacity-70" disabled title="Không thể sửa khi Event đang Active">
+                <i class="fa-solid fa-lock"></i> Chỉnh sửa
+            </button>
+        </div>
+
+    </div>
+</body>
+</html>
