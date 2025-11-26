@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP - Đường Đua Sĩ Tử</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base styles */
+        .gradient-orange { background: linear-gradient(135deg, #FF7A45 0%, #FFA500 100%); }
+        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
+        .modal.show { display: flex; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        [contenteditable]:empty:before { content: attr(placeholder); color: #9CA3AF; }
+
+        /* Visual styles */
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .gradient-green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .gradient-purple { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        
+        .status-badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-active { background: #D1FAE5; color: #065F46; }
+        .status-draft { background: #FEF3C7; color: #92400E; }
+        .status-ended { background: #F3F4F6; color: #374151; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-screen bg-slate-800 border-r border-slate-700 z-20 overflow-y-auto">
+        <div class="p-6 border-b border-slate-700">
+            <h1 class="text-2xl font-bold text-orange-500">📚 Luyện Đề ERP</h1>
+            <p class="text-sm text-slate-400 mt-2">Event Management v2.1</p>
+        </div>
+        
+        <nav class="p-4 space-y-2">
+            <a href="#" onclick="showTab('dashboard-tab')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <span class="text-xl">📊</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a href="#" onclick="showTab('events-tab')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <span class="text-xl">🎯</span>
+                <span class="text-sm font-medium">Events</span>
+            </a>
+            <a href="#" onclick="showTab('tasks-tab')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <span class="text-xl">⚡</span>
+                <span class="text-sm font-medium">Nhiệm Vụ</span>
+            </a>
+            <a href="#" onclick="showTab('rewards-tab')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <span class="text-xl">🎁</span>
+                <span class="text-sm font-medium">Giải Thưởng</span>
+            </a>
+            <a href="#" onclick="showTab('reports-tab')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <span class="text-xl">📈</span>
+                <span class="text-sm font-medium">Báo Cáo</span>
+            </a>
+            <a href="#" onclick="showTab('settings-tab')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition">
+                <span class="text-xl">⚙️</span>
+                <span class="text-sm font-medium">Cài Đặt</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content active">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Dashboard Overview</h2>
+                <p class="text-gray-600 mt-2">Tổng quan về tất cả các sự kiện Đường Đua Sĩ Tử</p>
+            </div>
+            
+            <!-- Metrics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-lg gradient-orange flex items-center justify-center text-white text-2xl">
+                            🎯
+                        </div>
+                        <span class="text-xs text-green-600 font-semibold bg-green-100 px-2 py-1 rounded">+12%</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm mb-1">Tổng Events</h3>
+                    <p class="text-3xl font-bold text-gray-800">12</p>
+                    <p class="text-xs text-gray-500 mt-2">3 đang hoạt động</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-lg gradient-blue flex items-center justify-center text-white text-2xl">
+                            👥
+                        </div>
+                        <span class="text-xs text-green-600 font-semibold bg-green-100 px-2 py-1 rounded">+24%</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm mb-1">Tổng User Tham Gia</h3>
+                    <p class="text-3xl font-bold text-gray-800">45,230</p>
+                    <p class="text-xs text-gray-500 mt-2">8,420 tuần này</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-lg gradient-green flex items-center justify-center text-white text-2xl">
+                            🏆
+                        </div>
+                        <span class="text-xs text-green-600 font-semibold bg-green-100 px-2 py-1 rounded">+15%</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm mb-1">User Đạt Giải</h3>
+                    <p class="text-3xl font-bold text-gray-800">1,856</p>
+                    <p class="text-xs text-gray-500 mt-2">Tỷ lệ đạt giải: 4.1%</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-lg gradient-purple flex items-center justify-center text-white text-2xl">
+                            🎁
+                        </div>
+                        <span class="text-xs text-red-600 font-semibold bg-red-100 px-2 py-1 rounded">-5%</span>
+                    </div>
+                    <h3 class="text-gray-600 text-sm mb-1">Giá Trị Giải Thưởng</h3>
+                    <p class="text-3xl font-bold text-gray-800">295M</p>
+                    <p class="text-xs text-gray-500 mt-2">1,856 user đạt giải</p>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-xl p-6 shadow-md mb-8">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="showTab('events-tab'); openModal('createEventModal')" class="flex items-center gap-3 p-4 border-2 border-dashed border-orange-300 rounded-lg hover:bg-orange-50 transition">
+                        <span class="text-2xl">➕</span>
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-800">Tạo Event Mới</p>
+                            <p class="text-xs text-gray-500">Bắt đầu sự kiện mới</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="showTab('tasks-tab')" class="flex items-center gap-3 p-4 border-2 border-dashed border-blue-300 rounded-lg hover:bg-blue-50 transition">
+                        <span class="text-2xl">📝</span>
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-800">Quản Lý Nhiệm Vụ</p>
+                            <p class="text-xs text-gray-500">Xem và chỉnh sửa tasks</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="showTab('reports-tab')" class="flex items-center gap-3 p-4 border-2 border-dashed border-green-300 rounded-lg hover:bg-green-50 transition">
+                        <span class="text-2xl">📊</span>
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-800">Xem Báo Cáo</p>
+                            <p class="text-xs text-gray-500">Analytics & insights</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Recent Events -->
+            <div class="bg-white rounded-xl p-6 shadow-md">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-bold text-gray-800">Sự Kiện Gần Đây</h3>
+                    <button onclick="showTab('events-tab')" class="text-sm text-orange-500 hover:text-orange-600 font-semibold">Xem tất cả →</button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-lg gradient-orange flex items-center justify-center text-white font-bold">
+                                DDST1
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Đường Đua Sĩ Tử 1</p>
+                                <p class="text-xs text-gray-500">01/10/2025 - 31/10/2025</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-gray-800">1,856 users</p>
+                                <p class="text-xs text-gray-500">100 đạt giải</p>
+                            </div>
+                            <span class="status-badge status-active">Đang diễn ra</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-lg gradient-blue flex items-center justify-center text-white font-bold">
+                                DDST2
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Đường Đua Sĩ Tử 2</p>
+                                <p class="text-xs text-gray-500">01/11/2025 - 30/11/2025</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-gray-800">3,421 users</p>
+                                <p class="text-xs text-gray-500">156 đạt giải</p>
+                            </div>
+                            <span class="status-badge status-ended">Đã kết thúc</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Events Tab -->
+        <div id="events-tab" class="tab-content">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">🎯 Quản Lý Events</h2>
+                <button onclick="openModal('createEventModal')" class="gradient-orange text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                    ➕ Tạo Event Mới
+                </button>
+            </div>
+            
+            <!-- Events Table -->
+            <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gray-100 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Event</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Thời gian</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Giải thưởng</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Nhiệm vụ</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Trạng thái</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4">
+                                <p class="font-semibold text-gray-800">Đường đua sĩ tử 1</p>
+                                <p class="text-xs text-gray-500">DDST1</p>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">01/10/2025 - 31/10/2025</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">5,000,000 VNĐ</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">8 nhiệm vụ</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Đang diễn ra</span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button class="text-blue-600 hover:text-blue-800 text-sm font-semibold">👁️ Xem</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4">
+                                <p class="font-semibold text-gray-800">Đường đua sĩ tử 2</p>
+                                <p class="text-xs text-gray-500">DDST2</p>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">01/11/2025 - 30/11/2025</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">15,000,000 VNĐ</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">5 nhiệm vụ</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">Đã kết thúc</span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button class="text-blue-600 hover:text-blue-800 text-sm font-semibold">👁️ Xem</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Tasks Tab -->
+        <div id="tasks-tab" class="tab-content">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">⚡ Quản Lý Nhiệm Vụ</h2>
+            <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                <p class="text-gray-600">Task management interface...</p>
+            </div>
+        </div>
+        
+        <!-- Rewards Tab -->
+        <div id="rewards-tab" class="tab-content">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">🎁 Quản Lý Giải Thưởng</h2>
+                <button onclick="openModal('createRewardModal')" class="gradient-orange text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                    ➕ Tạo Giải Thưởng Mới
+                </button>
+            </div>
+            
+            <!-- Rewards Table -->
+            <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gray-100 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Tên giải thưởng</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Mã</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Giá trị</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Số lượng</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 font-semibold text-gray-800">Đường đua sĩ tử 1</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">DDST1</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">5,000,000 VNĐ</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600">100</td>
+                            <td class="px-6 py-4 text-center">
+                                <button class="text-blue-600 hover:text-blue-800 text-sm font-semibold">👁️ Xem</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Reports Tab -->
+        <div id="reports-tab" class="tab-content">
+            <!-- Level 1: List Events -->
+            <div id="reports-level1">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">📈 Báo Cáo Events</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                        <p class="text-sm text-gray-600 mb-2">Tổng Events</p>
+                        <p class="text-3xl font-bold text-gray-800">12</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                        <p class="text-sm text-gray-600 mb-2">Tổng User Nhận Giải</p>
+                        <p class="text-3xl font-bold text-gray-800">1,856</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                        <p class="text-sm text-gray-600 mb-2">Giá Trị Giải</p>
+                        <p class="text-3xl font-bold text-gray-800">45,230,000</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-100 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Sự kiện</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Thời gian</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Số người nhận giải</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Trạng thái</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-semibold text-gray-800">Đường đua sĩ tử 1</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">01/10/2025 - 31/10/2025</td>
+                                <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">100</td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Đang diễn ra</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button onclick="showEventWinners('DDST1')" class="text-blue-600 hover:text-blue-800 text-sm font-semibold bg-blue-50 px-3 py-1 rounded">👁️ Người nhận giải</button>
+                                        <button onclick="showEventTaskStats('DDST1')" class="text-orange-600 hover:text-orange-800 text-sm font-semibold bg-orange-50 px-3 py-1 rounded">📊 Thống kê Task</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-semibold text-gray-800">Đường đua sĩ tử 2</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">01/11/2025 - 30/11/2025</td>
+                                <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">156</td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">Đã kết thúc</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button onclick="showEventWinners('DDST2')" class="text-blue-600 hover:text-blue-800 text-sm font-semibold bg-blue-50 px-3 py-1 rounded">👁️ Người nhận giải</button>
+                                        <button onclick="showEventTaskStats('DDST2')" class="text-orange-600 hover:text-orange-800 text-sm font-semibold bg-orange-50 px-3 py-1 rounded">📊 Thống kê Task</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Level 2: List Winners in Event -->
+            <div id="reports-level2" style="display:none;">
+                <div class="mb-6">
+                    <button onclick="backToReportsLevel1()" class="text-blue-600 hover:text-blue-800 font-semibold mb-4">← Quay lại danh sách events</button>
+                    <h2 class="text-3xl font-bold text-gray-800">👥 Danh Sách Người Nhận Giải - <span id="eventNameL2">Event</span></h2>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-100 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Họ tên</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">User ID</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Điểm đạt được</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Xếp hạng</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Thời gian hoàn thành</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="winnersTableBody">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-semibold text-gray-800">Nguyễn Văn A</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">124562</td>
+                                <td class="px-6 py-4 text-center text-sm font-semibold text-orange-600">100/100</td>
+                                <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">🥇 #1</td>
+                                <td class="px-6 py-4 text-center text-sm text-gray-600">10/10/2025</td>
+                                <td class="px-6 py-4 text-center">
+                                    <button onclick="showUserTasks('124562', 'DDST1')" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">👁️ Chi tiết nhiệm vụ</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Level 2: TASK STATS (New Feature) -->
+            <div id="reports-level2-tasks" style="display:none;">
+                <div class="mb-6 flex justify-between items-end">
+                    <div>
+                        <button onclick="backToReportsLevel1FromTasks()" class="text-blue-600 hover:text-blue-800 font-semibold mb-4">← Quay lại danh sách events</button>
+                        <h2 class="text-3xl font-bold text-gray-800">📊 Thống Kê Nhiệm Vụ - <span id="eventNameL2Tasks">Event</span></h2>
+                        <p class="text-gray-600 mt-2">Phân tích chi tiết hiệu quả từng nhiệm vụ để tối ưu event sau.</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500">Tổng tương tác</p>
+                        <p class="text-2xl font-bold text-blue-600">14,250</p>
+                    </div>
+                </div>
+
+                <!-- Top Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Hot Task -->
+                    <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-green-500">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">🔥 Nhiệm vụ Hot nhất</p>
+                                <h3 class="text-xl font-bold text-gray-800 mt-1">Đăng nhập hàng ngày</h3>
+                                <p class="text-sm text-gray-600 mt-2">Dễ thực hiện, user quay lại đều đặn.</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-3xl font-bold text-green-600">8,420</p>
+                                <p class="text-xs text-gray-500">lượt hoàn thành</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hard Task -->
+                    <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-red-500">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">⚠️ Nhiệm vụ Khó nhất</p>
+                                <h3 class="text-xl font-bold text-gray-800 mt-1">Mời 3 bạn bè (SĐT)</h3>
+                                <p class="text-sm text-gray-600 mt-2">Rào cản cao, cần cân nhắc giảm điều kiện.</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-3xl font-bold text-red-600">320</p>
+                                <p class="text-xs text-gray-500">lượt hoàn thành</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Table -->
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                        <h3 class="font-bold text-gray-800">Chi tiết từng nhiệm vụ</h3>
+                    </div>
+                    <table class="w-full">
+                        <thead class="bg-gray-100 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-1/3">Tên nhiệm vụ</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Loại</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Lượt hoàn thành</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-1/3">Thanh so sánh (Visual)</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Tỷ lệ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="taskStatsTableBody">
+                            <!-- Task 1: High -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <p class="font-semibold text-gray-800">⚡ Đăng nhập hàng ngày</p>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Daily</td>
+                                <td class="px-6 py-4 text-center font-bold text-gray-800">8,420</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-green-500 h-2.5 rounded-full" style="width: 95%"></div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center text-green-600 font-bold">95%</td>
+                            </tr>
+                            
+                            <!-- Task 2: Medium -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <p class="font-semibold text-gray-800">📱 Chia sẻ Facebook</p>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Social</td>
+                                <td class="px-6 py-4 text-center font-bold text-gray-800">4,150</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: 45%"></div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center text-blue-600 font-bold">45%</td>
+                            </tr>
+
+                            <!-- Task 3: Low -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <p class="font-semibold text-gray-800">👥 Mời 3 bạn bè (SĐT)</p>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Referral</td>
+                                <td class="px-6 py-4 text-center font-bold text-gray-800">320</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-red-500 h-2.5 rounded-full" style="width: 5%"></div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center text-red-600 font-bold">5%</td>
+                            </tr>
+
+                            <!-- Task 4: Medium -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <p class="font-semibold text-gray-800">📚 Làm đề thi thử</p>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">Practice</td>
+                                <td class="px-6 py-4 text-center font-bold text-gray-800">1,200</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 15%"></div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center text-yellow-600 font-bold">15%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Level 3: User Task Details -->
+            <div id="reports-level3" style="display:none;">
+                <div class="mb-6">
+                    <button onclick="backToReportsLevel2()" class="text-blue-600 hover:text-blue-800 font-semibold mb-4">← Quay lại danh sách người nhận giải</button>
+                    <h2 class="text-3xl font-bold text-gray-800">📋 Chi Tiết Nhiệm Vụ - <span id="userNameL3">User</span></h2>
+                    <p class="text-sm text-gray-600 mt-2">Event: <span id="eventNameL3">-</span> | User ID: <span id="userIdL3">-</span></p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+                        <p class="text-xs text-gray-600 mb-1">Tổng Nhiệm Vụ</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalTasksL3">10</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+                        <p class="text-xs text-gray-600 mb-1">Hoàn Thành</p>
+                        <p class="text-2xl font-bold text-green-600" id="completedTasksL3">10</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+                        <p class="text-xs text-gray-600 mb-1">Tổng Điểm</p>
+                        <p class="text-2xl font-bold text-orange-600" id="totalPointsL3">100</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+                        <p class="text-xs text-gray-600 mb-1">Xếp Hạng</p>
+                        <p class="text-2xl font-bold text-gray-800" id="rankL3">#1</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-100 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Nhiệm vụ</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Điểm đạt được</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Thời gian bắt đầu</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Thời gian hoàn thành</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="userTasksTableBody">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4">
+                                    <p class="font-semibold text-gray-800">⚡ Đăng nhập hàng ngày</p>
+                                    <p class="text-xs text-gray-500">Auto verification</p>
+                                </td>
+                                <td class="px-6 py-4 text-center text-sm font-semibold text-orange-600">20</td>
+                                <td class="px-6 py-4 text-center text-sm text-gray-600">01/10/2025 10:00</td>
+                                <td class="px-6 py-4 text-center text-sm text-gray-600">01/10/2025 10:05</td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Hoàn thành</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4">
+                                    <p class="font-semibold text-gray-800">📱 Chia sẻ Facebook</p>
+                                    <p class="text-xs text-gray-500">Trust-based</p>
+                                </td>
+                                <td class="px-6 py-4 text-center text-sm font-semibold text-orange-600">50</td>
+                                <td class="px-6 py-4 text-center text-sm text-gray-600">02/10/2025 14:30</td>
+                                <td class="px-6 py-4 text-center text-sm text-gray-600">02/10/2025 14:35</td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Hoàn thành</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settings-tab" class="tab-content">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">⚙️ Cài Đặt Hệ Thống</h2>
+            <div class="bg-white rounded-lg p-6 shadow-md border border-gray-200">
+                <p class="text-gray-600">System settings...</p>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Create Event Modal - UPDATED WITH SEGMENTATION -->
+    <div id="createEventModal" class="modal">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full m-4 max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between z-10">
+                <h2 class="text-2xl font-bold text-gray-800">➕ Tạo Event Mới</h2>
+                <button onclick="closeModal('createEventModal')" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
+            </div>
+            
+            <div class="px-8 py-6 space-y-8">
+                <!-- SECTION 1: Setup Banner (AT TOP) -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">🎨 Setup Banner & Đối tượng</h3>
+                    <p class="text-sm text-gray-600 mb-4">Cấu hình hiển thị và đối tượng mục tiêu cho event</p>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tên event *</label>
+                                <input type="text" id="eventName" placeholder="Đường Đua Sĩ Tử..." required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Mã event *</label>
+                                <input type="text" id="eventCode" placeholder="DDST4" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tiêu đề banner *</label>
+                            <input type="text" id="bannerTitle" placeholder="Đường Đua Sĩ Tử" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nội dung banner *</label>
+                            
+                            <!-- Rich Text Editor Toolbar -->
+                            <div class="border border-gray-300 rounded-t-lg bg-gray-50 px-3 py-2 flex items-center gap-2 flex-wrap">
+                                <button type="button" onclick="formatText('bold')" class="px-2 py-1 hover:bg-gray-200 rounded text-sm font-bold" title="Bold">B</button>
+                                <button type="button" onclick="formatText('italic')" class="px-2 py-1 hover:bg-gray-200 rounded text-sm italic" title="Italic">I</button>
+                                <button type="button" onclick="formatText('underline')" class="px-2 py-1 hover:bg-gray-200 rounded text-sm underline" title="Underline">U</button>
+                                <span class="text-gray-300">|</span>
+                                <button type="button" onclick="formatText('insertUnorderedList')" class="px-2 py-1 hover:bg-gray-200 rounded text-sm" title="Bullet List">• List</button>
+                                <button type="button" onclick="formatText('insertOrderedList')" class="px-2 py-1 hover:bg-gray-200 rounded text-sm" title="Numbered List">1. List</button>
+                            </div>
+                            
+                            <!-- Rich Text Editor Content -->
+                            <div id="bannerContent" contenteditable="true" class="w-full border border-t-0 border-gray-300 rounded-b-lg px-4 py-3 min-h-[120px] focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none" placeholder="Nhập nội dung banner..."></div>
+                            <p id="charCount" class="text-xs text-gray-500 mt-1">0/500 ký tự</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Link thể lệ (PDF) *</label>
+                            <input type="url" id="rulesLink" placeholder="https://luyende.vn/event/ddst/the-le.pdf" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+
+                        <!-- NEW: SEGMENT SELECTION -->
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <label class="block text-base font-bold text-gray-800 mb-3">🎯 Chọn Tệp Khách Hàng (Segmentation)</label>
+                            <p class="text-sm text-gray-600 mb-3">Chọn các nhóm user mục tiêu sẽ nhìn thấy và tham gia event này.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <!-- Segment 1 -->
+                                <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" checked class="mt-1 w-5 h-5 text-orange-600 rounded focus:ring-orange-500">
+                                    <div>
+                                        <div class="font-bold text-gray-800">Hướng nội - TB <span class="text-xs font-normal bg-gray-100 px-2 py-0.5 rounded-full ml-1">40-45%</span></div>
+                                        <p class="text-xs text-gray-500 mt-1">Sợ sai, cần an toàn. Thích lộ trình rõ ràng, nhiệm vụ nhỏ.</p>
+                                    </div>
+                                </label>
+                                
+                                <!-- Segment 2 -->
+                                <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" checked class="mt-1 w-5 h-5 text-orange-600 rounded focus:ring-orange-500">
+                                    <div>
+                                        <div class="font-bold text-gray-800">Hướng nội - Khá/Giỏi <span class="text-xs font-normal bg-gray-100 px-2 py-0.5 rounded-full ml-1">10-15%</span></div>
+                                        <p class="text-xs text-gray-500 mt-1">Tự học tốt, chiến binh thầm lặng. Thích phân tích sâu, tránh mất điểm oan.</p>
+                                    </div>
+                                </label>
+                                
+                                <!-- Segment 3 -->
+                                <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" checked class="mt-1 w-5 h-5 text-orange-600 rounded focus:ring-orange-500">
+                                    <div>
+                                        <div class="font-bold text-gray-800">Hướng ngoại - TB <span class="text-xs font-normal bg-gray-100 px-2 py-0.5 rounded-full ml-1">25-30%</span></div>
+                                        <p class="text-xs text-gray-500 mt-1">Năng lượng cao, thiếu kỷ luật. Thích social, ranking ngắn ngày (7 ngày).</p>
+                                    </div>
+                                </label>
+                                
+                                <!-- Segment 4 -->
+                                <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" checked class="mt-1 w-5 h-5 text-orange-600 rounded focus:ring-orange-500">
+                                    <div>
+                                        <div class="font-bold text-gray-800">Hướng ngoại - Khá/Giỏi <span class="text-xs font-normal bg-gray-100 px-2 py-0.5 rounded-full ml-1">~10%</span></div>
+                                        <p class="text-xs text-gray-500 mt-1">Thích đua top, competitive. Thích đề phân loại cao, thách đấu trực tiếp.</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECTION 2: Time Period -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">⏰ Thời gian diễn ra</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ngày bắt đầu *</label>
+                            <input type="datetime-local" id="startDate" onchange="validateEventDates()" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ngày kết thúc *</label>
+                            <input type="datetime-local" id="endDate" onchange="validateEventDates()" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">⏰ Timezone: GMT+7 (Giờ Việt Nam)</p>
+                    <p id="durationInfo" class="text-sm text-blue-600 font-semibold mt-2"></p>
+                    
+                    <!-- Active/Inactive Toggle -->
+                    <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <label class="text-sm font-bold text-gray-800">Trạng thái Event</label>
+                                <p class="text-xs text-gray-600 mt-1">Chỉ có 1 event được Active trong cùng khoảng thời gian</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="eventActive" onchange="validateEventActive()" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                            </label>
+                        </div>
+                        <div id="activeStatus" class="flex items-center gap-2">
+                            <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-xs font-semibold">Inactive</span>
+                        </div>
+                        <div id="activeWarning" class="hidden mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-500 text-sm text-yellow-700">
+                            ⚠️ <strong>Cảnh báo:</strong> Đã có event khác active trong khoảng thời gian này!
+                        </div>
+                        <div id="futureActiveInfo" class="hidden mt-3 p-3 bg-green-50 border-l-4 border-green-500 text-sm text-green-700">
+                            ✓ Event sẽ tự động active vào <span id="autoActiveDate" class="font-semibold"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECTION 3: Task Selection -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">📝 Chọn Nhiệm Vụ</h3>
+                    <p class="text-sm text-gray-600 mb-4">Chọn các nhiệm vụ cho event (điểm có thể chỉnh sửa)</p>
+                    
+                    <div class="space-y-3 max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-4">
+                        <!-- Task 1 -->
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                            <input type="checkbox" id="task1" class="w-4 h-4 text-orange-600 rounded" onchange="updateSelectedTasks()">
+                            <div class="flex-1">
+                                <label for="task1" class="font-semibold text-gray-800 cursor-pointer">⚡ Đăng nhập hàng ngày</label>
+                                <p class="text-xs text-gray-500">Auto verification</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="20" min="1" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm" disabled id="task1Points">
+                                <span class="text-sm text-gray-600">điểm</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Task 2 -->
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                            <input type="checkbox" id="task2" class="w-4 h-4 text-orange-600 rounded" onchange="updateSelectedTasks()">
+                            <div class="flex-1">
+                                <label for="task2" class="font-semibold text-gray-800 cursor-pointer">📱 Chia sẻ Facebook</label>
+                                <p class="text-xs text-gray-500">Trust-based</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="50" min="1" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm" disabled id="task2Points">
+                                <span class="text-sm text-gray-600">điểm</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Task 3 -->
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                            <input type="checkbox" id="task3" class="w-4 h-4 text-orange-600 rounded" onchange="updateSelectedTasks()">
+                            <div class="flex-1">
+                                <label for="task3" class="font-semibold text-gray-800 cursor-pointer">👥 Mời 3 bạn bè (xác thực SĐT)</label>
+                                <p class="text-xs text-gray-500">Phone verified</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="100" min="1" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm" disabled id="task3Points">
+                                <span class="text-sm text-gray-600">điểm</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Task 4 -->
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                            <input type="checkbox" id="task4" class="w-4 h-4 text-orange-600 rounded" onchange="updateSelectedTasks()">
+                            <div class="flex-1">
+                                <label for="task4" class="font-semibold text-gray-800 cursor-pointer">📚 Làm đề (điểm > 60%)</label>
+                                <p class="text-xs text-gray-500">Auto score verify</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="30" min="1" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm" disabled id="task4Points">
+                                <span class="text-sm text-gray-600">điểm</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Task 5 -->
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                            <input type="checkbox" id="task5" class="w-4 h-4 text-orange-600 rounded" onchange="updateSelectedTasks()">
+                            <div class="flex-1">
+                                <label for="task5" class="font-semibold text-gray-800 cursor-pointer">🎵 Repost TikTok</label>
+                                <p class="text-xs text-gray-500">Trust-based</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="50" min="1" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm" disabled id="task5Points">
+                                <span class="text-sm text-gray-600">điểm</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Task 6 -->
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                            <input type="checkbox" id="task6" class="w-4 h-4 text-orange-600 rounded" onchange="updateSelectedTasks()">
+                            <div class="flex-1">
+                                <label for="task6" class="font-semibold text-gray-800 cursor-pointer">💚 Chia sẻ Zalo Feed</label>
+                                <p class="text-xs text-gray-500">Trust-based</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="50" min="1" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm" disabled id="task6Points">
+                                <span class="text-sm text-gray-600">điểm</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="selectedTasksSummary" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p class="text-sm font-semibold text-green-800">
+                            Đã chọn: <span id="taskCount">0</span> nhiệm vụ | 
+                            Tổng điểm tối đa: <span id="totalPoints">0</span> điểm
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- SECTION 4: Reward Config - NO MANUAL RULES -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">🎁 Cấu hình Giải Thưởng</h3>
+                    
+                    <div class="flex items-center gap-4 mb-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="hasReward" value="yes" checked onclick="toggleRewardSection(true)" class="w-4 h-4 text-orange-600">
+                            <span class="text-sm font-medium text-gray-700">Có giải thưởng</span>
+                        </label>
+                        
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="hasReward" value="no" onclick="toggleRewardSection(false)" class="w-4 h-4 text-orange-600">
+                            <span class="text-sm font-medium text-gray-700">Không giải thưởng</span>
+                        </label>
+                    </div>
+                    
+                    <div id="rewardSection">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Mã giải thưởng *</label>
+                                <input type="text" id="rewardCodeInput" placeholder="DDST1, DDST2..." 
+                                    onblur="fetchRewardInfo(this.value)"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                <p class="text-xs text-gray-500 mt-1">💡 Nhập mã để tự động load thông tin & rules</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Số lượng giải</label>
+                                <input type="number" id="rewardQuantityInput" placeholder="Auto-fill..." readonly 
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 text-gray-600">
+                                <p class="text-xs text-gray-500 mt-1">Tự động điền khi nhập mã</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Auto-populated Reward Info with RULES -->
+                        <div id="rewardInfoBox" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-600 text-xl">✓</span>
+                                <div class="flex-1">
+                                    <p class="text-sm font-semibold text-green-800 mb-2">Thông tin giải thưởng:</p>
+                                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 mb-3">
+                                        <p><strong>🎁 Tên:</strong> <span id="displayRewardName">-</span></p>
+                                        <p><strong>💰 Giá trị:</strong> <span id="displayRewardValue">-</span> VNĐ</p>
+                                        <p><strong>🎯 Số lượng:</strong> <span id="displayRewardQuantity">-</span> phần</p>
+                                        <p><strong>📦 Loại:</strong> <span id="displayRewardType">-</span></p>
+                                    </div>
+                                    
+                                    <!-- Auto-populated Rules -->
+                                    <div class="border-t border-green-200 pt-3">
+                                        <p class="text-sm font-semibold text-green-800 mb-2">📋 Điều kiện nhận thưởng (auto từ DB):</p>
+                                        <ul id="rewardRulesList" class="text-xs text-green-700 space-y-1 list-disc list-inside">
+                                            <!-- Will be populated by fetchRewardInfo() -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="rewardErrorBox" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <div class="flex items-start gap-2">
+                                <span class="text-red-600 text-xl">⚠️</span>
+                                <div class="flex-1">
+                                    <p class="text-sm font-semibold text-red-800">Không tìm thấy mã giải thưởng!</p>
+                                    <p class="text-xs text-red-600 mt-1">Vui lòng kiểm tra lại hoặc tạo giải thưởng mới ở tab "Giải thưởng"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-8 py-6 flex justify-end gap-3">
+                <button onclick="closeModal('createEventModal')" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-100 transition">
+                    Hủy
+                </button>
+                <button onclick="submitEvent()" class="gradient-orange text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition">
+                    💾 Tạo event
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Create Reward Modal (UPDATED) -->
+    <div id="createRewardModal" class="modal">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full m-4 max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between z-10">
+                <h2 class="text-2xl font-bold text-gray-800">🎁 Tạo Giải Thưởng Mới</h2>
+                <button onclick="closeModal('createRewardModal')" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
+            </div>
+            
+            <div class="px-8 py-6 space-y-6">
+                <!-- Thông tin cơ bản -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Thông tin cơ bản</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tên giải thưởng *</label>
+                            <input type="text" placeholder="VD: Voucher Urbox 50k" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mã giải thưởng *</label>
+                            <input type="text" placeholder="VD: DDST1_50K" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                            <p class="text-xs text-gray-500 mt-1">Mã duy nhất để dễ tìm kiếm</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mô tả ngắn</label>
+                        <textarea rows="3" placeholder="Mô tả chi tiết về giải thưởng..." class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">0/300 ký tự</p>
+                    </div>
+                </div>
+                
+                <!-- Loại và giá trị -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Loại và Giá Trị</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phân loại *</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                <option>Voucher</option>
+                                <option>Tiền mặt</option>
+                                <option>Quà tặng vật chất</option>
+                                <option>Điểm thưởng</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Giá trị (VNĐ) *</label>
+                            <input type="number" placeholder="50000" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Số lượng *</label>
+                            <input type="number" placeholder="1000" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Điều kiện nhận thưởng -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Điều Kiện Nhận Thưởng</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="condition-tasks" class="w-4 h-4 text-orange-600 rounded focus:ring-orange-500">
+                            <label for="condition-tasks" class="text-sm text-gray-700">Hoàn thành tối thiểu</label>
+                            <input type="number" placeholder="70" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm">
+                            <span class="text-sm text-gray-700">% nhiệm vụ</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="condition-points" class="w-4 h-4 text-orange-600 rounded focus:ring-orange-500">
+                            <label for="condition-points" class="text-sm text-gray-700">Đạt tối thiểu</label>
+                            <input type="number" placeholder="500" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm">
+                            <span class="text-sm text-gray-700">điểm</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="condition-verified" class="w-4 h-4 text-orange-600 rounded focus:ring-orange-500">
+                            <label for="condition-verified" class="text-sm text-gray-700">Yêu cầu xác thực số điện thoại</label>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="condition-rank" class="w-4 h-4 text-orange-600 rounded focus:ring-orange-500">
+                            <label for="condition-rank" class="text-sm text-gray-700">Top</label>
+                            <input type="number" placeholder="100" class="w-20 border border-gray-300 rounded px-2 py-1 text-sm">
+                            <span class="text-sm text-gray-700">xếp hạng cao nhất</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Nhà cung cấp (nếu là voucher) -->
+                <div id="providerSection">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Nhà Cung Cấp</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tên nhà cung cấp</label>
+                            <input type="text" placeholder="VD: Urbox" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">API Integration</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                <option>Urbox API</option>
+                                <option>Manual</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-8 py-6 flex justify-end gap-3">
+                <button onclick="closeModal('createRewardModal')" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-100 transition">
+                    Hủy
+                </button>
+                <button class="gradient-orange text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition">
+                    💾 Tạo Giải Thưởng
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // Tab Management
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        // Modal Management
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+        
+        // Close modal on background click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal(this.id);
+                }
+            });
+        });
+        
+        // Rich Text Editor
+        function formatText(command, value = null) {
+            document.execCommand(command, false, value);
+            document.getElementById('bannerContent').focus();
+        }
+        
+        // Character Counter
+        document.getElementById('bannerContent')?.addEventListener('input', function() {
+            const charCount = this.textContent.length;
+            const counter = document.getElementById('charCount');
+            counter.textContent = `${charCount}/500 ký tự`;
+            if (charCount > 500) {
+                counter.classList.add('text-red-600');
+            } else {
+                counter.classList.remove('text-red-600');
+            }
+        });
+        
+        // Date Validation
+        function validateEventDates() {
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            const durationInfo = document.getElementById('durationInfo');
+            
+            if (!startDate.value || !endDate.value) return;
+            
+            const start = new Date(startDate.value);
+            const end = new Date(endDate.value);
+            const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            
+            if (end < start) {
+                durationInfo.innerHTML = '❌ Ngày kết thúc phải sau ngày bắt đầu!';
+                durationInfo.className = 'text-sm font-semibold text-red-600 mt-2';
+            } else {
+                durationInfo.innerHTML = `✓ Thời gian: ${diffDays} ngày`;
+                durationInfo.className = 'text-sm font-semibold text-green-600 mt-2';
+            }
+        }
+        
+        // Active Toggle Validation
+        function validateEventActive() {
+            const isActive = document.getElementById('eventActive').checked;
+            const activeStatus = document.getElementById('activeStatus');
+            const activeWarning = document.getElementById('activeWarning');
+            const futureActiveInfo = document.getElementById('futureActiveInfo');
+            const startDate = document.getElementById('startDate').value;
+            
+            // Update badge
+            if (isActive) {
+                activeStatus.innerHTML = '<span class="px-3 py-1 bg-green-500 text-white rounded-full text-xs font-semibold">✓ Active</span>';
+            } else {
+                activeStatus.innerHTML = '<span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-xs font-semibold">Inactive</span>';
+            }
+            
+            // Check overlap (mock - production sẽ gọi API)
+            const hasOverlap = false;
+            const start = new Date(startDate);
+            const now = new Date();
+            
+            activeWarning.classList.add('hidden');
+            futureActiveInfo.classList.add('hidden');
+            
+            if (isActive && hasOverlap) {
+                activeWarning.classList.remove('hidden');
+            } else if (isActive && start > now) {
+                futureActiveInfo.classList.remove('hidden');
+                document.getElementById('autoActiveDate').textContent = start.toLocaleDateString('vi-VN', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                });
+            }
+        }
+        
+        // Task Selection Update
+        function updateSelectedTasks() {
+            let taskCount = 0;
+            let totalPoints = 0;
+            
+            for (let i = 1; i <= 6; i++) {
+                const checkbox = document.getElementById(`task${i}`);
+                const pointsInput = document.getElementById(`task${i}Points`);
+                
+                if (checkbox.checked) {
+                    taskCount++;
+                    totalPoints += parseInt(pointsInput.value || 0);
+                    pointsInput.disabled = false;
+                } else {
+                    pointsInput.disabled = true;
+                }
+            }
+            
+            document.getElementById('taskCount').textContent = taskCount;
+            document.getElementById('totalPoints').textContent = totalPoints;
+        }
+        
+        // Toggle Reward Section
+        function toggleRewardSection(show) {
+            const section = document.getElementById('rewardSection');
+            if (show) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        }
+        
+        // Fetch Reward Info with AUTO-POPULATE RULES
+        function fetchRewardInfo(code) {
+            if (!code) return;
+            
+            const rewardDatabase = {
+                'DDST1': {
+                    name: 'Đường đua sĩ tử 1',
+                    value: '5,000,000',
+                    quantity: 100,
+                    type: 'Voucher Urbox',
+                    rules: [
+                        'Có xác thực SĐT (bắt buộc)',
+                        'Hoàn thành tối thiểu 80% nhiệm vụ trong event',
+                        'Tổng điểm đạt >= 300 điểm',
+                        'Thời gian tham gia: Trong khoảng thời gian event diễn ra'
+                    ]
+                },
+                'DDST2': {
+                    name: 'Đường đua sĩ tử 2',
+                    value: '15,000,000',
+                    quantity: 156,
+                    type: 'Voucher Urbox',
+                    rules: [
+                        'Có xác thực SĐT (bắt buộc)',
+                        'Hoàn thành tối thiểu 90% nhiệm vụ',
+                        'Tổng điểm đạt >= 450 điểm',
+                        'Mời thành công ít nhất 3 bạn bè tham gia'
+                    ]
+                },
+                'DDST3': {
+                    name: 'Đường đua sĩ tử 3',
+                    value: '10,000,000',
+                    quantity: 1000,
+                    type: 'Voucher Urbox',
+                    rules: [
+                        'Có xác thực SĐT (bắt buộc)',
+                        'Hoàn thành tối thiểu 70% nhiệm vụ',
+                        'Tổng điểm đạt >= 250 điểm'
+                    ]
+                }
+            };
+            
+            const infoBox = document.getElementById('rewardInfoBox');
+            const errorBox = document.getElementById('rewardErrorBox');
+            const reward = rewardDatabase[code.toUpperCase()];
+            
+            if (reward) {
+                // Populate reward info
+                document.getElementById('displayRewardName').textContent = reward.name;
+                document.getElementById('displayRewardValue').textContent = reward.value;
+                document.getElementById('displayRewardQuantity').textContent = reward.quantity;
+                document.getElementById('displayRewardType').textContent = reward.type;
+                document.getElementById('rewardQuantityInput').value = reward.quantity;
+                
+                // Populate rules
+                const rulesList = document.getElementById('rewardRulesList');
+                rulesList.innerHTML = '';
+                reward.rules.forEach(rule => {
+                    const li = document.createElement('li');
+                    li.textContent = rule;
+                    rulesList.appendChild(li);
+                });
+                
+                // Show success, hide error
+                infoBox.classList.remove('hidden');
+                errorBox.classList.add('hidden');
+            } else {
+                // Show error, hide success
+                infoBox.classList.add('hidden');
+                errorBox.classList.remove('hidden');
+            }
+        }
+        
+        // Reports Navigation - FIXED STRUCTURE
+        let currentEventId = null;
+        let currentUserId = null;
+        
+        function showEventWinners(eventId) {
+            currentEventId = eventId;
+            document.getElementById('reports-level1').style.display = 'none';
+            document.getElementById('reports-level2').style.display = 'block';
+            document.getElementById('reports-level2-tasks').style.display = 'none'; // Ensure tasks are hidden
+            document.getElementById('eventNameL2').textContent = `Event ${eventId}`;
+            
+            // Mock data - production sẽ load từ API
+            const winnersData = [
+                { name: 'Nguyễn Văn A', userId: '124562', points: '100/100', rank: '🥇 #1', completed: '10/10/2025' },
+                { name: 'Trần Thị B', userId: '124563', points: '95/100', rank: '🥈 #2', completed: '11/10/2025' },
+                { name: 'Lê Văn C', userId: '124564', points: '90/100', rank: '🥉 #3', completed: '12/10/2025' }
+            ];
+            
+            const tbody = document.getElementById('winnersTableBody');
+            tbody.innerHTML = winnersData.map(winner => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 font-semibold text-gray-800">${winner.name}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${winner.userId}</td>
+                    <td class="px-6 py-4 text-center text-sm font-semibold text-orange-600">${winner.points}</td>
+                    <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">${winner.rank}</td>
+                    <td class="px-6 py-4 text-center text-sm text-gray-600">${winner.completed}</td>
+                    <td class="px-6 py-4 text-center">
+                        <button onclick="showUserTasks('${winner.userId}', '${eventId}')" class="text-blue-600 hover:text-blue-800 text-sm font-semibold">👁️ Chi tiết nhiệm vụ</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // NEW: Show Task Stats
+        function showEventTaskStats(eventId) {
+            currentEventId = eventId;
+            document.getElementById('reports-level1').style.display = 'none';
+            document.getElementById('reports-level2').style.display = 'none';
+            document.getElementById('reports-level2-tasks').style.display = 'block';
+            document.getElementById('eventNameL2Tasks').textContent = `Event ${eventId}`;
+            // In production, fetch data based on eventId here
+        }
+
+        function backToReportsLevel1FromTasks() {
+            document.getElementById('reports-level2-tasks').style.display = 'none';
+            document.getElementById('reports-level1').style.display = 'block';
+        }
+        
+        function showUserTasks(userId, eventId) {
+            currentUserId = userId;
+            document.getElementById('reports-level2').style.display = 'none';
+            document.getElementById('reports-level3').style.display = 'block';
+            document.getElementById('userNameL3').textContent = `Nguyễn Văn A`;
+            document.getElementById('eventNameL3').textContent = `Event ${eventId}`;
+            document.getElementById('userIdL3').textContent = userId;
+            
+            // Mock task details
+            const tasksData = [
+                {
+                    name: '⚡ Đăng nhập hàng ngày',
+                    type: 'Auto verification',
+                    points: 20,
+                    startTime: '01/10/2025 10:00',
+                    endTime: '01/10/2025 10:05',
+                    status: 'Hoàn thành'
+                },
+                {
+                    name: '📱 Chia sẻ Facebook',
+                    type: 'Trust-based',
+                    points: 50,
+                    startTime: '02/10/2025 14:30',
+                    endTime: '02/10/2025 14:35',
+                    status: 'Hoàn thành'
+                },
+                {
+                    name: '👥 Mời 3 bạn bè',
+                    type: 'Phone verified',
+                    points: 100,
+                    startTime: '03/10/2025 09:15',
+                    endTime: '05/10/2025 18:20',
+                    status: 'Hoàn thành'
+                }
+            ];
+            
+            const tbody = document.getElementById('userTasksTableBody');
+            tbody.innerHTML = tasksData.map(task => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4">
+                        <p class="font-semibold text-gray-800">${task.name}</p>
+                        <p class="text-xs text-gray-500">${task.type}</p>
+                    </td>
+                    <td class="px-6 py-4 text-center text-sm font-semibold text-orange-600">${task.points}</td>
+                    <td class="px-6 py-4 text-center text-sm text-gray-600">${task.startTime}</td>
+                    <td class="px-6 py-4 text-center text-sm text-gray-600">${task.endTime}</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">${task.status}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function backToReportsLevel1() {
+            document.getElementById('reports-level2').style.display = 'none';
+            document.getElementById('reports-level1').style.display = 'block';
+        }
+        
+        function backToReportsLevel2() {
+            document.getElementById('reports-level3').style.display = 'none';
+            document.getElementById('reports-level2').style.display = 'block';
+        }
+        
+        // Submit Event
+        function submitEvent() {
+            // Validation
+            const eventName = document.getElementById('eventName').value;
+            const eventCode = document.getElementById('eventCode').value;
+            const bannerTitle = document.getElementById('bannerTitle').value;
+            const bannerContent = document.getElementById('bannerContent').textContent;
+            const rulesLink = document.getElementById('rulesLink').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!eventName || !eventCode || !bannerTitle || !bannerContent || !rulesLink || !startDate || !endDate) {
+                alert('⚠️ Vui lòng điền đầy đủ các trường bắt buộc (*)');
+                return;
+            }
+            
+            // Mock submit
+            alert('✅ Event đã được tạo thành công!\n\n' +
+                  `Tên: ${eventName}\n` +
+                  `Mã: ${eventCode}\n` +
+                  `Thời gian: ${new Date(startDate).toLocaleDateString('vi-VN')} - ${new Date(endDate).toLocaleDateString('vi-VN')}`);
+            
+            closeModal('createEventModal');
+        }
+    </script>
+</body>
+</html>
