@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup: User Details Flow (V2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f1f5f9; }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Filter Inputs */
+        .filter-input {
+            width: 100%; margin-top: 4px; padding: 4px 8px; font-size: 11px;
+            border: 1px solid #e2e8f0; border-radius: 4px; outline: none;
+            color: #475569; background-color: #fff;
+        }
+        .filter-input:focus { border-color: #f97316; }
+
+        /* Sort Icons */
+        .sort-icon { cursor: pointer; margin-left: 4px; color: #94a3b8; font-size: 11px; }
+        .sort-icon.active { color: #f97316; }
+
+        /* Breadcrumb */
+        .breadcrumb { font-size: 14px; color: #64748b; margin-bottom: 16px; display: flex; items-center; gap: 8px; }
+        .breadcrumb a { color: #3b82f6; font-weight: 600; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #1d4ed8; text-decoration: underline; }
+        
+        /* Badges */
+        .badge-done { background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        .badge-pending { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm px-8 py-4 z-10 border-b border-gray-200 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xl font-bold"><i class="fa-solid fa-users"></i></div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Chi tiết User & Nhiệm vụ</h1>
+                <p class="text-xs text-slate-500">Drill-down Report View</p>
+            </div>
+        </div>
+        <button onclick="window.location.reload()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-rotate-right"></i> Reload</button>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 overflow-y-auto p-8 custom-scroll relative">
+        
+        <!-- === SCREEN 1: DANH SÁCH NGƯỜI NHẬN GIẢI === -->
+        <div id="screen1" class="max-w-7xl mx-auto transition-opacity duration-300">
+            <div class="breadcrumb">
+                <i class="fa-solid fa-arrow-left text-gray-400"></i>
+                <a href="#">Quay lại danh sách events</a>
+                <span class="text-gray-300">/</span>
+                <span class="text-slate-800 font-medium">Danh sách người nhận giải - Event DDST1</span>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 w-[220px]">
+                                    <div class="flex justify-between cursor-pointer" onclick="sortData1('name')">Họ tên <i class="fa-solid fa-sort sort-icon"></i></div>
+                                    <input type="text" class="filter-input" placeholder="Lọc tên..." onkeyup="filterData1()">
+                                </th>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 w-[120px]">
+                                    <div class="flex justify-between cursor-pointer" onclick="sortData1('id')">User ID <i class="fa-solid fa-sort sort-icon"></i></div>
+                                    <input type="text" class="filter-input" placeholder="Lọc ID..." onkeyup="filterData1()">
+                                </th>
+                                <!-- NEW: Phone Column -->
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 w-[140px]">
+                                    <div class="flex justify-between cursor-pointer" onclick="sortData1('phone')">SĐT <i class="fa-solid fa-sort sort-icon"></i></div>
+                                    <input type="text" class="filter-input" placeholder="09..." onkeyup="filterData1()">
+                                </th>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center w-[100px]">
+                                    <div class="flex justify-center gap-1 cursor-pointer" onclick="sortData1('score')">Điểm <i class="fa-solid fa-sort sort-icon"></i></div>
+                                    <input type="number" class="filter-input text-center" placeholder=">..." onkeyup="filterData1()">
+                                </th>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center w-[100px]">
+                                    <div class="flex justify-center gap-1 cursor-pointer" onclick="sortData1('rank')">Rank <i class="fa-solid fa-sort sort-icon active"></i></div>
+                                    <input type="number" class="filter-input text-center" placeholder="#" onkeyup="filterData1()">
+                                </th>
+                                <!-- RENAMED: Completion Time -->
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center w-[180px]">
+                                    <div class="flex justify-center gap-1 cursor-pointer" onclick="sortData1('time')">Thời gian hoàn thành <i class="fa-solid fa-sort sort-icon"></i></div>
+                                    <input type="text" class="filter-input text-center" placeholder="dd/mm/yyyy" onkeyup="filterData1()">
+                                </th>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody1" class="divide-y divide-gray-100 text-sm text-slate-600">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
+                    <span class="text-xs text-slate-500">Hiển thị 1-10 / 156 user</span>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1 bg-white border rounded text-xs font-bold hover:bg-gray-100 disabled:opacity-50">Prev</button>
+                        <button class="px-3 py-1 bg-white border rounded text-xs font-bold hover:bg-gray-100">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === SCREEN 2: CHI TIẾT NHIỆM VỤ (Hidden by default) === -->
+        <div id="screen2" class="max-w-7xl mx-auto hidden transition-opacity duration-300">
+            <div class="breadcrumb">
+                <i class="fa-solid fa-arrow-left text-gray-400"></i>
+                <a href="#" onclick="showScreen1()">Quay lại danh sách người nhận giải</a>
+                <span class="text-gray-300">/</span>
+                <span class="text-slate-800 font-medium">Chi Tiết Nhiệm Vụ - <span id="detailUserName" class="text-blue-600 font-bold">Nguyễn Văn A</span></span>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Tổng Nhiệm Vụ</p>
+                    <p class="text-3xl font-bold text-slate-800 mt-1">10</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Hoàn Thành</p>
+                    <p class="text-3xl font-bold text-green-600 mt-1">10 <span class="text-sm text-gray-400 font-normal">/10</span></p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Tổng Điểm</p>
+                    <p class="text-3xl font-bold text-orange-500 mt-1">100</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Xếp Hạng</p>
+                    <p class="text-3xl font-bold text-blue-600 mt-1">#1</p>
+                </div>
+            </div>
+
+            <!-- Task Details Table -->
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 w-1/3">
+                                    Nhiệm vụ
+                                    <input type="text" class="filter-input" placeholder="Lọc tên task...">
+                                </th>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center">
+                                    Điểm
+                                    <input type="number" class="filter-input text-center" placeholder="> Điểm">
+                                </th>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center">
+                                    Bắt đầu
+                                    <input type="text" class="filter-input text-center" placeholder="hh:mm">
+                                </th>
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center">
+                                    Hoàn thành
+                                    <input type="text" class="filter-input text-center" placeholder="hh:mm">
+                                </th>
+                                
+                                <!-- NEW: Link Proof Column -->
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 w-[200px]">
+                                    Link Proof
+                                    <input type="text" class="filter-input" placeholder="Tìm link...">
+                                </th>
+                                
+                                <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center w-[140px]">
+                                    Trạng thái
+                                    <select class="filter-input text-center">
+                                        <option>Tất cả</option>
+                                        <option>Hoàn thành</option>
+                                        <option>Chưa</option>
+                                    </select>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody2" class="divide-y divide-gray-100 text-sm text-slate-600">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+                 <div class="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
+                    <span class="text-xs text-slate-500">Hiển thị 1-10 / 10 task</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- MOCK DATA SCREEN 1 (Winners) ---
+        const winners = Array.from({length: 10}, (_, i) => ({
+            name: `Nguyễn Văn ${String.fromCharCode(65+i)}`,
+            id: `12456${i}`,
+            phone: `09${Math.floor(Math.random()*100000000)}`, // Random Phone
+            score: 100 - (i*5),
+            rank: `#${i+1}`,
+            time: `1${i}/10/2025 10:30`
+        }));
+
+        // --- MOCK DATA SCREEN 2 (Task Details) ---
+        // proof: link for social tasks, null for auto tasks
+        const tasks = [
+            { name: "⚡ Đăng nhập hàng ngày", type: "Auto", score: 20, start: "01/10 10:00", end: "01/10 10:05", proof: null, status: "Hoàn thành" },
+            { name: "📱 Chia sẻ Facebook", type: "Trust", score: 50, start: "02/10 14:30", end: "02/10 14:35", proof: "https://fb.com/share/123", status: "Hoàn thành" },
+            { name: "👥 Mời 3 bạn bè", type: "Ref", score: 100, start: "03/10 09:15", end: "05/10 18:20", proof: null, status: "Hoàn thành" },
+            { name: "📚 Làm đề Toán", type: "Quiz", score: 30, start: "04/10 20:00", end: "04/10 20:45", proof: null, status: "Hoàn thành" },
+            { name: "🎵 Repost TikTok", type: "Social", score: 50, start: "05/10 11:00", end: "05/10 11:02", proof: "https://tiktok.com/@user/video/999", status: "Hoàn thành" },
+            { name: "💚 Share Zalo", type: "Social", score: 50, start: "06/10 08:00", end: "06/10 08:05", proof: "https://zalo.me/post/abc", status: "Hoàn thành" },
+            { name: "📝 Điểm danh chuỗi", type: "Streak", score: 10, start: "07/10 07:00", end: "07/10 07:01", proof: null, status: "Hoàn thành" },
+            { name: "🧩 Giải đố vui", type: "Game", score: 15, start: "08/10 12:00", end: "08/10 12:10", proof: null, status: "Hoàn thành" },
+            { name: "⭐ Rate app 5 sao", type: "Rate", score: 100, start: "09/10 15:00", end: "09/10 15:05", proof: null, status: "Hoàn thành" },
+            { name: "🎁 Nhập mã giới thiệu", type: "Ref", score: 50, start: "10/10 09:00", end: "10/10 09:01", proof: null, status: "Hoàn thành" }
+        ];
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderScreen1() {
+            const tbody = document.getElementById('tableBody1');
+            tbody.innerHTML = winners.map(u => `
+                <tr class="hover:bg-blue-50 transition border-b border-gray-100 last:border-0">
+                    <td class="px-6 py-4 font-semibold text-slate-800">${u.name}</td>
+                    <td class="px-6 py-4 font-mono text-slate-500">${u.id}</td>
+                    <td class="px-6 py-4 font-mono text-slate-600">${u.phone}</td>
+                    <td class="px-6 py-4 text-center font-bold text-orange-600">${u.score}</td>
+                    <td class="px-6 py-4 text-center font-bold text-slate-700">${u.rank}</td>
+                    <td class="px-6 py-4 text-center text-slate-500 text-xs">${u.time}</td>
+                    <td class="px-6 py-4 text-center">
+                        <button onclick="showScreen2('${u.name}')" class="text-blue-600 hover:text-blue-800 text-xs font-bold flex items-center justify-center gap-1 mx-auto border border-blue-200 bg-blue-50 px-3 py-1.5 rounded hover:bg-blue-100 transition">
+                            <i class="fa-solid fa-eye"></i> Chi tiết nhiệm vụ
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderScreen2() {
+            const tbody = document.getElementById('tableBody2');
+            tbody.innerHTML = tasks.map(t => {
+                // Logic Proof: Nếu có link -> Hiện input/link, Nếu ko -> Hiện dấu -
+                let proofHtml = `<span class="text-gray-300 text-center block">-</span>`;
+                if(t.proof) {
+                    proofHtml = `
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-link text-gray-400 text-xs"></i>
+                            <a href="${t.proof}" target="_blank" class="text-blue-600 hover:underline text-xs truncate w-40 block" title="${t.proof}">
+                                ${t.proof}
+                            </a>
+                        </div>
+                    `;
+                }
+
+                return `
+                <tr class="hover:bg-orange-50 transition border-b border-gray-100 last:border-0">
+                    <td class="px-6 py-4">
+                        <p class="font-bold text-slate-800">${t.name}</p>
+                        <p class="text-xs text-slate-400">${t.type}</p>
+                    </td>
+                    <td class="px-6 py-4 text-center font-bold text-orange-500">+${t.score}</td>
+                    <td class="px-6 py-4 text-center text-slate-500 font-mono text-xs">${t.start}</td>
+                    <td class="px-6 py-4 text-center text-slate-500 font-mono text-xs">${t.end}</td>
+                    
+                    <!-- Link Proof Column -->
+                    <td class="px-6 py-4">
+                        ${proofHtml}
+                    </td>
+
+                    <td class="px-6 py-4 text-center">
+                        <span class="badge-done"><i class="fa-solid fa-check mr-1"></i> ${t.status}</span>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // --- NAVIGATION ---
+
+        function showScreen2(userName) {
+            document.getElementById('detailUserName').innerText = userName;
+            
+            // Animation Fade Out Screen 1
+            const s1 = document.getElementById('screen1');
+            s1.style.opacity = '0';
+            setTimeout(() => {
+                s1.classList.add('hidden');
+                const s2 = document.getElementById('screen2');
+                s2.classList.remove('hidden');
+                setTimeout(() => s2.style.opacity = '1', 50);
+                renderScreen2();
+            }, 300);
+        }
+
+        function showScreen1() {
+            const s2 = document.getElementById('screen2');
+            s2.style.opacity = '0';
+            setTimeout(() => {
+                s2.classList.add('hidden');
+                const s1 = document.getElementById('screen1');
+                s1.classList.remove('hidden');
+                setTimeout(() => s1.style.opacity = '1', 50);
+            }, 300);
+        }
+
+        // --- INIT ---
+        renderScreen1();
+    </script>
+</body>
+</html>
