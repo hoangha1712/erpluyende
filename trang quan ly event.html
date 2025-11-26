@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Đề ERP - Quản Lý Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f3f4f6; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Sort Icons */
+        .sort-icon { cursor: pointer; margin-left: 5px; color: #9ca3af; }
+        .sort-icon.active { color: #f97316; }
+
+        /* Filter Inputs */
+        .filter-input {
+            width: 100%;
+            margin-top: 5px;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            outline: none;
+            font-weight: normal;
+        }
+        .filter-input:focus { border-color: #f97316; box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.1); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-slate-800 text-white flex flex-col flex-shrink-0 transition-all duration-300">
+        <div class="p-6 border-b border-slate-700 flex items-center gap-3">
+            <i class="fa-solid fa-layer-group text-orange-500 text-2xl"></i>
+            <div>
+                <h1 class="text-xl font-bold text-orange-500 tracking-wide">Luyện Đề ERP</h1>
+                <p class="text-xs text-slate-400">Event Management v2.1</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li><a href="#" class="flex items-center gap-3 px-6 py-3 text-slate-300 hover:bg-slate-700 hover:text-white transition"><i class="fa-solid fa-chart-pie w-5"></i> Dashboard</a></li>
+                <!-- Active Item -->
+                <li><a href="#" class="flex items-center gap-3 px-6 py-3 bg-slate-700 text-white border-l-4 border-orange-500"><i class="fa-solid fa-bullseye w-5"></i> Events</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-6 py-3 text-slate-300 hover:bg-slate-700 hover:text-white transition"><i class="fa-solid fa-bolt w-5"></i> Nhiệm Vụ</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-6 py-3 text-slate-300 hover:bg-slate-700 hover:text-white transition"><i class="fa-solid fa-gift w-5"></i> Giải Thưởng</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-6 py-3 text-slate-300 hover:bg-slate-700 hover:text-white transition"><i class="fa-solid fa-chart-line w-5"></i> Báo Cáo</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-6 py-3 text-slate-300 hover:bg-slate-700 hover:text-white transition"><i class="fa-solid fa-gear w-5"></i> Cài Đặt</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm px-8 py-5 flex justify-between items-center z-10">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bullseye text-2xl text-red-600"></i>
+                <h2 class="text-2xl font-bold text-slate-800">Quản Lý Events</h2>
+            </div>
+            <button class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg font-semibold shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Tạo Event Mới
+            </button>
+        </header>
+
+        <!-- Content Body -->
+        <div class="flex-1 overflow-auto p-8">
+            
+            <!-- Table Card -->
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 flex flex-col h-full max-h-[calc(100vh-140px)]">
+                
+                <!-- Table Wrapper -->
+                <div class="overflow-auto flex-1">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <!-- Column: Event Name -->
+                                <th class="px-6 py-4 font-semibold text-gray-700 text-sm min-w-[200px]">
+                                    <div class="flex items-center justify-between cursor-pointer" onclick="sortTable('name')">
+                                        Event <i class="fa-solid fa-sort sort-icon" id="sort-name"></i>
+                                    </div>
+                                    <input type="text" class="filter-input" placeholder="Lọc tên..." onkeyup="filterData('name', this.value)">
+                                </th>
+
+                                <!-- Column: Segment (New) -->
+                                <th class="px-6 py-4 font-semibold text-gray-700 text-sm min-w-[150px]">
+                                    <div class="flex items-center justify-between cursor-pointer" onclick="sortTable('segment')">
+                                        Segment <i class="fa-solid fa-sort sort-icon" id="sort-segment"></i>
+                                    </div>
+                                    <select class="filter-input" onchange="filterData('segment', this.value)">
+                                        <option value="">Tất cả</option>
+                                        <option value="Hướng nội">Hướng nội</option>
+                                        <option value="Hướng ngoại">Hướng ngoại</option>
+                                        <option value="Khá/Giỏi">Khá/Giỏi</option>
+                                        <option value="TB">Trung Bình</option>
+                                    </select>
+                                </th>
+
+                                <!-- Column: Time -->
+                                <th class="px-6 py-4 font-semibold text-gray-700 text-sm min-w-[180px]">
+                                    <div class="flex items-center justify-between cursor-pointer" onclick="sortTable('start')">
+                                        Thời gian <i class="fa-solid fa-sort sort-icon" id="sort-start"></i>
+                                    </div>
+                                    <input type="text" class="filter-input" placeholder="dd/mm/yyyy..." onkeyup="filterData('time', this.value)">
+                                </th>
+
+                                <!-- Column: Reward -->
+                                <th class="px-6 py-4 font-semibold text-gray-700 text-sm min-w-[150px]">
+                                    <div class="flex items-center justify-between cursor-pointer" onclick="sortTable('rewardValue')">
+                                        Giải thưởng <i class="fa-solid fa-sort sort-icon" id="sort-rewardValue"></i>
+                                    </div>
+                                    <input type="text" class="filter-input" placeholder="> Giá trị..." onkeyup="filterData('reward', this.value)">
+                                </th>
+
+                                <!-- Column: Tasks -->
+                                <th class="px-6 py-4 font-semibold text-gray-700 text-sm text-center w-[100px]">
+                                    <div class="flex items-center justify-center cursor-pointer" onclick="sortTable('tasks')">
+                                        Nhiệm vụ <i class="fa-solid fa-sort sort-icon" id="sort-tasks"></i>
+                                    </div>
+                                    <input type="number" class="filter-input text-center" placeholder="Số lg" onkeyup="filterData('tasks', this.value)">
+                                </th>
+
+                                <!-- Column: Status -->
+                                <th class="px-6 py-4 font-semibold text-gray-700 text-sm text-center min-w-[140px]">
+                                    <div class="flex items-center justify-center cursor-pointer" onclick="sortTable('statusPriority')">
+                                        Trạng thái <i class="fa-solid fa-sort sort-icon" id="sort-statusPriority"></i>
+                                    </div>
+                                    <select class="filter-input text-center" onchange="filterData('status', this.value)">
+                                        <option value="">Tất cả</option>
+                                        <option value="Đang diễn ra">Đang diễn ra</option>
+                                        <option value="Sắp diễn ra">Sắp diễn ra</option>
+                                        <option value="Đã kết thúc">Đã kết thúc</option>
+                                    </select>
+                                </th>
+
+                                <!-- Column: Actions -->
+                                <th class="px-6 py-4 font-semibold text-gray-700 text-sm text-center w-[100px]">
+                                    Actions
+                                    <div class="h-[26px]"></div> <!-- Spacer for alignment -->
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="divide-y divide-gray-100">
+                            <!-- Rows will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="border-t border-gray-200 p-4 bg-gray-50 flex justify-between items-center rounded-b-xl">
+                    <p class="text-sm text-gray-600">
+                        Hiển thị <span class="font-bold text-gray-800" id="startItem">1</span> đến <span class="font-bold text-gray-800" id="endItem">10</span> trong tổng số <span class="font-bold text-gray-800" id="totalItems">20</span> bản ghi
+                    </p>
+                    <div class="flex gap-2">
+                        <button onclick="prevPage()" class="px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" id="btnPrev">
+                            Previous
+                        </button>
+                        <button onclick="nextPage()" class="px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" id="btnNext">
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 1. DỮ LIỆU MẪU (20 Items)
+        // Priority: Active (1) -> Upcoming (2) -> Ended (3)
+        const rawData = [
+            { id: "DDST1", name: "Đường đua sĩ tử 1", start: "01/10/2025", end: "31/10/2025", reward: "5,000,000", rewardValue: 5000000, tasks: 8, segment: "Hướng nội - TB", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST2", name: "Đường đua sĩ tử 2", start: "01/11/2025", end: "30/11/2025", reward: "15,000,000", rewardValue: 15000000, tasks: 5, segment: "Hướng ngoại - Giỏi", status: "Sắp diễn ra", statusPriority: 2 },
+            { id: "DDST0", name: "Khởi động mùa thi", start: "01/09/2025", end: "30/09/2025", reward: "2,000,000", rewardValue: 2000000, tasks: 10, segment: "Tất cả", status: "Đã kết thúc", statusPriority: 3 },
+            { id: "DDST3", name: "Về đích thần tốc", start: "01/12/2025", end: "31/12/2025", reward: "10,000,000", rewardValue: 10000000, tasks: 6, segment: "Hướng nội - Giỏi", status: "Sắp diễn ra", statusPriority: 2 },
+            { id: "DDST4", name: "Thử thách 7 ngày", start: "15/10/2025", end: "22/10/2025", reward: "1,000,000", rewardValue: 1000000, tasks: 7, segment: "Hướng ngoại - TB", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST5", name: "Siêu trí tuệ", start: "05/10/2025", end: "25/10/2025", reward: "3,000,000", rewardValue: 3000000, tasks: 12, segment: "Hướng ngoại - Giỏi", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST6", name: "Học bá tranh tài", start: "01/08/2025", end: "31/08/2025", reward: "500,000", rewardValue: 500000, tasks: 4, segment: "Hướng nội - TB", status: "Đã kết thúc", statusPriority: 3 },
+            { id: "DDST7", name: "Chiến binh thầm lặng", start: "10/10/2025", end: "10/11/2025", reward: "4,000,000", rewardValue: 4000000, tasks: 9, segment: "Hướng nội - Giỏi", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST8", name: "Bứt phá điểm số", start: "01/01/2026", end: "31/01/2026", reward: "20,000,000", rewardValue: 20000000, tasks: 15, segment: "Tất cả", status: "Sắp diễn ra", statusPriority: 2 },
+            { id: "DDST9", name: "Thử thách cuối tuần", start: "07/10/2025", end: "09/10/2025", reward: "200,000", rewardValue: 200000, tasks: 3, segment: "Hướng ngoại - TB", status: "Đã kết thúc", statusPriority: 3 },
+            { id: "DDST10", name: "Marathon học tập", start: "01/10/2025", end: "31/12/2025", reward: "50,000,000", rewardValue: 50000000, tasks: 30, segment: "Hướng nội - Giỏi", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST11", name: "Quiz vui vẻ", start: "12/10/2025", end: "15/10/2025", reward: "100,000", rewardValue: 100000, tasks: 1, segment: "Hướng ngoại - TB", status: "Sắp diễn ra", statusPriority: 2 },
+            { id: "DDST12", name: "Ôn thi cấp tốc", start: "20/10/2025", end: "20/11/2025", reward: "2,500,000", rewardValue: 2500000, tasks: 10, segment: "Hướng nội - TB", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST13", name: "Giao lưu kết bạn", start: "02/09/2025", end: "05/09/2025", reward: "Voucher", rewardValue: 50000, tasks: 2, segment: "Hướng ngoại - TB", status: "Đã kết thúc", statusPriority: 3 },
+            { id: "DDST14", name: "Thử thách Toán học", start: "01/11/2025", end: "15/11/2025", reward: "1,500,000", rewardValue: 1500000, tasks: 5, segment: "Hướng nội - Giỏi", status: "Sắp diễn ra", statusPriority: 2 },
+            { id: "DDST15", name: "Văn học cảm thụ", start: "01/10/2025", end: "30/10/2025", reward: "1,200,000", rewardValue: 1200000, tasks: 4, segment: "Hướng nội - TB", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST16", name: "Tiếng Anh giao tiếp", start: "10/11/2025", end: "10/12/2025", reward: "3,500,000", rewardValue: 3500000, tasks: 8, segment: "Hướng ngoại - Giỏi", status: "Sắp diễn ra", statusPriority: 2 },
+            { id: "DDST17", name: "Kỹ năng mềm", start: "15/08/2025", end: "20/08/2025", reward: "Sách", rewardValue: 100000, tasks: 3, segment: "Tất cả", status: "Đã kết thúc", statusPriority: 3 },
+            { id: "DDST18", name: "Luyện đề Sinh học", start: "05/10/2025", end: "25/10/2025", reward: "1,800,000", rewardValue: 1800000, tasks: 6, segment: "Hướng nội - Khá", status: "Đang diễn ra", statusPriority: 1 },
+            { id: "DDST19", name: "Vật lý ứng dụng", start: "01/11/2025", end: "30/11/2025", reward: "2,200,000", rewardValue: 2200000, tasks: 7, segment: "Hướng ngoại - Khá", status: "Sắp diễn ra", statusPriority: 2 }
+        ];
+
+        // 2. VARIABLES
+        let currentData = [...rawData]; // Data after filter & sort
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentSort = { column: 'statusPriority', order: 'asc' }; // Default sort: Active first
+        let filters = { name: '', segment: '', time: '', reward: '', tasks: '', status: '' };
+
+        // 3. FUNCTIONS
+
+        function init() {
+            // Apply default sort (Status priority)
+            currentData.sort((a, b) => a.statusPriority - b.statusPriority);
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            // Pagination Logic
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedItems = currentData.slice(start, end);
+
+            if (paginatedItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-500">Không tìm thấy dữ liệu phù hợp</td></tr>`;
+            } else {
+                paginatedItems.forEach(item => {
+                    // Determine Status Badge Color
+                    let badgeClass = '';
+                    if(item.status === 'Đang diễn ra') badgeClass = 'bg-green-100 text-green-700 border border-green-200';
+                    else if(item.status === 'Sắp diễn ra') badgeClass = 'bg-yellow-100 text-yellow-700 border border-yellow-200';
+                    else badgeClass = 'bg-gray-100 text-gray-600 border border-gray-200';
+
+                    const row = `
+                        <tr class="hover:bg-blue-50 transition border-b border-gray-100 last:border-0">
+                            <td class="px-6 py-4">
+                                <div class="font-semibold text-slate-800">${item.name}</div>
+                                <div class="text-xs text-slate-400 mt-0.5">${item.id}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded font-medium">${item.segment}</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                                ${item.start} - ${item.end}
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium text-slate-700">
+                                ${item.reward} VNĐ
+                            </td>
+                            <td class="px-6 py-4 text-sm text-center text-slate-600">
+                                ${item.tasks}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="${badgeClass} px-3 py-1 rounded-full text-xs font-semibold">
+                                    ${item.status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button class="text-blue-600 hover:text-blue-800 font-semibold text-sm flex items-center justify-center gap-1 mx-auto">
+                                    <i class="fa-regular fa-eye"></i> Xem
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+
+            // Update Pagination Info
+            document.getElementById('startItem').textContent = currentData.length > 0 ? start + 1 : 0;
+            document.getElementById('endItem').textContent = Math.min(end, currentData.length);
+            document.getElementById('totalItems').textContent = currentData.length;
+
+            // Update Buttons State
+            document.getElementById('btnPrev').disabled = currentPage === 1;
+            document.getElementById('btnNext').disabled = end >= currentData.length;
+        }
+
+        // Filtering Logic
+        function filterData(column, value) {
+            filters[column] = value.toLowerCase();
+            
+            currentData = rawData.filter(item => {
+                const matchName = item.name.toLowerCase().includes(filters.name) || item.id.toLowerCase().includes(filters.name);
+                const matchSegment = item.segment.toLowerCase().includes(filters.segment);
+                const matchTime = (item.start + item.end).includes(filters.time); // Simple string match for demo
+                const matchReward = item.rewardValue.toString().includes(filters.reward);
+                const matchTasks = item.tasks.toString().includes(filters.tasks);
+                const matchStatus = item.status.toLowerCase().includes(filters.status);
+
+                return matchName && matchSegment && matchTime && matchReward && matchTasks && matchStatus;
+            });
+
+            // Re-apply current sort after filter
+            sortDataInternal();
+            
+            currentPage = 1; // Reset to page 1
+            renderTable();
+        }
+
+        // Sorting Logic
+        function sortTable(column) {
+            // Toggle order
+            if (currentSort.column === column) {
+                currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.order = 'asc';
+            }
+
+            // Update Icons UI
+            document.querySelectorAll('.sort-icon').forEach(icon => icon.className = 'fa-solid fa-sort sort-icon');
+            const activeIcon = document.getElementById(`sort-${column}`);
+            if(activeIcon) activeIcon.className = `fa-solid fa-sort-${currentSort.order === 'asc' ? 'up' : 'down'} sort-icon active`;
+
+            sortDataInternal();
+            renderTable();
+        }
+
+        function sortDataInternal() {
+            const col = currentSort.column;
+            const order = currentSort.order;
+
+            currentData.sort((a, b) => {
+                let valA = a[col];
+                let valB = b[col];
+
+                // Handle specific types
+                if (col === 'rewardValue' || col === 'tasks' || col === 'statusPriority') {
+                    return order === 'asc' ? valA - valB : valB - valA;
+                }
+                
+                // Default string sort
+                if (valA < valB) return order === 'asc' ? -1 : 1;
+                if (valA > valB) return order === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // Pagination Controls
+        function nextPage() {
+            if ((currentPage * itemsPerPage) < currentData.length) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        // Initialize
+        init();
+
+    </script>
+</body>
+</html>
