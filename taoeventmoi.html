@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup: Tạo Event Mới (Fixed Rewards)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e2e8f0; }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Rich Text Editor Style */
+        .editor-toolbar button { padding: 4px 8px; border-radius: 4px; color: #4b5563; }
+        .editor-toolbar button:hover { background-color: #e5e7eb; color: #000; }
+        
+        /* Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #f97316; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #f97316; }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center p-4">
+
+    <!-- MODAL CONTAINER (Giả lập đang mở Modal) -->
+    <div class="bg-white w-full max-w-4xl h-[95vh] rounded-xl shadow-2xl flex flex-col overflow-hidden relative">
+        
+        <!-- 1. HEADER -->
+        <div class="px-8 py-5 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+                        <i class="fa-solid fa-calendar-plus text-xl"></i>
+                    </div>
+                    Thiết Lập Event Mới
+                </h2>
+            </div>
+            <button class="text-gray-400 hover:text-red-500 transition text-2xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- 2. BODY (SCROLLABLE) -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scroll space-y-8">
+            
+            <!-- BƯỚC 1: THÔNG TIN CHUNG -->
+            <section>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-6 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs font-bold">1</div>
+                    <h3 class="text-lg font-bold text-slate-800">Thông tin chung</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <!-- Mã Event -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Mã Event (Auto)</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-barcode absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" id="eventCode" value="EVT-2025-8X92" readonly class="w-full pl-10 pr-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-slate-600 font-mono font-bold cursor-not-allowed">
+                        </div>
+                    </div>
+                    <!-- Tên Event -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tên Event <span class="text-red-500">*</span></label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none" placeholder="VD: Đường Đua Sĩ Tử Mùa 3">
+                    </div>
+                </div>
+
+                <!-- Banner Content (Rich Text) -->
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tiêu đề Banner</label>
+                    <input type="text" class="w-full px-4 py-2 mb-3 border border-gray-300 rounded-lg" placeholder="Nhập tiêu đề hiển thị...">
+                    
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nội dung Banner</label>
+                    <div class="border border-gray-300 rounded-lg overflow-hidden">
+                        <div class="editor-toolbar bg-gray-50 border-b border-gray-200 p-2 flex gap-1">
+                            <button><i class="fa-solid fa-bold"></i></button>
+                            <button><i class="fa-solid fa-italic"></i></button>
+                            <button><i class="fa-solid fa-underline"></i></button>
+                            <div class="w-px h-4 bg-gray-300 mx-1 self-center"></div>
+                            <button><i class="fa-solid fa-list-ul"></i></button>
+                            <button><i class="fa-solid fa-list-ol"></i></button>
+                        </div>
+                        <div class="p-3 min-h-[80px] text-sm text-gray-600 outline-none" contenteditable="true">Nhập nội dung mô tả event tại đây...</div>
+                    </div>
+                </div>
+
+                <!-- Link Thể lệ & Segment -->
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Link Thể lệ (PDF)</label>
+                    <input type="url" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="https://...">
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <label class="block text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-users-viewfinder text-blue-600"></i> Chọn Segment (Tệp khách hàng)
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <label class="flex items-center gap-3 p-3 bg-white border rounded-lg cursor-pointer hover:shadow-sm transition">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded">
+                            <div><div class="font-bold text-sm">Hướng nội - TB</div><div class="text-xs text-gray-500">Cần an toàn, lộ trình rõ.</div></div>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white border rounded-lg cursor-pointer hover:shadow-sm transition">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded">
+                            <div><div class="font-bold text-sm">Hướng nội - Khá/Giỏi</div><div class="text-xs text-gray-500">Thích phân tích sâu.</div></div>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white border rounded-lg cursor-pointer hover:shadow-sm transition">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded">
+                            <div><div class="font-bold text-sm">Hướng ngoại - TB</div><div class="text-xs text-gray-500">Thích social, ngắn hạn.</div></div>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white border rounded-lg cursor-pointer hover:shadow-sm transition">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded">
+                            <div><div class="font-bold text-sm">Hướng ngoại - Khá/Giỏi</div><div class="text-xs text-gray-500">Thích đua top, PK.</div></div>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BƯỚC 2: THỜI GIAN -->
+            <section>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-6 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs font-bold">2</div>
+                    <h3 class="text-lg font-bold text-slate-800">Thời gian & Validate</h3>
+                </div>
+                <div class="bg-white p-5 border border-gray-200 rounded-xl flex flex-col md:flex-row gap-6 items-start">
+                    <div class="flex-1 grid grid-cols-2 gap-4 w-full">
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Bắt đầu</label><input type="datetime-local" class="w-full border rounded px-3 py-2"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kết thúc</label><input type="datetime-local" class="w-full border rounded px-3 py-2"></div>
+                    </div>
+                    <div class="flex flex-col items-center pl-6 md:border-l md:border-gray-200">
+                        <label class="text-sm font-bold mb-2 text-slate-700">Kích hoạt</label>
+                        <div class="relative inline-block w-12 align-middle select-none">
+                            <input type="checkbox" id="activeToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" onchange="simulateOverlap()"/>
+                            <label for="activeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fake Error Message -->
+                <div id="overlapMsg" class="hidden mt-2 p-3 bg-red-50 text-red-700 text-sm rounded border border-red-200 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation"></i> 
+                    <span><strong>Lỗi trùng lịch:</strong> Đã có Event khác chạy cho nhóm "Hướng nội" trong thời gian này!</span>
+                </div>
+            </section>
+
+            <!-- BƯỚC 3: NHIỆM VỤ -->
+            <section>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-6 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs font-bold">3</div>
+                    <h3 class="text-lg font-bold text-slate-800">Cấu hình Nhiệm vụ</h3>
+                </div>
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <div class="bg-gray-50 px-4 py-2 text-xs font-bold text-gray-500 uppercase border-b">Danh sách Task từ kho</div>
+                    <div class="max-h-60 overflow-y-auto p-2 space-y-2 bg-white">
+                        <!-- Item 1 -->
+                        <div class="flex items-center gap-3 p-3 border border-gray-100 rounded hover:bg-orange-50 group">
+                            <input type="checkbox" checked class="w-5 h-5 text-orange-600 rounded">
+                            <div class="flex-1">
+                                <div class="font-bold text-slate-700">⚡ Đăng nhập hàng ngày</div>
+                            </div>
+                            <select class="text-sm border border-gray-300 rounded px-2 py-1 bg-white text-slate-600">
+                                <option>🔁 Hàng ngày</option>
+                                <option>1️⃣ Một lần</option>
+                            </select>
+                            <div class="flex items-center gap-1 w-24">
+                                <input type="number" value="20" class="w-full border rounded px-2 py-1 text-center text-sm font-bold">
+                                <span class="text-xs text-gray-500">pts</span>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <div class="flex items-center gap-3 p-3 border border-gray-100 rounded hover:bg-orange-50 group">
+                            <input type="checkbox" checked class="w-5 h-5 text-orange-600 rounded">
+                            <div class="flex-1">
+                                <div class="font-bold text-slate-700">📱 Chia sẻ Facebook</div>
+                            </div>
+                            <select class="text-sm border border-gray-300 rounded px-2 py-1 bg-white text-slate-600">
+                                <option>🔁 Hàng ngày</option>
+                                <option selected>1️⃣ Một lần</option>
+                            </select>
+                            <div class="flex items-center gap-1 w-24">
+                                <input type="number" value="50" class="w-full border rounded px-2 py-1 text-center text-sm font-bold">
+                                <span class="text-xs text-gray-500">pts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BƯỚC 4: GIẢI THƯỞNG (LOGIC MỚI) -->
+            <section class="pb-4">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-6 h-6 rounded-full bg-orange-600 text-white flex items-center justify-center text-xs font-bold">4</div>
+                    <h3 class="text-lg font-bold text-slate-800">Cấu hình Giải thưởng (Rewards)</h3>
+                </div>
+
+                <!-- Radio Selection -->
+                <div class="flex gap-6 mb-4 ml-8">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="radio" name="reward_opt" checked class="w-5 h-5 text-orange-600 focus:ring-orange-500" onchange="toggleReward(true)">
+                        <span class="font-bold text-slate-700 group-hover:text-orange-600 transition">Có giải thưởng</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="radio" name="reward_opt" class="w-5 h-5 text-orange-600 focus:ring-orange-500" onchange="toggleReward(false)">
+                        <span class="font-bold text-slate-700 group-hover:text-orange-600 transition">Không có giải thưởng</span>
+                    </label>
+                </div>
+
+                <!-- Reward Panel (Updated Logic) -->
+                <div id="rewardPanel" class="ml-8 bg-white border border-gray-200 rounded-xl p-5 shadow-sm transition-all duration-300">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                        <!-- 1. Chọn quà từ kho -->
+                        <div class="md:col-span-7">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Chọn quà từ kho</label>
+                            <div class="relative">
+                                <select id="rewardSelect" onchange="onSelectReward()" class="w-full appearance-none border border-gray-300 rounded-lg pl-10 pr-8 py-2.5 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-slate-700 font-medium">
+                                    <option value="">-- Vui lòng chọn giải thưởng --</option>
+                                    <option value="r1">🎁 Voucher Urbox 50k (Còn: 1,250)</option>
+                                    <option value="r2">🎫 Vé xem phim CGV (Còn: 500)</option>
+                                    <option value="r3">🎒 Balo Luyện Đề Limited (Còn: 45)</option>
+                                    <option value="r4">📚 Sách "Bí kíp luyện thi" (Còn: 200)</option>
+                                </select>
+                                <i class="fa-solid fa-gift absolute left-3 top-3 text-gray-400"></i>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-xs text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- 2. Hiển thị tồn kho (Info Only) -->
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Tồn kho</label>
+                            <div class="w-full py-2.5 px-3 bg-gray-100 border border-gray-200 rounded-lg text-center">
+                                <span id="stockDisplay" class="font-bold text-gray-400">--</span>
+                            </div>
+                        </div>
+
+                        <!-- 3. Nhập số lượng phát (Input) -->
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold text-orange-600 uppercase mb-1">SL phát cho Event</label>
+                            <input type="number" id="allocateQty" disabled class="w-full border border-gray-300 rounded-lg px-3 py-2.5 font-bold text-slate-800 focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50 disabled:cursor-not-allowed" placeholder="0">
+                        </div>
+                    </div>
+
+                    <!-- Helper Text -->
+                    <p id="helperText" class="text-xs text-gray-500 mt-2 italic pl-1">
+                        * Vui lòng chọn giải thưởng để xem số lượng tồn kho khả dụng.
+                    </p>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- 3. FOOTER -->
+        <div class="px-8 py-5 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+            <button class="px-6 py-2.5 border border-gray-300 rounded-lg font-bold text-slate-600 hover:bg-white transition">Hủy bỏ</button>
+            <button class="bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-8 py-2.5 rounded-lg font-bold shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                <i class="fa-regular fa-floppy-disk"></i> Lưu Event
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // JS Logic for Interaction
+        
+        // Fake Data
+        const rewardDatabase = {
+            'r1': { name: 'Voucher Urbox 50k', stock: 1250 },
+            'r2': { name: 'Vé xem phim CGV', stock: 500 },
+            'r3': { name: 'Balo Luyện Đề Limited', stock: 45 },
+            'r4': { name: 'Sách Bí kíp luyện thi', stock: 200 }
+        };
+
+        function onSelectReward() {
+            const select = document.getElementById('rewardSelect');
+            const stockDisplay = document.getElementById('stockDisplay');
+            const qtyInput = document.getElementById('allocateQty');
+            const helper = document.getElementById('helperText');
+            
+            const value = select.value;
+
+            if (value && rewardDatabase[value]) {
+                const stock = rewardDatabase[value].stock;
+                
+                // Update Stock Display (Popup style but inline)
+                stockDisplay.innerText = stock;
+                stockDisplay.className = "font-bold text-green-600 text-lg animate-pulse"; // Highlight effect
+                
+                // Enable Input
+                qtyInput.disabled = false;
+                qtyInput.max = stock;
+                qtyInput.focus();
+                qtyInput.placeholder = `Max: ${stock}`;
+                
+                helper.innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check"></i> Đã chọn: <strong>${rewardDatabase[value].name}</strong>. Tồn kho khả dụng: <strong>${stock}</strong>.</span>`;
+                
+            } else {
+                // Reset
+                stockDisplay.innerText = "--";
+                stockDisplay.className = "font-bold text-gray-400";
+                qtyInput.disabled = true;
+                qtyInput.value = "";
+                qtyInput.placeholder = "0";
+                helper.innerText = "* Vui lòng chọn giải thưởng để xem số lượng tồn kho khả dụng.";
+            }
+        }
+
+        function toggleReward(show) {
+            const panel = document.getElementById('rewardPanel');
+            if(show) {
+                panel.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                panel.classList.add('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function simulateOverlap() {
+            const toggle = document.getElementById('activeToggle');
+            const msg = document.getElementById('overlapMsg');
+            
+            if(toggle.checked) {
+                // Randomly show error for simulation
+                setTimeout(() => {
+                    if(Math.random() > 0.3) {
+                        msg.classList.remove('hidden');
+                    } else {
+                        msg.classList.add('hidden');
+                    }
+                }, 200);
+            } else {
+                msg.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
