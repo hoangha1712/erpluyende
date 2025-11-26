@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup: Task Stats Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f1f5f9; }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Filter Inputs */
+        .filter-input {
+            width: 100%; margin-top: 4px; padding: 4px 8px; font-size: 11px;
+            border: 1px solid #e2e8f0; border-radius: 4px; outline: none;
+            color: #475569; background-color: #fff;
+        }
+        .filter-input:focus { border-color: #f97316; }
+
+        /* Sort Icons */
+        .sort-icon { cursor: pointer; margin-left: 4px; color: #94a3b8; font-size: 11px; }
+        .sort-icon.active { color: #f97316; }
+
+        /* Visual Bar */
+        .progress-bg { background-color: #e2e8f0; height: 8px; border-radius: 4px; width: 100%; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm px-8 py-4 z-10 border-b border-gray-200 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 text-xl font-bold"><i class="fa-solid fa-chart-column"></i></div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Thống Kê Nhiệm Vụ - Event DDST1</h1>
+                <p class="text-xs text-slate-500">Phân tích chi tiết hiệu quả từng task</p>
+            </div>
+        </div>
+        <button onclick="window.location.reload()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-rotate-right"></i> Reload</button>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 overflow-y-auto p-8 custom-scroll relative">
+        
+        <!-- === SCREEN 1: THỐNG KÊ TASK (Overview) === -->
+        <div id="screen1" class="max-w-7xl mx-auto transition-opacity duration-300">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <a href="#" class="text-blue-600 text-sm hover:underline mb-2 inline-block"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách events</a>
+                    <div class="text-xs text-gray-500">Tổng tương tác: <strong>14,250</strong></div>
+                </div>
+            </div>
+
+            <!-- Highlights -->
+            <div class="grid grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">🔥 Nhiệm vụ Hot nhất</p>
+                    <h3 class="text-2xl font-bold text-slate-800">Đăng nhập hàng ngày</h3>
+                    <div class="mt-2 flex justify-between items-end">
+                        <p class="text-sm text-gray-500">Dễ thực hiện, user quay lại đều đặn.</p>
+                        <p class="text-3xl font-bold text-green-600">8,420 <span class="text-xs text-gray-400 font-normal">lượt</span></p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">⚠️ Nhiệm vụ Khó nhất</p>
+                    <h3 class="text-2xl font-bold text-slate-800">Mời 3 bạn bè (SĐT)</h3>
+                    <div class="mt-2 flex justify-between items-end">
+                        <p class="text-sm text-gray-500">Rào cản cao, cần cân nhắc giảm điều kiện.</p>
+                        <p class="text-3xl font-bold text-red-600">320 <span class="text-xs text-gray-400 font-normal">lượt</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Stats -->
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 w-[300px]">
+                                <div class="flex justify-between text-sm font-semibold text-slate-700 cursor-pointer" onclick="sortData1('name')">Tên nhiệm vụ <i class="fa-solid fa-sort sort-icon"></i></div>
+                                <input type="text" class="filter-input" placeholder="Lọc tên..." onkeyup="filterData1()">
+                            </th>
+                            <th class="px-6 py-4 w-[150px]">
+                                <div class="flex justify-between text-sm font-semibold text-slate-700 cursor-pointer" onclick="sortData1('type')">Loại <i class="fa-solid fa-sort sort-icon"></i></div>
+                                <select class="filter-input">
+                                    <option>Tất cả</option>
+                                    <option>Daily</option>
+                                    <option>Social</option>
+                                </select>
+                            </th>
+                            <th class="px-6 py-4 w-[150px] text-center">
+                                <div class="flex justify-center gap-1 text-sm font-semibold text-slate-700 cursor-pointer" onclick="sortData1('count')">Lượt làm <i class="fa-solid fa-sort sort-icon active"></i></div>
+                                <input type="number" class="filter-input text-center" placeholder="> Số lg">
+                            </th>
+                            <th class="px-6 py-4 w-[300px] text-sm font-semibold text-slate-700">
+                                Thanh so sánh (Visual)
+                            </th>
+                            <th class="px-6 py-4 w-[100px] text-center text-sm font-semibold text-slate-700">
+                                Tỷ lệ
+                            </th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody1" class="divide-y divide-gray-100 text-sm text-slate-600">
+                        <!-- JS Populated -->
+                    </tbody>
+                </table>
+                 <div class="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
+                    <span class="text-xs text-slate-500">Hiển thị 1-5 / 5 task</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- === SCREEN 2: CHI TIẾT 1 TASK (Hidden by default) === -->
+        <div id="screen2" class="max-w-7xl mx-auto hidden transition-opacity duration-300">
+            <div class="mb-6">
+                <button onclick="showScreen1()" class="text-blue-600 text-sm font-bold hover:underline mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại Thống kê Task
+                </button>
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold uppercase mb-1">Đang xem chi tiết</p>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                            <span id="detailIcon"></span> <span id="detailTaskName">Task Name</span>
+                        </h2>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-slate-500">Tổng người làm</p>
+                        <p class="text-3xl font-bold text-blue-600" id="detailTotalCount">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User List Table -->
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 font-semibold text-sm text-slate-700 w-[250px]">
+                                <div class="flex justify-between cursor-pointer">Họ tên <i class="fa-solid fa-sort sort-icon"></i></div>
+                                <input type="text" class="filter-input" placeholder="Lọc tên user...">
+                            </th>
+                            <th class="px-6 py-4 font-semibold text-sm text-slate-700 w-[150px]">
+                                <div class="flex justify-between cursor-pointer">User ID <i class="fa-solid fa-sort sort-icon"></i></div>
+                                <input type="text" class="filter-input" placeholder="Lọc ID...">
+                            </th>
+                            <!-- Rank in Event -->
+                            <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center w-[120px]">
+                                <div class="flex justify-center gap-1 cursor-pointer">Rank <i class="fa-solid fa-sort sort-icon"></i></div>
+                                <input type="number" class="filter-input text-center" placeholder="Top #">
+                            </th>
+                            <th class="px-6 py-4 font-semibold text-sm text-slate-700 text-center w-[200px]">
+                                <div class="flex justify-center gap-1 cursor-pointer">Thời gian hoàn thành <i class="fa-solid fa-sort sort-icon active"></i></div>
+                                <input type="text" class="filter-input text-center" placeholder="dd/mm/yyyy">
+                            </th>
+                            <th class="px-6 py-4 font-semibold text-sm text-slate-700">
+                                Link Proof (Nếu có)
+                                <input type="text" class="filter-input" placeholder="Tìm link...">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody2" class="divide-y divide-gray-100 text-sm text-slate-600">
+                        <!-- JS Populated -->
+                    </tbody>
+                </table>
+                 <div class="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
+                    <span class="text-xs text-slate-500">Hiển thị 1-10 / 50 records</span>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1 bg-white border rounded text-xs font-bold hover:bg-gray-100 disabled:opacity-50">Prev</button>
+                        <button class="px-3 py-1 bg-white border rounded text-xs font-bold hover:bg-gray-100">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- MOCK DATA SCREEN 1 (Tasks List) ---
+        const taskStats = [
+            { id: 1, name: "Đăng nhập hàng ngày", icon: "⚡", type: "Daily", count: 8420, rate: 95, color: "bg-green-500", text: "text-green-600" },
+            { id: 2, name: "Chia sẻ Facebook", icon: "📱", type: "Social", count: 4150, rate: 45, color: "bg-blue-500", text: "text-blue-600" },
+            { id: 3, name: "Mời 3 bạn bè (SĐT)", icon: "👥", type: "Referral", count: 320, rate: 5, color: "bg-red-500", text: "text-red-600" },
+            { id: 4, name: "Làm đề thi thử", icon: "📚", type: "Practice", count: 1200, rate: 15, color: "bg-yellow-500", text: "text-yellow-600" },
+            { id: 5, name: "Nhập mã giới thiệu", icon: "🎁", type: "Ref", count: 2500, rate: 28, color: "bg-purple-500", text: "text-purple-600" }
+        ];
+
+        // --- MOCK DATA SCREEN 2 (User List for a Task) ---
+        const userList = Array.from({length: 10}, (_, i) => ({
+            name: `Học sinh Test ${i+1}`,
+            uid: `U${8800+i}`,
+            rank: `#${Math.floor(Math.random() * 100) + 1}`,
+            time: `2${i}/10/2025 10:${10+i}`,
+            proof: i % 2 === 0 ? `https://fb.com/post/${123+i}` : null
+        }));
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderScreen1() {
+            const tbody = document.getElementById('tableBody1');
+            tbody.innerHTML = taskStats.map(t => `
+                <tr class="hover:bg-blue-50 transition border-b border-gray-100 last:border-0">
+                    <td class="px-6 py-4 font-bold text-slate-800 flex items-center gap-2">
+                        <span>${t.icon}</span> ${t.name}
+                    </td>
+                    <td class="px-6 py-4 text-slate-500">${t.type}</td>
+                    <td class="px-6 py-4 text-center font-bold text-slate-700">${t.count.toLocaleString()}</td>
+                    <td class="px-6 py-4">
+                        <div class="progress-bg">
+                            <div class="progress-fill ${t.color}" style="width: ${t.rate}%"></div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-center font-bold ${t.text}">${t.rate}%</td>
+                    <td class="px-6 py-4 text-center">
+                        <button onclick="showScreen2(${t.id})" class="text-blue-600 hover:text-blue-800 text-xs font-bold border border-blue-200 bg-white px-3 py-1.5 rounded hover:bg-blue-50 transition shadow-sm">
+                            <i class="fa-regular fa-eye"></i> Chi tiết
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderScreen2() {
+            const tbody = document.getElementById('tableBody2');
+            tbody.innerHTML = userList.map(u => {
+                let proofHtml = u.proof 
+                    ? `<a href="${u.proof}" target="_blank" class="text-blue-500 hover:underline text-xs flex items-center gap-1"><i class="fa-solid fa-link"></i> Xem Link</a>` 
+                    : `<span class="text-gray-300">-</span>`;
+                
+                return `
+                <tr class="hover:bg-orange-50 transition border-b border-gray-100 last:border-0">
+                    <td class="px-6 py-4 font-semibold text-slate-800">${u.name}</td>
+                    <td class="px-6 py-4 font-mono text-slate-500">${u.uid}</td>
+                    <td class="px-6 py-4 text-center font-bold text-slate-700">${u.rank}</td>
+                    <td class="px-6 py-4 text-center text-slate-500 text-xs font-mono">${u.time}</td>
+                    <td class="px-6 py-4">${proofHtml}</td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // --- NAVIGATION ---
+
+        function showScreen2(id) {
+            const task = taskStats.find(t => t.id === id);
+            document.getElementById('detailIcon').innerText = task.icon;
+            document.getElementById('detailTaskName').innerText = task.name;
+            document.getElementById('detailTotalCount').innerText = task.count.toLocaleString();
+
+            // Animation
+            const s1 = document.getElementById('screen1');
+            s1.style.opacity = '0';
+            setTimeout(() => {
+                s1.classList.add('hidden');
+                const s2 = document.getElementById('screen2');
+                s2.classList.remove('hidden');
+                setTimeout(() => s2.style.opacity = '1', 50);
+                renderScreen2();
+            }, 300);
+        }
+
+        function showScreen1() {
+            const s2 = document.getElementById('screen2');
+            s2.style.opacity = '0';
+            setTimeout(() => {
+                s2.classList.add('hidden');
+                const s1 = document.getElementById('screen1');
+                s1.classList.remove('hidden');
+                setTimeout(() => s1.style.opacity = '1', 50);
+            }, 300);
+        }
+
+        // --- INIT ---
+        renderScreen1();
+    </script>
+</body>
+</html>
