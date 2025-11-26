@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyende.vn - Chia sẻ Facebook</title>
+    <style>
+        /* Reset & Base Styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        body {
+            background-color: #334155; /* Dark bg to highlight modal */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Modal Container */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Header */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .modal-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 30px;
+        }
+
+        /* Step List */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background-color: #EFF6FF; /* Xanh nhạt */
+            color: #2563EB; /* Xanh đậm */
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .step-content {
+            font-size: 16px;
+            color: #334155;
+            line-height: 1.5;
+            padding-top: 4px;
+        }
+
+        .hashtag {
+            display: inline-block;
+            background-color: #FFF7ED; /* Cam nhạt */
+            color: #EA580C; /* Cam đậm */
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            margin: 0 2px;
+        }
+
+        /* Note */
+        .note-text {
+            text-align: center;
+            background-color: #F8FAFC;
+            padding: 12px;
+            border-radius: 12px;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        /* Action Buttons Grid */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Nút Share - Style giống ảnh gốc (Màu cam) */
+        .btn-share {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+        }
+        .btn-share:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(234, 88, 12, 0.4); }
+
+        /* Nút Verify - Style mới (Màu xanh) */
+        .btn-verify-trigger {
+            background: white;
+            border: 2px solid #3B82F6;
+            color: #3B82F6;
+        }
+        .btn-verify-trigger:hover { background: #EFF6FF; }
+
+        /* Verify Input Section (Hidden by default) */
+        .verify-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .verify-container.active {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .link-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .link-input:focus {
+            border-color: #3B82F6;
+        }
+
+        .btn-confirm {
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-confirm:hover { background-color: #2563EB; }
+
+        .helper-text {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 8px;
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn">×</button>
+
+            <h2 class="modal-title">Chia sẻ "khoe" điểm lên Facebook</h2>
+
+            <!-- Step List -->
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        Nhấn nút <strong>"Chia sẻ ngay"</strong> để mở Facebook.
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        Đăng bài viết kèm hashtag <span class="hashtag">#LuyenDe</span> <span class="hashtag">#OnThiDaiHoc</span> ở chế độ <strong>Công khai (Public)</strong>.
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        Copy link bài viết vừa đăng, quay lại đây và nhấn <strong>"Xác nhận link"</strong> để nhận điểm thưởng ⚡️
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note -->
+            <div class="note-text">
+                💡 Nhớ chọn chế độ "Công khai" để hệ thống tính điểm cho bạn nha!
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-share" onclick="handleShare()">
+                    <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    Chia sẻ ngay
+                </button>
+                <button class="btn btn-verify-trigger" onclick="toggleVerify()">
+                    ✅ Xác nhận link
+                </button>
+            </div>
+
+            <!-- Verify Section (Expandable) -->
+            <div class="verify-container" id="verifySection">
+                <label style="display:block; margin-bottom:8px; font-weight:600; color:#475569; font-size:14px;">Dán link bài viết của bạn:</label>
+                <div class="input-group">
+                    <input type="text" class="link-input" id="linkInput" placeholder="Ví dụ: facebook.com/nguyenvanA/posts/123...">
+                    <button class="btn-confirm" onclick="submitVerify()">Gửi</button>
+                </div>
+                <span class="helper-text">Hệ thống sẽ duyệt tự động trong vài giây</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function handleShare() {
+            // Giả lập mở cửa sổ chia sẻ Facebook
+            const urlToShare = "https://luyende.vn"; 
+            const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+            
+            // Mở popup window
+            window.open(fbShareUrl, 'facebook-share-dialog', 'width=800,height=600');
+        }
+
+        function toggleVerify() {
+            const section = document.getElementById('verifySection');
+            const input = document.getElementById('linkInput');
+            
+            if (section.classList.contains('active')) {
+                section.classList.remove('active');
+            } else {
+                section.classList.add('active');
+                // Auto focus vào ô input cho UX tốt hơn
+                setTimeout(() => input.focus(), 300);
+            }
+        }
+
+        function submitVerify() {
+            const link = document.getElementById('linkInput').value;
+            if(link.length < 10) {
+                alert("Vui lòng dán link bài viết Facebook hợp lệ!");
+            } else {
+                alert("Đang kiểm tra bài viết... (Logic backend sẽ xử lý ở đây)");
+            }
+        }
+    </script>
+
+</body>
+</html>
