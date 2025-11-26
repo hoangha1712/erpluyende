@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup: Chi Tiết Event (Final Fixed)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f1f5f9; }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Read-only styles */
+        input:disabled, select:disabled, textarea:disabled {
+            background-color: #f3f4f6; color: #6b7280; cursor: not-allowed; border-color: #e5e7eb;
+        }
+        
+        /* Disabled ContentEditable */
+        .editable-div[contenteditable="false"] {
+            background-color: #f3f4f6; color: #6b7280; cursor: not-allowed; outline: none;
+        }
+
+        /* Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #f97316; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #f97316; }
+        .toggle-checkbox:disabled + .toggle-label { background-color: #d1d5db; opacity: 0.6; cursor: not-allowed; }
+
+        .sim-controls { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 8px 16px; border-radius: 99px; z-index: 100; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; gap: 10px; align-items: center; }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center p-4">
+
+    <!-- SIMULATION TOOLBAR -->
+    <div class="sim-controls">
+        <span>🔧 Test Mode:</span>
+        <button onclick="setMode('DRAFT')" class="px-2 py-1 bg-gray-600 rounded hover:bg-gray-500 text-xs">Mode: DRAFT (Edit)</button>
+        <button onclick="setMode('ACTIVE')" class="px-2 py-1 bg-green-600 rounded hover:bg-green-500 text-xs">Mode: ACTIVE (View Only)</button>
+    </div>
+
+    <!-- MODAL CONTAINER -->
+    <div class="bg-white w-full max-w-5xl h-[95vh] rounded-xl shadow-2xl flex flex-col overflow-hidden relative">
+        
+        <!-- 1. HEADER -->
+        <div class="px-8 py-5 border-b border-gray-200 flex justify-between items-center bg-white">
+            <div>
+                <div class="flex items-center gap-3">
+                    <h2 class="text-2xl font-bold text-slate-800">Chi Tiết Event</h2>
+                    <span id="statusBadge" class="px-3 py-1 rounded-full text-xs font-bold border uppercase bg-gray-100 text-gray-600 border-gray-200">DRAFT</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Xem và cập nhật thông tin chiến dịch</p>
+            </div>
+            <button class="text-gray-400 hover:text-red-500 transition text-2xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- ALERT BANNER -->
+        <div id="readOnlyAlert" class="hidden bg-yellow-50 border-b border-yellow-200 px-8 py-3 flex items-center gap-3 text-yellow-800 text-sm">
+            <i class="fa-solid fa-lock"></i>
+            <span><strong>Chế độ chỉ xem:</strong> Sự kiện đang hoạt động. Không thể chỉnh sửa các thông tin quan trọng.</span>
+        </div>
+
+        <!-- 2. BODY -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scroll space-y-8" id="formContainer">
+            
+            <!-- INFO & SEGMENT -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-orange-500 pl-3">1. Thông tin & Đối tượng</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Mã Event</label>
+                        <input type="text" value="DDST1" disabled class="w-full border border-gray-300 rounded-lg px-4 py-2 font-mono font-bold text-slate-600 bg-gray-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tên Event *</label>
+                        <input type="text" value="Đường Đua Sĩ Tử Mùa 1" class="editable w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-orange-500">
+                    </div>
+                    
+                    <!-- RESTORED: BANNER SECTION -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tiêu đề Banner</label>
+                        <input type="text" value="🔥 Đường Đua Sĩ Tử - Bứt Phá Điểm Số" class="editable w-full border border-gray-300 rounded-lg px-4 py-2 mb-3 focus:ring-orange-500">
+                        
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nội dung Banner</label>
+                        <div id="bannerEditor" class="editable-div w-full border border-gray-300 rounded-lg px-4 py-3 min-h-[100px] text-sm focus:ring-orange-500 focus:outline-none" contenteditable="true">
+                            <p>Chào mừng các sĩ tử tham gia đường đua!</p>
+                            <ul class="list-disc ml-4">
+                                <li>Hoàn thành nhiệm vụ hàng ngày</li>
+                                <li>Nhận điểm thưởng tích lũy</li>
+                                <li>Đổi quà hấp dẫn</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Segments -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                    <label class="block text-sm font-bold text-slate-800 mb-3 uppercase">🎯 Tệp Khách Hàng</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="flex items-center gap-3"><input type="checkbox" checked class="editable-check w-5 h-5 text-blue-600 rounded"> <span class="text-sm font-medium">Hướng nội - TB</span></label>
+                        <label class="flex items-center gap-3"><input type="checkbox" class="editable-check w-5 h-5 text-blue-600 rounded"> <span class="text-sm font-medium">Hướng nội - Khá/Giỏi</span></label>
+                        <label class="flex items-center gap-3"><input type="checkbox" class="editable-check w-5 h-5 text-blue-600 rounded"> <span class="text-sm font-medium">Hướng ngoại - TB</span></label>
+                        <label class="flex items-center gap-3"><input type="checkbox" class="editable-check w-5 h-5 text-blue-600 rounded"> <span class="text-sm font-medium">Hướng ngoại - Khá/Giỏi</span></label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TIME -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-orange-500 pl-3">2. Thời gian & Trạng thái</h3>
+                <div class="bg-white p-5 border border-gray-200 rounded-xl flex gap-6 items-start">
+                    <div class="flex-1 grid grid-cols-2 gap-4">
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Bắt đầu</label><input type="datetime-local" value="2025-10-01T00:00" class="editable w-full border rounded px-3 py-2"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kết thúc</label><input type="datetime-local" value="2025-10-31T23:59" class="editable w-full border rounded px-3 py-2"></div>
+                    </div>
+                    <div class="border-l pl-6 flex flex-col items-center">
+                        <label class="text-sm font-bold mb-2">Active</label>
+                        <div class="relative inline-block w-12 align-middle select-none">
+                            <input type="checkbox" id="activeToggle" class="toggle-checkbox editable-check absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                            <label for="activeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TASKS -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-orange-500 pl-3">3. Cấu hình Nhiệm vụ</h3>
+                <div class="border border-gray-200 rounded-xl bg-white p-4 space-y-3">
+                    <div class="flex items-center gap-4 p-3 border border-gray-100 rounded bg-orange-50">
+                        <input type="checkbox" checked class="editable-check w-5 h-5 text-orange-600 rounded">
+                        <div class="flex-1"><p class="font-bold text-sm">⚡ Đăng nhập hàng ngày</p></div>
+                        <select class="editable w-32 text-sm border rounded px-2 py-1"><option value="daily">🔁 Hàng ngày</option></select>
+                        <div class="flex items-center gap-2"><input type="number" value="20" class="editable w-16 border rounded px-2 py-1 text-center text-sm font-bold"> pts</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REWARDS (FINAL CORRECTED) -->
+            <section>
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-orange-500 pl-3">4. Cấu hình Giải thưởng</h3>
+                <div id="rewardPanel" class="bg-white p-5 border border-gray-200 rounded-xl shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                        
+                        <!-- Col 1: Chọn Quà (6 cols) -->
+                        <div class="md:col-span-6">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Giải thưởng</label>
+                            <select class="editable w-full border border-gray-300 rounded-lg px-3 py-2 bg-white text-slate-800 font-medium focus:ring-orange-500">
+                                <option value="r1" selected>🎁 Voucher Urbox 50k</option>
+                                <option value="r2">🎫 Vé xem phim CGV</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Col 2: Kho còn lại (3 cols) -->
+                        <div class="md:col-span-3">
+                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kho còn lại</label>
+                             <div class="w-full py-2 px-3 bg-gray-100 border rounded-lg text-center text-gray-500 font-bold">1,250</div>
+                        </div>
+
+                        <!-- Col 3: Số lượng Phân bổ (3 cols) -->
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold text-orange-600 uppercase mb-1">SL Phân bổ</label>
+                            <input type="number" value="100" class="editable w-full border border-gray-300 rounded-lg px-3 py-2 font-bold text-slate-800 text-center focus:ring-orange-500">
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- 3. FOOTER -->
+        <div class="px-8 py-5 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+            <button class="px-6 py-2.5 border border-gray-300 rounded-lg font-bold text-slate-600 hover:bg-white transition">Đóng</button>
+            <button id="btnSave" class="bg-orange-500 text-white px-8 py-2.5 rounded-lg font-bold shadow-md hover:bg-orange-600 flex items-center gap-2 transition disabled:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed">
+                <i class="fa-regular fa-floppy-disk"></i> Cập nhật
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // TEST MODE SWITCHER
+        function setMode(mode) {
+            const badge = document.getElementById('statusBadge');
+            const alert = document.getElementById('readOnlyAlert');
+            const btnSave = document.getElementById('btnSave');
+            const editables = document.querySelectorAll('.editable');
+            const checks = document.querySelectorAll('.editable-check');
+            const toggle = document.getElementById('activeToggle');
+            const bannerEditor = document.getElementById('bannerEditor'); // Rich text div
+
+            if (mode === 'ACTIVE') {
+                badge.innerText = 'ĐANG DIỄN RA';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold border uppercase bg-green-100 text-green-700 border-green-200';
+                alert.classList.remove('hidden');
+                editables.forEach(el => el.setAttribute('disabled', 'true'));
+                checks.forEach(el => el.setAttribute('disabled', 'true'));
+                
+                // Lock Rich Text
+                bannerEditor.setAttribute('contenteditable', 'false');
+                
+                btnSave.setAttribute('disabled', 'true');
+                btnSave.innerHTML = '<i class="fa-solid fa-lock"></i> Đã khóa';
+                toggle.checked = true;
+                toggle.disabled = true;
+            } else {
+                badge.innerText = 'NHÁP (DRAFT)';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold border uppercase bg-yellow-100 text-yellow-700 border-yellow-200';
+                alert.classList.add('hidden');
+                editables.forEach(el => el.removeAttribute('disabled'));
+                checks.forEach(el => el.removeAttribute('disabled'));
+
+                // Unlock Rich Text
+                bannerEditor.setAttribute('contenteditable', 'true');
+
+                btnSave.removeAttribute('disabled');
+                btnSave.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Cập nhật';
+                toggle.checked = false;
+                toggle.disabled = false;
+            }
+        }
+        // Default Init
+        setMode('DRAFT');
+    </script>
+</body>
+</html>
