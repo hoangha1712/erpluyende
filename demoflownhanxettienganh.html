@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor Feedback Flow Demo</title>
+    <!-- Font Awesome & Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* Mobile Simulator */
+        .mobile-frame {
+            width: 320px;
+            height: 600px;
+            border: 12px solid #1f2937;
+            border-radius: 30px;
+            overflow: hidden;
+            background: #fff;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .notch {
+            position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 20px;
+            background: #1f2937;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 10;
+        }
+
+        .checkbox-card {
+            transition: all 0.2s;
+        }
+        .checkbox-card:hover {
+            background-color: #f0f9ff;
+            border-color: #bae6fd;
+        }
+        .checkbox-card input:checked + div {
+            color: #0284c7;
+            font-weight: 600;
+        }
+        
+        /* Tab Active State */
+        .tab-btn.active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- SIDEBAR: STUDENT LIST -->
+    <div class="w-full md:w-64 bg-white border-r flex-shrink-0 flex flex-col z-20">
+        <div class="p-4 border-b bg-gray-50">
+            <h2 class="font-bold text-gray-700"><i class="fas fa-users text-blue-600 mr-2"></i>Danh sách lớp</h2>
+            <div class="text-xs text-gray-500 mt-1">Class: ENG-KIDS-01</div>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            <!-- Student 1: Grade 2 -->
+            <div onclick="selectStudent(1)" id="student-1" class="p-3 border-b cursor-pointer hover:bg-blue-50 bg-blue-50 border-l-4 border-l-blue-600 transition">
+                <div class="font-semibold text-gray-800">Bé Nana (7 tuổi)</div>
+                <div class="text-xs text-gray-500">Lớp 2 • Level: Starters</div>
+            </div>
+            <!-- Student 2: Grade 11 -->
+            <div onclick="selectStudent(2)" id="student-2" class="p-3 border-b cursor-pointer hover:bg-blue-50 border-l-4 border-l-transparent transition">
+                <div class="font-semibold text-gray-800">Nguyễn Văn Minh</div>
+                <div class="text-xs text-gray-500">Lớp 11 • Level: IELTS 5.0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN AREA: INPUT & REVIEW -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        
+        <!-- TOP BAR: BATCH METADATA -->
+        <div class="bg-white border-b p-4 shadow-sm z-10">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide"><i class="fas fa-layer-group text-blue-500 mr-2"></i>Thông tin bài học (Nhập 1 lần)</h3>
+                <label class="flex items-center space-x-2 text-xs cursor-pointer bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition">
+                    <input type="checkbox" checked class="form-checkbox h-3 w-3 text-blue-600 rounded">
+                    <span class="font-semibold">Áp dụng cho cả lớp</span>
+                </label>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="col-span-1">
+                    <label class="text-xs text-gray-500 font-semibold">Unit Name (Auto)</label>
+                    <input type="text" value="Unit 5: Amazing Animals" disabled class="w-full bg-gray-100 border rounded px-2 py-1.5 text-sm font-medium text-gray-700">
+                </div>
+                <div class="col-span-2">
+                    <label class="text-xs text-gray-500 font-semibold">Nội dung trọng tâm (Vocab/Grammar)</label>
+                    <input type="text" id="lesson-content" value="Vocab: wild animals. Grammar: Present Continuous (is sleeping, is running)" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+            <!-- INPUT FORM (Scrollable) -->
+            <div class="flex-1 overflow-y-auto p-6 pb-24">
+                
+                <!-- TABS -->
+                <div class="flex border-b mb-6">
+                    <button onclick="switchTab('feedback')" id="tab-feedback" class="tab-btn active px-4 py-2 text-sm">Nhận xét Phụ huynh</button>
+                    <button onclick="switchTab('internal')" id="tab-internal" class="tab-btn px-4 py-2 text-sm text-gray-500 hover:text-gray-700">🔒 Ghi chú Nội bộ</button>
+                </div>
+
+                <!-- TAB CONTENT: FEEDBACK -->
+                <div id="content-feedback" class="space-y-6">
+                    <!-- 1. Attitude -->
+                    <div class="bg-white rounded-lg shadow-sm border p-4">
+                        <h4 class="font-bold text-gray-700 mb-3 text-sm flex items-center"><i class="far fa-smile text-yellow-500 mr-2"></i>Thái độ học tập (Attitude)</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="att-1" class="mr-2 accent-blue-600"> <div>Hào hứng, xung phong</div>
+                            </label>
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="att-2" class="mr-2 accent-blue-600"> <div>Tập trung tốt</div>
+                            </label>
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="att-3" class="mr-2 accent-red-500"> <div>Mất tập trung / Nói chuyện</div>
+                            </label>
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="att-4" class="mr-2 accent-red-500"> <div>Uể oải / Buồn ngủ</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 2. Skills -->
+                    <div class="bg-white rounded-lg shadow-sm border p-4">
+                        <h4 class="font-bold text-gray-700 mb-3 text-sm flex items-center"><i class="fas fa-bolt text-blue-500 mr-2"></i>Kỹ năng & Kiến thức (Minh chứng)</h4>
+                        <div class="grid grid-cols-1 gap-3">
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="skill-1" class="mr-2 accent-green-600"> <div>Phát âm từ vựng to, rõ ràng</div>
+                            </label>
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="skill-2" class="mr-2 accent-red-500"> <div>Quên "Ending sounds" (s, t, k)</div>
+                            </label>
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="skill-3" class="mr-2 accent-green-600"> <div>Nắm chắc ngữ pháp bài học</div>
+                            </label>
+                            <label class="checkbox-card flex items-center p-2 border rounded cursor-pointer">
+                                <input type="checkbox" id="skill-4" class="mr-2 accent-red-500"> <div>Sai cấu trúc ngữ pháp (quên to be/verb-ing)</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 3. Homework -->
+                    <div class="bg-white rounded-lg shadow-sm border p-4">
+                        <h4 class="font-bold text-gray-700 mb-3 text-sm flex items-center"><i class="fas fa-book text-indigo-500 mr-2"></i>BTVN (Homework)</h4>
+                        <div class="flex gap-4">
+                            <label class="flex items-center cursor-pointer"><input type="radio" name="hw" value="full" class="mr-2"> Hoàn thành tốt</label>
+                            <label class="flex items-center cursor-pointer"><input type="radio" name="hw" value="missing" class="mr-2"> Thiếu bài</label>
+                            <label class="flex items-center cursor-pointer"><input type="radio" name="hw" value="none" class="mr-2"> Chưa làm</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT: INTERNAL -->
+                <div id="content-internal" class="hidden">
+                    <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded mb-4 text-xs">
+                        <i class="fas fa-lock mr-1"></i> Thông tin này chỉ lưu hành nội bộ, không gửi cho Phụ huynh.
+                    </div>
+                    <textarea class="w-full border p-3 rounded text-sm h-32" placeholder="Ghi chú sự cố, hành vi, đề xuất CSKH..."></textarea>
+                </div>
+            </div>
+
+            <!-- ACTION FOOTER -->
+            <div class="absolute bottom-0 left-0 w-full md:w-auto md:right-[340px] bg-white border-t p-4 z-20 flex justify-between items-center shadow-lg">
+                <div class="text-xs text-gray-500 italic hidden md:block">
+                    * AI sẽ tự động chọn tone giọng theo tuổi học sinh
+                </div>
+                <button onclick="generateFeedback()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-2.5 rounded-lg font-bold shadow-md transition transform hover:-translate-y-0.5 flex items-center">
+                    <i class="fas fa-magic mr-2"></i> Tạo Nhận Xét (AI)
+                </button>
+            </div>
+
+            <!-- RIGHT PANEL: PREVIEW & REVIEW (DESKTOP MODE) -->
+            <div class="w-full md:w-[400px] bg-gray-100 border-l flex flex-col h-full border-t md:border-t-0">
+                
+                <!-- TEACHER REVIEW BOX -->
+                <div class="flex-1 flex flex-col p-4 overflow-hidden">
+                    <h3 class="font-bold text-gray-700 mb-2 flex justify-between items-center">
+                        <span><i class="fas fa-edit text-gray-500 mr-2"></i>Giáo viên duyệt (Review)</span>
+                        <span id="word-count" class="text-xs font-normal text-gray-400">0 từ</span>
+                    </h3>
+                    
+                    <!-- EDITABLE AREA -->
+                    <div class="flex-1 relative">
+                        <textarea id="ai-output" class="w-full h-full p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm leading-relaxed resize-none font-sans" placeholder="Kết quả AI sẽ hiện ở đây để thầy/cô chỉnh sửa..."></textarea>
+                        
+                        <!-- AI Actions Overlay -->
+                        <div id="ai-loading" class="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg hidden z-10">
+                            <div class="flex flex-col items-center">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+                                <span class="text-xs font-semibold text-blue-600">AI đang viết...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 flex gap-2">
+                        <button class="flex-1 bg-white border border-gray-300 text-gray-600 py-2 rounded font-semibold text-xs hover:bg-gray-50">
+                            <i class="fas fa-sync-alt mr-1"></i> Viết lại
+                        </button>
+                        <button onclick="showMobilePreview()" class="flex-1 bg-green-600 text-white py-2 rounded font-semibold text-xs hover:bg-green-700 shadow-sm">
+                            <i class="fas fa-paper-plane mr-1"></i> Gửi & Xem App
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PARENT MOBILE VIEW -->
+    <div id="mobile-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="mobile-frame animate-fade-in-up">
+            <div class="notch"></div>
+            
+            <!-- App Header -->
+            <div class="bg-blue-600 text-white pt-12 pb-4 px-4 shadow-md">
+                <div class="flex justify-between items-center">
+                    <i class="fas fa-chevron-left"></i>
+                    <span class="font-semibold">Báo cáo học tập</span>
+                    <i class="fas fa-bell"></i>
+                </div>
+            </div>
+
+            <!-- App Content -->
+            <div class="h-full bg-gray-50 overflow-y-auto pb-20">
+                <div class="p-4">
+                    <div class="text-center mb-4">
+                        <div class="inline-block p-1 rounded-full bg-white shadow-sm mb-2">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nana" class="w-16 h-16 rounded-full bg-blue-50" alt="Avatar">
+                        </div>
+                        <h2 class="font-bold text-gray-800 text-lg" id="mobile-student-name">Bé Nana</h2>
+                        <p class="text-xs text-gray-500">12/11/2025 • 19:30 - 21:00</p>
+                    </div>
+
+                    <!-- THE FEEDBACK CARD -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="border-b px-4 py-3 bg-blue-50 flex justify-between items-center">
+                            <span class="font-bold text-blue-800 text-sm">💌 Nhận xét từ Cô Linh</span>
+                        </div>
+                        <div class="p-5 text-sm text-gray-700 space-y-4" id="mobile-content">
+                            <!-- Content injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="mt-4 flex gap-3">
+                        <button class="flex-1 bg-white border py-2.5 rounded-lg text-xs font-semibold text-gray-600 shadow-sm">Phản hồi lại</button>
+                        <button class="flex-1 bg-blue-600 text-white py-2.5 rounded-lg text-xs font-semibold shadow-sm shadow-blue-200">Xác nhận đã đọc</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Close Modal Btn -->
+            <button onclick="closeMobilePreview()" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-1 rounded-full text-xs opacity-80 hover:opacity-100">
+                Đóng Demo
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let currentStudent = 1; // 1 = Kid, 2 = Teen
+
+        function switchTab(tab) {
+            document.getElementById('content-feedback').classList.add('hidden');
+            document.getElementById('content-internal').classList.add('hidden');
+            document.getElementById('tab-feedback').classList.remove('active');
+            document.getElementById('tab-internal').classList.remove('active');
+
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        function selectStudent(id) {
+            currentStudent = id;
+            
+            // Visual Update Sidebar
+            document.getElementById('student-1').className = "p-3 border-b cursor-pointer hover:bg-blue-50 border-l-4 border-l-transparent transition";
+            document.getElementById('student-2').className = "p-3 border-b cursor-pointer hover:bg-blue-50 border-l-4 border-l-transparent transition";
+            
+            const activeClass = "p-3 border-b cursor-pointer hover:bg-blue-50 bg-blue-50 border-l-4 border-l-blue-600 transition";
+            document.getElementById(`student-${id}`).className = activeClass;
+
+            // Clear checkboxes to simulate new student
+            document.querySelectorAll('input[type="checkbox"]:not(.form-checkbox)').forEach(el => el.checked = false);
+            document.getElementById('ai-output').value = "";
+            
+            // Pre-fill for demo purposes
+            if(id === 1) { // Kid
+                document.getElementById('att-1').checked = true; // Hào hứng
+                document.getElementById('skill-1').checked = true; // Phát âm tốt
+                document.getElementById('skill-4').checked = true; // Sai ngữ pháp
+            } else { // Teen
+                document.getElementById('att-2').checked = true; // Tập trung
+                document.getElementById('skill-3').checked = true; // Ngữ pháp tốt
+                document.getElementById('skill-2').checked = true; // Sai ending sound
+            }
+        }
+
+        function generateFeedback() {
+            // Show Loading
+            const loader = document.getElementById('ai-loading');
+            loader.classList.remove('hidden');
+
+            setTimeout(() => {
+                const lesson = document.getElementById('lesson-content').value;
+                let text = "";
+
+                // SIMULATING AI LOGIC BASED ON USER STORY ACs
+                if (currentStudent === 1) {
+                    // TONE: KID (Lớp 1-5) - Vui vẻ, Emojis
+                    text = `📚 Bài học: Hôm nay con học về ${lesson.split(':')[1].split('.')[0]}.\n\n`;
+                    text += `🌟 Điểm sáng:\n• Nana học siêu hào hứng! Con xung phong trả lời suốt. 🎉\n• Con phát âm các từ vựng to và rõ ràng lắm.\n\n`;
+                    text += `🛠 Cần cải thiện:\n• Con chú ý ngữ pháp "Present Continuous" nhé (nhớ thêm 'ing' sau động từ nha).\n\n`;
+                    text += `💡 Dặn dò:\n• Mẹ cho con xem lại video bài hát về động vật 5 phút nhé! 💪`;
+                } else {
+                    // TONE: TEEN (Lớp 11) - Chuyên nghiệp, Mentor
+                    text = `📚 Nội dung: Ôn tập về ${lesson.split(':')[1].split('.')[0]} và cấu trúc ngữ pháp.\n\n`;
+                    text += `✅ Điểm mạnh:\n• Minh giữ vững sự tập trung cao độ trong suốt buổi học.\n• Em nắm rất chắc cấu trúc thì Hiện tại tiếp diễn, làm bài tập chính xác.\n\n`;
+                    text += `🛠 Cần lưu ý:\n• Em vẫn hay quên bật âm đuôi (ending sounds) khi nói nhanh. Cần chú ý kỹ hơn.\n\n`;
+                    text += `💡 Định hướng:\n• Em hãy luyện nói lại đoạn hội thoại trang 15 và ghi âm để tự kiểm tra lỗi phát âm nhé.`;
+                }
+
+                document.getElementById('ai-output').value = text;
+                loader.classList.add('hidden');
+                
+                // Update word count
+                document.getElementById('word-count').innerText = text.split(' ').length + " từ";
+            }, 1500); // Simulate 1.5s API delay
+        }
+
+        function showMobilePreview() {
+            const content = document.getElementById('ai-output').value;
+            if(!content) { alert("Vui lòng tạo nhận xét trước!"); return; }
+
+            // Format text for HTML display (convert \n to <br>)
+            // Also create colorful badges for the sections to look like a real app
+            let formattedHtml = content
+                .replace(/📚 (.*?):/g, '<div class="font-bold text-gray-800 mb-1">📚 $1:</div>')
+                .replace(/🌟 (.*?):/g, '<div class="font-bold text-green-600 mt-3 mb-1 bg-green-50 p-1 rounded inline-block">🌟 $1:</div>')
+                .replace(/✅ (.*?):/g, '<div class="font-bold text-green-600 mt-3 mb-1 bg-green-50 p-1 rounded inline-block">✅ $1:</div>')
+                .replace(/🛠 (.*?):/g, '<div class="font-bold text-orange-600 mt-3 mb-1 bg-orange-50 p-1 rounded inline-block">🛠 $1:</div>')
+                .replace(/💡 (.*?):/g, '<div class="font-bold text-blue-600 mt-3 mb-1 bg-blue-50 p-1 rounded inline-block">💡 $1:</div>')
+                .replace(/\n/g, '<br>');
+
+            document.getElementById('mobile-content').innerHTML = formattedHtml;
+            
+            // Set Name
+            const name = currentStudent === 1 ? "Bé Nana" : "Nguyễn Văn Minh";
+            document.getElementById('mobile-student-name').innerText = name;
+            
+            document.getElementById('mobile-modal').classList.remove('hidden');
+        }
+
+        function closeMobilePreview() {
+            document.getElementById('mobile-modal').classList.add('hidden');
+        }
+
+        // Init
+        selectStudent(1);
+    </script>
+</body>
+</html>
