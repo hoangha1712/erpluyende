@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thể Lệ Chương Trình - Luyende.ai</title>
+    <style>
+        /* CSS Giao diện văn bản */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .document-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 { color: #2563EB; text-align: center; font-size: 24px; margin-bottom: 5px; text-transform: uppercase; }
+        h2 { text-align: center; font-size: 16px; color: #666; font-weight: normal; margin-top: 0; margin-bottom: 30px; border-bottom: 2px solid #F97316; padding-bottom: 20px; display: inline-block; width: 100%; }
+        h3 { color: #2563EB; font-size: 18px; margin-top: 25px; border-left: 4px solid #F97316; padding-left: 10px; }
+        
+        /* Bảng nhiệm vụ (Đã xóa cột Ghi chú) */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f8f9fa; color: #2c3e50; font-weight: bold; }
+        .highlight { color: #F97316; font-weight: bold; }
+        
+        .footer { margin-top: 40px; text-align: right; font-style: italic; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
+        
+        /* Loading State */
+        .dynamic-field { background: #e0f2fe; padding: 0 5px; border-radius: 3px; color: #0284c7; }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        <!-- HEADER -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <!-- Placeholder Logo -->
+            <img src="https://placehold.co/150x50/2563EB/ffffff?text=LUYENDE.AI" alt="Logo" height="40">
+        </div>
+
+        <!-- TÊN CHƯƠNG TRÌNH ĐỘNG -->
+        <h1>THỂ LỆ CHƯƠNG TRÌNH: <span id="campaignName" class="dynamic-field">Đang tải...</span></h1>
+        <h2>Áp dụng cho toàn bộ người dùng trên hệ thống Luyende.ai</h2>
+
+        <!-- NỘI DUNG -->
+        <h3>1. THỜI GIAN TRIỂN KHAI</h3>
+        <p>Chương trình diễn ra trong khoảng thời gian sau (theo giờ Việt Nam):</p>
+        <ul>
+            <li><strong>Bắt đầu:</strong> 00:00 ngày <span id="startDate" class="dynamic-field">...</span></li>
+            <li><strong>Kết thúc:</strong> 23:59 ngày <span id="endDate" class="dynamic-field">...</span></li>
+        </ul>
+        <p><em>*Lưu ý: Ban Tổ Chức (BTC) có quyền gia hạn hoặc kết thúc sớm chương trình tùy thuộc vào tình hình thực tế. Thông báo sẽ được cập nhật tại trang này.</em></p>
+
+        <h3>2. ĐỐI TƯỢNG & CÁCH THỨC</h3>
+        <p>Tất cả các học sinh có tài khoản trên <strong>Luyende.ai</strong> đều có quyền tham gia.</p>
+        <p>Người chơi thực hiện các nhiệm vụ dưới đây để tích lũy <strong>Điểm Năng Lượng (⚡)</strong> dùng để đua Top và đổi thưởng.</p>
+
+        <h3>3. DANH SÁCH NHIỆM VỤ & ĐIỂM THƯỞNG</h3>
+        <p>Các nhiệm vụ hiện đang áp dụng cho chiến dịch này:</p>
+        
+        <!-- BẢNG NHIỆM VỤ ĐỘNG (Render từ JS - Đã xóa cột Ghi chú) -->
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50%">Tên Nhiệm Vụ</th>
+                    <th style="width: 25%">Tần suất</th>
+                    <th style="width: 25%">Điểm Thưởng</th>
+                </tr>
+            </thead>
+            <tbody id="taskTableBody">
+                <!-- Dữ liệu sẽ được điền vào đây tự động -->
+            </tbody>
+        </table>
+
+        <h3>4. QUY ĐỊNH CHỐNG GIAN LẬN (QUAN TRỌNG)</h3>
+        <ul>
+            <li><strong>Xác thực:</strong> Các tài khoản được mời (Referral) bắt buộc phải xác thực SĐT (OTP) mới được tính điểm.</li>
+            <li><strong>Quy định Chia sẻ:</strong> Bài viết chia sẻ Facebook phải ở chế độ <strong>Công khai</strong> và bắt buộc phải <strong>tồn tại cho đến thời điểm BTC thực hiện kiểm tra (Audit)</strong>. Nếu tại thời điểm kiểm tra bài viết không còn tồn tại hoặc bị ẩn, kết quả sẽ bị hủy bỏ.</li>
+            <li><strong>Cấm Clone:</strong> Một thiết bị/IP chỉ được đăng ký tối đa 3 tài khoản. Nếu phát hiện hành vi spam, BTC sẽ khóa tài khoản vĩnh viễn.</li>
+        </ul>
+
+        <h3>5. QUY ĐỊNH CHUNG</h3>
+        <p>BTC có toàn quyền sử dụng hình ảnh và kết quả của người chơi cho mục đích truyền thông. Trong mọi trường hợp tranh chấp, quyết định của Luyende.ai là quyết định cuối cùng.</p>
+
+        <div class="footer">
+            <p>Hà Nội, ngày <span id="currentDate">...</span></p>
+            <p><strong>ĐẠI DIỆN LUYENDE.AI TEAM</strong></p>
+        </div>
+    </div>
+
+    <!-- SCRIPT GIẢ LẬP DỮ LIỆU TỪ BACKEND -->
+    <script>
+        // 1. DATA MASTER (Phần này Backend sẽ trả về API)
+        // Đây chính là dữ liệu bạn cấu hình trong ERP của bạn
+        const campaignData = {
+            name: "ĐƯỜNG ĐUA SĨ TỬ - MÙA 1",
+            start_date: "15/01/2026",
+            end_date: "15/02/2026",
+            tasks: [
+                { name: "Điểm danh hàng ngày", type: "Hàng ngày", point: 20 },
+                { name: "Chia sẻ Facebook (Trang/Kết quả)", type: "Tuần", point: 100 },
+                { name: "Mời bạn bè (Verified)", type: "1 Lần", point: "300 - 700" },
+                { name: "Hoàn thành Profile", type: "1 Lần", point: 30 },
+                { name: "Reup TikTok", type: "Tháng", point: 200 }
+            ]
+        };
+
+        // 2. HÀM RENDER (Frontend tự chạy)
+        function renderPage() {
+            // Điền thông tin chung
+            document.getElementById('campaignName').innerText = campaignData.name;
+            document.getElementById('startDate').innerText = campaignData.start_date;
+            document.getElementById('endDate').innerText = campaignData.end_date;
+            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('vi-VN');
+
+            // Điền bảng nhiệm vụ
+            const tableBody = document.getElementById('taskTableBody');
+            let html = '';
+            
+            campaignData.tasks.forEach(task => {
+                html += `
+                    <tr>
+                        <td><strong>${task.name}</strong></td>
+                        <td>${task.type}</td>
+                        <td class="highlight">+${task.point}⚡</td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+
+        // Chạy hàm
+        renderPage();
+    </script>
+</body>
+</html>
