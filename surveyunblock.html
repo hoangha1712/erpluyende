@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyende.ai - Đường Đua Sĩ Tử</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #2563EB;
+            --action-orange: #F97316; /* Tone cam chủ đạo */
+            --bg-light: #F9FAFB;
+            --text-dark: #111827;
+            --text-gray: #6B7280;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 80px; -webkit-font-smoothing: antialiased; }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            position: sticky; top: 0; z-index: 50;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo-container img { height: 36px; border-radius: 6px; } 
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .points-badge { 
+            background: #FFF7ED; color: var(--action-orange); 
+            padding: 4px 10px; border-radius: 20px; 
+            font-size: 13px; font-weight: 700; border: 1px solid #FFEDD5;
+        }
+        .avatar { 
+            width: 36px; height: 36px; background: #EFF6FF; 
+            border-radius: 50%; color: var(--primary-blue); 
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1D4ED8 100%);
+            color: white; padding: 30px 20px 50px 20px;
+            text-align: center; border-radius: 0 0 24px 24px; margin-bottom: -30px;
+        }
+        .hero h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero p { font-size: 13px; opacity: 0.9; font-weight: 400; }
+
+        /* --- TASK BOARD --- */
+        .container { max-width: 500px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 10; }
+        
+        .board-header {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 16px; padding-left: 4px;
+        }
+        .board-header h2 { font-size: 16px; font-weight: 700; color: var(--text-dark); }
+        .board-header i { color: var(--action-orange); }
+
+        .task-list { display: flex; flex-direction: column; gap: 12px; position: relative; transition: all 0.3s ease; }
+
+        /* TASK CARD STYLES */
+        .task-card {
+            background: var(--white); border-radius: 16px; padding: 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+        .task-card:active { transform: scale(0.98); }
+
+        .task-left { display: flex; align-items: center; gap: 14px; }
+        .task-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: #F3F4F6; color: var(--text-gray);
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+            flex-shrink: 0;
+        }
+        .task-info h3 { font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
+        .task-info p { font-size: 12px; color: var(--text-gray); }
+
+        .btn-action {
+            padding: 8px 14px; border-radius: 20px; border: none;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            background: #F3F4F6; color: var(--text-gray); white-space: nowrap;
+        }
+
+        /* ACTIVE MISSION (NHIỆM VỤ MỒI) */
+        .task-card.mission-0 {
+            border: 2px solid var(--action-orange);
+            background: #FFF7ED;
+        }
+        .task-card.mission-0 .task-icon { background: white; color: var(--action-orange); }
+        .task-card.mission-0 .btn-action {
+            background: var(--action-orange); color: white;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+            animation: pulse 2s infinite;
+        }
+
+        /* LOCKED STATE */
+        .locked-mode .task-card:not(.mission-0) {
+            filter: grayscale(100%); opacity: 0.5; pointer-events: none;
+        }
+        
+        .lock-message {
+            position: absolute; top: 90px; left: 0; right: 0; bottom: 0;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 20; pointer-events: none;
+        }
+        .locked-mode .lock-message { display: flex; }
+        .lock-badge {
+            background: rgba(31, 41, 55, 0.85); color: white;
+            padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: 600;
+            backdrop-filter: blur(4px); display: flex; align-items: center; gap: 6px;
+        }
+
+        /* --- MODAL & POPUP --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+            z-index: 1000; display: none; opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+
+        .modal-box {
+            background: white; width: 90%; max-width: 420px;
+            border-radius: 20px; padding: 24px; position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-box { transform: translateY(0); }
+
+        /* CLOSE BUTTON (X) */
+        .close-btn {
+            position: absolute; top: 16px; right: 16px;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #F3F4F6; color: #9CA3AF;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; font-size: 16px;
+        }
+        .close-btn:hover { background: #E5E7EB; color: #4B5563; }
+
+        /* QUIZ UI */
+        .progress-container { width: 100%; height: 6px; background: #F3F4F6; border-radius: 10px; margin: 10px 0 24px 0; overflow: hidden;}
+        .progress-bar { height: 100%; background: var(--action-orange); width: 33%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .question-text { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 20px; line-height: 1.4; }
+        
+        .option-item {
+            border: 2px solid #E5E7EB; border-radius: 12px; padding: 14px;
+            margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .option-item:hover { border-color: #FDBA74; background: #FFF7ED; }
+        .radio-circle {
+            width: 20px; height: 20px; border: 2px solid #D1D5DB; border-radius: 50%;
+            margin-top: 2px; flex-shrink: 0; position: relative;
+        }
+        .option-item:hover .radio-circle { border-color: var(--action-orange); }
+        .option-text { font-size: 14px; color: #4B5563; line-height: 1.4; }
+
+        /* TOAST NOTIFICATION */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #374151; color: white; padding: 12px 24px; border-radius: 30px;
+            font-size: 13px; font-weight: 500; z-index: 2000; opacity: 0; transition: all 0.4s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 8px;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); } 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo-container">
+            <img src="https://via.placeholder.com/120x40/2563EB/FFFFFF?text=Luyende+AI" alt="Logo">
+        </div>
+        <div class="user-info">
+            <div class="points-badge">⚡ 0</div>
+            <div class="avatar"><i class="fa-solid fa-user"></i></div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Đường Đua Sĩ Tử</h1>
+        <p>Thử thách bản lĩnh - Chinh phục 9+</p>
+    </section>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <div class="board-header">
+            <i class="fa-solid fa-layer-group"></i>
+            <h2>Nhiệm vụ tuần này</h2>
+        </div>
+
+        <!-- DANH SÁCH NHIỆM VỤ -->
+        <div id="taskBoard" class="task-list locked-mode">
+            
+            <!-- NHIỆM VỤ MỒI (TRIGGER) -->
+            <div class="task-card mission-0" id="triggerCard">
+                <div class="task-left">
+                    <div class="task-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="task-info">
+                        <h3>Kích hoạt Trợ lý AI</h3>
+                        <p>Setup lộ trình riêng & nhận 50⚡</p>
+                    </div>
+                </div>
+                <button class="btn-action" onclick="startSurvey()">Kích hoạt</button>
+            </div>
+
+            <!-- OVERLAY KHI BỊ KHÓA -->
+            <div class="lock-message">
+                <div class="lock-badge"><i class="fa-solid fa-lock"></i> Hoàn thành kích hoạt để mở khóa</div>
+            </div>
+
+            <!-- CÁC NHIỆM VỤ KHÁC (SẼ RENDER LẠI BẰNG JS) -->
+            <div class="task-card">
+                <div class="task-left">
+                    <div class="task-icon"><i class="fa-regular fa-calendar-check"></i></div>
+                    <div class="task-info">
+                        <h3>Điểm danh</h3>
+                        <p>Nhận điểm chuyên cần</p>
+                    </div>
+                </div>
+                <button class="btn-action">Thực hiện</button>
+            </div>
+             <div class="task-card">
+                <div class="task-left">
+                    <div class="task-icon"><i class="fa-solid fa-share-nodes"></i></div>
+                    <div class="task-info">
+                        <h3>Chia sẻ Facebook</h3>
+                        <p>Nhận 100 điểm</p>
+                    </div>
+                </div>
+                <button class="btn-action">Thực hiện</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. POPUP KHẢO SÁT -->
+    <div id="surveyModal" class="modal-overlay">
+        <div class="modal-box">
+            <!-- NÚT X ĐÓNG -->
+            <div class="close-btn" onclick="closeSurveyByX()"><i class="fa-solid fa-xmark"></i></div>
+            
+            <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+            
+            <div id="quizContent">
+                <!-- JS Render câu hỏi vào đây -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. POPUP KẾT QUẢ (CHÚC MỪNG) -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-box" style="text-align: center; padding-top: 40px;">
+            <div style="font-size: 60px; margin-bottom: 10px;">🎉</div>
+            <h2 style="color: var(--action-orange); margin-bottom: 8px;">Kích hoạt thành công!</h2>
+            <p id="successMsg" style="color: #4B5563; font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+                AI đã thiết lập chế độ phù hợp.
+            </p>
+            <div style="background: #F3F4F6; border-radius: 12px; padding: 12px; margin-bottom: 24px; text-align: left; display: flex; align-items: center; gap: 12px;">
+                <i class="fa-solid fa-shield-halved" style="color: var(--primary-blue); font-size: 20px;"></i>
+                <div>
+                    <div style="font-size: 11px; color: #6B7280; text-transform: uppercase; font-weight: 700;">Chế độ đã bật</div>
+                    <div style="font-weight: 700; color: var(--text-dark);" id="segmentLabel">...</div>
+                </div>
+            </div>
+            <button class="btn-action" style="background: var(--primary-blue); color: white; width: 100%; padding: 14px; font-size: 14px;" onclick="finalizeUnlock()">
+                Khám phá nhiệm vụ ngay
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST THÔNG BÁO -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="toastMsg">Thông báo hệ thống</span>
+    </div>
+
+    <script>
+        /* --- CONFIG DATA --- */
+        const questions = [
+            {
+                text: "Gặp một bài Toán 'siêu khoai', phản xạ đầu tiên của bạn là?",
+                options: [
+                    { label: "A. Tự lực cánh sinh: Tra Google, xem sách, tự mò mới 'đã'.", score: 0 },
+                    { label: "B. Cầu cứu: Chụp ảnh hỏi bạn bè/thầy cô ngay cho nhanh.", score: 1 }
+                ]
+            },
+            {
+                text: "Không gian 'tu luyện' lý tưởng giúp bạn tập trung 100%?",
+                options: [
+                    { label: "A. Ẩn danh: Yên tĩnh tuyệt đối, không ai làm phiền.", score: 0 },
+                    { label: "B. Sôi động: Phải thấy bạn bè online, có BXH nhảy số mới vui.", score: 1 }
+                ]
+            },
+            {
+                text: "Tưởng tượng vừa đạt 9.5 điểm Toán. Cảm xúc lúc đó?",
+                options: [
+                    { label: "A. Vui thầm: Lưu lại để tự so sánh với chính mình.", score: 0 },
+                    { label: "B. Phấn khích: Chụp màn hình khoe Story/Bạn bè ngay!", score: 1 }
+                ]
+            }
+        ];
+
+        // DATABASE NHIỆM VỤ THEO SEGMENT
+        const taskDatabase = {
+            introvert: [ // Hướng nội / Default (Click X)
+                { title: "Điểm danh hàng ngày", icon: "fa-calendar-check", sub: "Priority High", btn: "Điểm danh", hot: true },
+                { title: "Mini-Quiz Khởi động", icon: "fa-book-open", sub: "Làm 5 câu dễ", btn: "Làm ngay", hot: false },
+                { title: "Hoàn thành Profile", icon: "fa-pen-to-square", sub: "Cập nhật trường/lớp", btn: "Cập nhật", hot: false }
+            ],
+            extrovert: [ // Hướng ngoại
+                { title: "Mời bạn bè cùng học", icon: "fa-user-plus", sub: "X2 Điểm thưởng", btn: "Mời ngay", hot: true },
+                { title: "Chia sẻ Kết quả", icon: "fa-share-nodes", sub: "Nhận 100 điểm", btn: "Chia sẻ", hot: false },
+                { title: "Thách đấu 1vs1", icon: "fa-fire", sub: "Đua top thời gian thực", btn: "Chiến ngay", hot: true },
+                { title: "Điểm danh hàng ngày", icon: "fa-calendar-check", sub: "+20 điểm", btn: "Điểm danh", hot: false }
+            ]
+        };
+
+        /* --- LOGIC APP --- */
+        let currentStep = 0;
+        let totalScore = 0;
+        let finalSegment = 'introvert'; // Default
+
+        const modal = document.getElementById('surveyModal');
+        const successModal = document.getElementById('successModal');
+        const board = document.getElementById('taskBoard');
+
+        // 1. Mở Quiz
+        function startSurvey() {
+            currentStep = 0;
+            totalScore = 0;
+            renderQuestion();
+            modal.classList.add('show');
+        }
+
+        // 2. Render từng câu hỏi
+        function renderQuestion() {
+            const q = questions[currentStep];
+            // Update Progress Bar
+            document.getElementById('progressBar').style.width = `${((currentStep + 1) / questions.length) * 100}%`;
+            
+            let html = `<div class="question-text">${currentStep + 1}. ${q.text}</div>`;
+            
+            q.options.forEach(opt => {
+                html += `
+                <div class="option-item" onclick="chooseAnswer(${opt.score})">
+                    <div class="radio-circle"></div>
+                    <div class="option-text">${opt.label}</div>
+                </div>`;
+            });
+            
+            document.getElementById('quizContent').innerHTML = html;
+        }
+
+        // 3. Chọn đáp án -> Next
+        function chooseAnswer(score) {
+            totalScore += score;
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                // Hiệu ứng chuyển nhẹ
+                const content = document.getElementById('quizContent');
+                content.style.opacity = 0;
+                setTimeout(() => {
+                    renderQuestion();
+                    content.style.opacity = 1;
+                }, 200);
+            } else {
+                finishSurvey(false); // false = Normal finish
+            }
+        }
+
+        // 4. LOGIC QUAN TRỌNG: ĐÓNG NÚT X (ABANDON)
+        function closeSurveyByX() {
+            // Insight: User bấm X -> Auto Hướng nội / Default
+            modal.classList.remove('show');
+            
+            // Show Toast thông báo nhẹ
+            showToast("Đã áp dụng chế độ Mặc định (Riêng tư)");
+            
+            // Unlock board thầm lặng (Không hiện Popup chúc mừng)
+            finalSegment = 'introvert'; 
+            renderUnlockedBoard(finalSegment);
+        }
+
+        // 5. Hoàn thành Quiz bình thường
+        function finishSurvey() {
+            modal.classList.remove('show');
+            
+            // Logic phân loại: 0-1 = Introvert, 2-3 = Extrovert
+            finalSegment = (totalScore >= 2) ? 'extrovert' : 'introvert';
+            
+            // Setup nội dung Popup chúc mừng
+            const title = (finalSegment === 'extrovert') ? 'CHIẾN THẦN NGOẠI GIAO' : 'CHIẾN BINH THẦM LẶNG';
+            const msg = (finalSegment === 'extrovert') 
+                ? "Hệ thống đã mở khóa Đấu trường và tính năng Thách đấu cho bạn!" 
+                : "Hệ thống đã tối ưu giao diện yên tĩnh và lộ trình cá nhân hóa cho bạn.";
+            
+            document.getElementById('segmentLabel').innerText = title;
+            document.getElementById('successMsg').innerText = msg;
+            
+            // Hiện Popup chúc mừng
+            successModal.classList.add('show');
+        }
+
+        // 6. Finalize Unlock (Từ Popup chúc mừng)
+        function finalizeUnlock() {
+            successModal.classList.remove('show');
+            renderUnlockedBoard(finalSegment);
+        }
+
+        // 7. Render lại Board sau khi Unlock
+        function renderUnlockedBoard(segment) {
+            board.classList.remove('locked-mode');
+            
+            // Xóa Card Trigger (Nhiệm vụ mồi)
+            const triggerCard = document.getElementById('triggerCard');
+            if(triggerCard) triggerCard.remove();
+
+            // Render tasks
+            const tasks = taskDatabase[segment];
+            let html = '';
+            
+            tasks.forEach((t, index) => {
+                let badge = t.hot ? `<span style="background:#FEF3C7; color:#D97706; padding:2px 6px; border-radius:4px; font-size:10px; border:1px solid #FCD34D; margin-left:6px;">HOT</span>` : '';
+                let btnStyle = t.hot ? `background: var(--action-orange); color: white;` : `background: #F3F4F6; color: var(--text-gray);`;
+                
+                html += `
+                <div class="task-card" style="animation: slideUp 0.4s ease forwards; animation-delay: ${index * 0.1}s; opacity: 0; transform: translateY(10px);">
+                    <div class="task-left">
+                        <div class="task-icon"><i class="fa-solid ${t.icon}"></i></div>
+                        <div class="task-info">
+                            <h3>${t.title} ${badge}</h3>
+                            <p>${t.sub}</p>
+                        </div>
+                    </div>
+                    <button class="btn-action" style="${btnStyle}">${t.btn}</button>
+                </div>`;
+            });
+
+            // Append vào board (giữ lại các task cũ hoặc thay thế hoàn toàn - ở đây thay thế cho demo)
+            // Trong thực tế bạn có thể merge với list cũ.
+            board.innerHTML = html;
+            
+            // CSS Animation Keyframe
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes slideUp { to { opacity: 1; transform: translateY(0); } }`;
+            document.head.appendChild(style);
+        }
+
+        // Utils: Show Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+    </script>
+</body>
+</html>
