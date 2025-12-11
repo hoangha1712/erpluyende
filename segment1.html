@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đường Đua Sĩ Tử</title>
+    <style>
+        :root {
+            --primary-orange: #FF7A45;
+            --hover-orange: #E66A35;
+            --bg-orange-light: #FFF7ED;
+            --bg-orange-medium: #FFEDD5;
+            --text-gray: #6B7280;
+            --text-dark: #1F2937;
+            --border-gray: #E5E7EB;
+            --bg-gray: #F3F4F6;
+            --bg-white: #FFFFFF;
+            --radius: 12px;
+            --shadow-card: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-popup: 0 20px 60px rgba(0,0,0,0.3);
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        
+        body { background-color: #F9FAFB; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; }
+        
+        /* Container */
+        .app-container {
+            width: 100%;
+            max-width: 600px; /* Mobile focused but looks good on desktop */
+            background: white;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        @media (min-width: 1440px) {
+            .app-container { max-width: 800px; border-radius: 20px; min-height: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        }
+
+        /* Typography */
+        h2 { font-size: 20px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: var(--text-gray); margin-bottom: 24px; }
+        .card-title { font-size: 16px; font-weight: 600; color: var(--text-dark); }
+        .card-desc { font-size: 14px; color: var(--text-gray); margin-top: 4px; }
+
+        /* Button Standard */
+        .btn {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 16px;
+        }
+        .btn:hover { background-color: var(--hover-orange); }
+        .btn:disabled { background-color: var(--border-gray); cursor: not-allowed; color: #9CA3AF; }
+        
+        /* Task Cards */
+        .task-list { display: flex; flex-direction: column; gap: 16px; }
+        
+        .card {
+            background: white;
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius);
+            padding: 20px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover { border-color: var(--primary-orange); box-shadow: var(--shadow-card); }
+
+        .card-header { display: flex; align-items: flex-start; gap: 12px; }
+        .card-icon { font-size: 24px; flex-shrink: 0; }
+        .card-content { flex-grow: 1; }
+        
+        .badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--bg-orange-light);
+            color: var(--primary-orange);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        /* Locked State Specifics */
+        .card.locked {
+            background-color: var(--bg-gray);
+            opacity: 0.8;
+            border: 1px solid transparent;
+        }
+        .card.locked .card-title, .card.locked .card-desc { color: #9CA3AF; }
+        .locked-badge { font-size: 12px; font-weight: 700; color: #9CA3AF; margin-right: 4px; }
+
+        /* Active Trigger Card (Locked Screen) */
+        .card.trigger {
+            background: linear-gradient(to right, #FFF7ED, #FFEDD5);
+            border: 1px solid var(--primary-orange);
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 540px;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-popup);
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Survey Styles */
+        .survey-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .progress-dots { display: flex; gap: 6px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #E5E7EB; }
+        .dot.active { background: var(--primary-orange); }
+
+        .question-box {
+            background: #F9FAFB;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .options-container { display: flex; flex-direction: column; gap: 12px; }
+        
+        .option-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary-orange);
+            background-color: var(--bg-orange-light);
+        }
+
+        .radio-circle {
+            width: 20px; height: 20px;
+            border: 2px solid #D1D5DB;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .option-item.selected .radio-circle {
+            border-color: var(--primary-orange);
+        }
+        
+        .option-item.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px; height: 10px;
+            background: var(--primary-orange);
+            border-radius: 50%;
+        }
+
+        .modal-footer { margin-top: 24px; display: flex; justify-content: flex-end; }
+        .close-icon { position: absolute; top: 16px; right: 16px; cursor: pointer; font-size: 20px; color: #9CA3AF; }
+
+        /* Success Styles */
+        .success-content { text-align: center; padding: 20px 0; }
+        .points-display { font-size: 48px; font-weight: 800; color: var(--primary-orange); margin: 10px 0; }
+        .divider { height: 1px; background: #E5E7EB; margin: 20px 0; width: 100%; }
+        .confetti { font-size: 24px; position: absolute; animation: fall 3s infinite linear; }
+
+        /* Utility */
+        .hidden { display: none !important; }
+        .text-orange { color: var(--primary-orange); }
+
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1 & 4 CONTAINER -->
+    <div class="app-container" id="mainScreen">
+        <header>
+            <h2>📊 Nhiệm vụ của bạn</h2>
+            <p class="subtitle">Hoàn thành các nhiệm vụ để được nhận thưởng</p>
+        </header>
+
+        <!-- Dynamic List Container -->
+        <div class="task-list" id="taskList">
+            <!-- Content will be injected by JS -->
+        </div>
+    </div>
+
+    <!-- SCREEN 2: SURVEY MODAL -->
+    <div class="modal-overlay" id="surveyModal">
+        <div class="modal-content">
+            <div class="close-icon" onclick="closeModal('surveyModal')">✕</div>
+            <div class="survey-header">
+                <h2>🎓 Khảo sát tính cách</h2>
+                <div class="progress-dots" id="progressDots">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            
+            <div id="surveyQuestionContainer">
+                <div class="question-box" id="questionText">Loading...</div>
+                <div class="options-container" id="optionsList">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn" id="nextBtn" style="width: auto; padding: 10px 32px;" disabled>Tiếp theo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: SUCCESS MODAL -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content success-content">
+            <div>🎉 🎉 🎉</div>
+            <p style="margin-top:10px; font-size: 18px; color:#374151;">BẠN NHẬN ĐƯỢC</p>
+            <div class="points-display">100 ⚡</div>
+            <div class="divider"></div>
+            <h3 style="margin-bottom:8px;">Hoàn thành nhiệm vụ: Kích hoạt đường đua</h3>
+            <p style="font-size:13px; color:gray; font-style:italic;">Hãy tiếp tục hoàn thành các nhiệm vụ khác để giành được giải thưởng nhé.</p>
+            <button class="btn" id="successBtn">Tiếp tục (5s)</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA CONFIGURATION ---
+        
+        // Locked Task Data (Initial View)
+        const lockedTasks = [
+            { icon: '🔒', title: 'Đăng nhập hàng ngày Ngày 1', desc: 'Nhận điểm ngay', points: 100 },
+            { icon: '🔒', title: 'Mở 3 bạn bè', desc: 'Mời bạn bè tham gia', points: 100 },
+            { icon: '🔒', title: 'Chia sẻ Facebook', desc: 'Chia sẻ công khai', points: 100 },
+            { icon: '🔒', title: 'Chia sẻ kết quả học tập', desc: 'Khoe thành tích', points: 100 },
+            { icon: '🔒', title: 'Repost TikTok', desc: 'Repost video', points: 50 },
+            { icon: '🔒', title: 'Chia sẻ Zalo Feed', desc: 'Đăng lên nhật ký', points: 50 },
+            { icon: '🔒', title: 'Mời bạn vào FB Group', desc: 'Tham gia cộng đồng', points: 50 },
+            { icon: '🔒', title: 'Cập nhật hồ sơ', desc: 'Điền đầy đủ thông tin', points: 50 }
+        ];
+
+        // All Possible Active Tasks
+        const allTasks = {
+            login: { icon: '📅', title: 'Đăng nhập hàng ngày Ngày 1', desc: 'Nhận điểm danh ngay', points: 100, btn: 'Nhận điểm ngay' },
+            fbShare: { icon: '💚', title: 'Chia sẻ link lên Facebook', desc: 'Chia sẻ công khai để bạn bè cùng biết', points: 100, btn: 'Chia sẻ ngay' },
+            invite: { icon: '👥', title: 'Mời 3 bạn bè (có xác thực SDT)', desc: 'Mời bạn bè cùng tham gia', points: 100, btn: 'Mời bạn bè' },
+            resultShare: { icon: '📊', title: 'Chia sẻ kết quả học tập', desc: 'Lưu lại thành tích của bạn', points: 100, btn: 'Chia sẻ ngay' },
+            tiktok: { icon: '🎵', title: 'Repost TikTok', desc: 'Repost video mới nhất', points: 50, btn: 'Repost ngay' },
+            zalo: { icon: '💬', title: 'Chia sẻ Zalo Feed', desc: 'Đăng lên nhật ký Zalo', points: 50, btn: 'Chia sẻ ngay' },
+            group: { icon: '👨‍👩‍👧‍👦', title: 'Mời bạn vào FB Group', desc: 'Gia nhập cộng đồng sĩ tử', points: 50, btn: 'Tham gia ngay' },
+        };
+
+        // Survey Questions
+        const questions = [
+            {
+                q: 'Gặp bài Toán "siêu khoai", phản xạ đầu tiên là?',
+                options: [
+                    { text: 'Tự lực cánh sinh: Tra Google, chat GPT, sách.', val: 'independent' },
+                    { text: 'Cầu cứu người thân: Chụp ảnh hỏi bạn bè/thầy cô.', val: 'dependent' }
+                ]
+            },
+            {
+                q: 'Không gian "tu luyện" lý tưởng của bạn?',
+                options: [
+                    { text: 'Ẩn danh: Yên tĩnh tuyệt đối, đeo tai nghe.', val: 'introvert' }, // Hướng nội
+                    { text: 'Sôi động: Thấy bạn bè online, có BXH nhảy số.', val: 'extrovert' } // Hướng ngoại
+                ]
+            },
+            {
+                q: 'Tưởng tượng đạt 9 điểm Toán, cảm xúc là?',
+                options: [
+                    { text: 'Vui thầm: Lưu lại để tự so sánh với mình.', val: 'tb' }, // Trung bình/Khiêm tốn
+                    { text: 'Phấn khích: Chụp màn hình khoe Story ngay.', val: 'kg' } // Khá giỏi/Tự tin
+                ]
+            }
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let currentStep = 0;
+        let answers = {};
+        let countdownTimer = null;
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderLockedScreen() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+
+            // 1. Active Trigger Card
+            const triggerCard = document.createElement('div');
+            triggerCard.className = 'card trigger';
+            triggerCard.innerHTML = `
+                <span class="badge">+50⚡</span>
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-content">
+                        <div class="card-title">Kích hoạt đường đua sĩ tử</div>
+                        <div class="card-desc">Hoàn thành khảo sát để nhận thưởng và mở khóa đường đua sĩ tử nào </div>
+                        <button class="btn" onclick="startSurvey()">Kích hoạt ngay</button>
+                    </div>
+                </div>
+            `;
+            list.appendChild(triggerCard);
+
+            // 2. Locked Cards
+            lockedTasks.forEach(task => {
+                const card = document.createElement('div');
+                card.className = 'card locked';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-icon">${task.icon}</div>
+                        <div class="card-content">
+                            <div class="card-title"><span class="locked-badge">[LOCKED]</span>${task.title}</div>
+                            <div class="card-desc">${task.desc}</div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function renderUnlockedScreen(variant) {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            
+            // Logic to determine task order based on variant
+            // Variants: 'introvert-tb', 'introvert-kg', 'extrovert-tb', 'extrovert-kg'
+            
+            let taskOrder = [];
+
+            if (variant === 'extrovert-tb') {
+                // Default logic from prompt (Screen 4)
+                taskOrder = ['login', 'fbShare', 'invite', 'resultShare', 'tiktok', 'zalo', 'group'];
+            } else if (variant === 'introvert-tb') {
+                // Hide social heavy stuff (tiktok, zalo, group), move Invite to #3
+                taskOrder = ['login', 'resultShare', 'invite', 'fbShare']; 
+            } else if (variant === 'introvert-kg') {
+                // Prioritize Result Share
+                taskOrder = ['login', 'resultShare', 'invite', 'fbShare', 'tiktok'];
+            } else if (variant === 'extrovert-kg') {
+                // Result share #3 before FB
+                taskOrder = ['login', 'invite', 'resultShare', 'fbShare', 'tiktok', 'zalo', 'group'];
+            } else {
+                // Fallback
+                taskOrder = ['login', 'fbShare', 'invite', 'resultShare'];
+            }
+
+            // Render Active Tasks
+            taskOrder.forEach(key => {
+                const t = allTasks[key];
+                if (!t) return;
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <span class="badge text-orange">+${t.points}⚡</span>
+                    <div class="card-header">
+                        <div class="card-icon">${t.icon}</div>
+                        <div class="card-content">
+                            <div class="card-title">${t.title}</div>
+                            <div class="card-desc">${t.desc}</div>
+                            <button class="btn">${t.btn}</button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // --- SURVEY LOGIC ---
+
+        function startSurvey() {
+            currentStep = 0;
+            answers = {};
+            document.getElementById('surveyModal').style.display = 'flex';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentStep];
+            document.getElementById('questionText').innerText = `Câu ${currentStep + 1}: ${q.q}`;
+            
+            // Update dots
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((d, i) => d.className = `dot ${i <= currentStep ? 'active' : ''}`);
+
+            // Render Options
+            const optsContainer = document.getElementById('optionsList');
+            optsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const el = document.createElement('div');
+                el.className = 'option-item';
+                el.onclick = () => selectOption(idx, opt.val, el);
+                el.innerHTML = `
+                    <div class="radio-circle"></div>
+                    <span>${opt.text}</span>
+                `;
+                optsContainer.appendChild(el);
+            });
+
+            // Reset Button
+            const btn = document.getElementById('nextBtn');
+            btn.disabled = true;
+            btn.innerText = (currentStep === questions.length - 1) ? 'Hoàn thành' : 'Tiếp theo';
+            btn.onclick = nextStep;
+        }
+
+        let selectedValue = null;
+
+        function selectOption(index, val, element) {
+            // UI Update
+            document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Logic Update
+            selectedValue = val;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextStep() {
+            // Save answer
+            if (currentStep === 1) answers.personality = selectedValue; // introvert/extrovert
+            if (currentStep === 2) answers.level = selectedValue; // tb/kg
+
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                selectedValue = null;
+                renderQuestion();
+            } else {
+                finishSurvey();
+            }
+        }
+
+        function finishSurvey() {
+            document.getElementById('surveyModal').style.display = 'none';
+            showSuccess();
+        }
+
+        // --- SUCCESS & RESULT LOGIC ---
+
+        function showSuccess() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'flex';
+            
+            let seconds = 5;
+            const btn = document.getElementById('successBtn');
+            btn.innerText = `Tiếp tục (${seconds}s)`;
+
+            countdownTimer = setInterval(() => {
+                seconds--;
+                btn.innerText = `Tiếp tục (${seconds}s)`;
+                if (seconds <= 0) {
+                    clearInterval(countdownTimer);
+                    closeSuccess();
+                }
+            }, 1000);
+            
+            btn.onclick = () => {
+                clearInterval(countdownTimer);
+                closeSuccess();
+            };
+        }
+
+        function closeSuccess() {
+            document.getElementById('successModal').style.display = 'none';
+            
+            // Calculate Variant
+            // Default to extrovert-tb if undefined
+            const p = answers.personality || 'extrovert';
+            const l = answers.level || 'tb';
+            const variant = `${p}-${l}`;
+            
+            console.log("Variant calculated:", variant);
+            renderUnlockedScreen(variant);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            renderLockedScreen();
+        };
+
+    </script>
+</body>
+</html>
