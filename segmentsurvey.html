@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyende.ai - Đường Đua Sĩ Tử (Final 3 Questions)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #2563EB;
+            --action-orange: #F97316;
+            --bg-light: #F9FAFB;
+            --text-dark: #111827;
+            --text-gray: #6B7280;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 80px; -webkit-font-smoothing: antialiased; }
+
+        /* HEADER */
+        header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            position: sticky; top: 0; z-index: 50;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo-container { font-weight: 800; color: var(--primary-blue); font-size: 18px; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .points-badge { 
+            background: #FFF7ED; color: var(--action-orange); 
+            padding: 4px 10px; border-radius: 20px; 
+            font-size: 13px; font-weight: 700; border: 1px solid #FFEDD5;
+        }
+        .avatar { 
+            width: 36px; height: 36px; background: #EFF6FF; 
+            border-radius: 50%; color: var(--primary-blue); 
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1D4ED8 100%);
+            color: white; padding: 30px 20px 50px 20px;
+            text-align: center; border-radius: 0 0 24px 24px; margin-bottom: -30px;
+        }
+        .hero h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero p { font-size: 13px; opacity: 0.9; font-weight: 400; }
+
+        /* BOARD */
+        .container { max-width: 500px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 10; }
+        
+        .board-header {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 16px; padding-left: 4px;
+        }
+        .board-header h2 { font-size: 16px; font-weight: 700; color: var(--text-dark); }
+        .board-header i { color: var(--action-orange); }
+
+        .task-list { display: flex; flex-direction: column; gap: 12px; position: relative; min-height: 300px; }
+
+        /* TASK CARD */
+        .task-card {
+            background: var(--white); border-radius: 16px; padding: 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease forwards;
+            opacity: 0; transform: translateY(10px);
+        }
+        
+        .task-left { display: flex; align-items: center; gap: 14px; flex: 1; }
+        .task-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: #F3F4F6; color: var(--text-gray);
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+            flex-shrink: 0;
+        }
+        .task-info h3 { font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
+        .task-info p { font-size: 12px; color: var(--text-gray); }
+
+        .btn-action {
+            padding: 8px 14px; border-radius: 20px; border: none;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            background: #F3F4F6; color: var(--text-gray); white-space: nowrap;
+        }
+
+        /* CARD STATES */
+        .task-card.trigger-card {
+            border: 2px solid var(--action-orange);
+            background: #FFF7ED;
+            position: relative; z-index: 20; cursor: pointer;
+        }
+        .task-card.trigger-card .task-icon { background: white; color: var(--action-orange); font-size: 20px; }
+        .task-card.trigger-card .btn-action {
+            background: var(--action-orange); color: white;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+            animation: pulse 2s infinite;
+        }
+
+        .task-card.locked {
+            filter: blur(2px) grayscale(80%); opacity: 0.6; pointer-events: none; user-select: none;
+        }
+        .lock-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            display: flex; align-items: center; justify-content: center; z-index: 5;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+            z-index: 1000; display: none; opacity: 0;
+            transition: opacity 0.3s ease; align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+
+        .modal-box {
+            background: white; width: 90%; max-width: 420px;
+            border-radius: 24px; padding: 24px; position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-box { transform: translateY(0); }
+
+        .close-btn {
+            position: absolute; top: 16px; right: 16px;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #F3F4F6; color: #9CA3AF;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; font-size: 16px;
+        }
+        .close-btn:hover { background: #E5E7EB; color: #4B5563; }
+
+        /* QUIZ */
+        .progress-container { width: 100%; height: 6px; background: #F3F4F6; border-radius: 10px; margin: 10px 0 24px 0; overflow: hidden;}
+        .progress-bar { height: 100%; background: var(--action-orange); width: 33%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .question-text { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 20px; line-height: 1.4; }
+        
+        .option-item {
+            border: 2px solid #E5E7EB; border-radius: 12px; padding: 14px;
+            margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .option-item:hover, .option-item.selected { border-color: #FDBA74; background: #FFF7ED; }
+        .radio-circle {
+            width: 20px; height: 20px; border: 2px solid #D1D5DB; border-radius: 50%;
+            margin-top: 2px; flex-shrink: 0; position: relative;
+        }
+        .option-item:hover .radio-circle, .option-item.selected .radio-circle { border-color: var(--action-orange); }
+        .option-item.selected .radio-circle::after {
+            content: ''; position: absolute; top: 3px; left: 3px; width: 10px; height: 10px;
+            background: var(--action-orange); border-radius: 50%;
+        }
+        .option-text { font-size: 14px; color: #4B5563; line-height: 1.4; }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #374151; color: white; padding: 12px 24px; border-radius: 30px;
+            font-size: 13px; font-weight: 500; z-index: 2000; opacity: 0; transition: all 0.4s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 8px; width: max-content;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); } 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        .countdown-text { color: #9CA3AF; font-size: 12px; margin-top: 12px; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo-container">Luyende.ai</div>
+        <div class="user-info">
+            <div class="points-badge">⚡ 10</div>
+            <div class="avatar"><i class="fa-solid fa-user"></i></div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Đường Đua Sĩ Tử</h1>
+        <p>Hoàn thành nhiệm vụ - Mở khóa lộ trình</p>
+    </section>
+
+    <!-- CONTAINER -->
+    <div class="container">
+        <div class="board-header">
+            <i class="fa-solid fa-layer-group"></i>
+            <h2>Nhiệm vụ tuần này</h2>
+        </div>
+
+        <!-- DANH SÁCH NHIỆM VỤ -->
+        <div id="taskBoard" class="task-list">
+            
+            <!-- TRIGGER CARD -->
+            <div class="task-card trigger-card" onclick="startSurvey()">
+                <div class="task-left">
+                    <div class="task-icon"><i class="fa-solid fa-gift"></i></div>
+                    <div class="task-info">
+                        <h3>Kích hoạt Trợ lý AI & Nhận lộ trình</h3>
+                        <p style="color: var(--action-orange);">Trả lời 3 câu hỏi để mở khóa & nhận 50đ</p>
+                    </div>
+                </div>
+                <button class="btn-action">Kích hoạt ngay</button>
+            </div>
+
+            <!-- FAKE LOCKED TASKS -->
+            <div class="task-card locked">
+                <div class="task-left">
+                    <div class="task-icon"><i class="fa-solid fa-lock"></i></div>
+                    <div class="task-info">
+                        <h3>Nhiệm vụ bí mật</h3>
+                        <p>Hoàn thành kích hoạt để mở</p>
+                    </div>
+                </div>
+                <div class="lock-overlay"><i class="fa-solid fa-lock" style="color:#6B7280"></i></div>
+            </div>
+            
+            <div class="task-card locked">
+                <div class="task-left">
+                    <div class="task-icon"><i class="fa-solid fa-lock"></i></div>
+                    <div class="task-info">
+                        <h3>Nhiệm vụ bí mật</h3>
+                        <p>Hoàn thành kích hoạt để mở</p>
+                    </div>
+                </div>
+                <div class="lock-overlay"><i class="fa-solid fa-lock" style="color:#6B7280"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. POPUP KHẢO SÁT (3 CÂU) -->
+    <div id="surveyModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="close-btn" onclick="closeSurveyByX()"><i class="fa-solid fa-xmark"></i></div>
+            <div class="progress-container"><div class="progress-bar" id="progressBar" style="width: 33%;"></div></div>
+            <div id="quizContent" style="opacity: 1;">
+                <!-- JS Render -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. POPUP KẾT QUẢ (THÔNG BÁO CHUNG) -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-box" style="text-align: center; padding-top: 40px;">
+            <div class="close-btn" onclick="finalizeUnlock()"><i class="fa-solid fa-xmark"></i></div>
+
+            <div style="font-size: 60px; margin-bottom: 16px;">🎉</div>
+            <h2 style="color: var(--action-orange); margin-bottom: 12px; font-size: 20px;">Kích hoạt thành công!</h2>
+            <p style="color: #4B5563; font-size: 15px; margin-bottom: 30px; line-height: 1.5;">
+                Bạn đã mở khóa thành công bảng nhiệm vụ <br><b>Đường đua sĩ tử</b>.
+            </p>
+            
+            <button class="btn-action" style="background: var(--primary-blue); color: white; width: 100%; padding: 14px; font-size: 14px;" onclick="finalizeUnlock()">
+                Vào Đường Đua Ngay
+            </button>
+            
+            <div class="countdown-text">Tự động đóng sau <span id="countdownTimer">5</span>s</div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">Thông báo hệ thống</span>
+    </div>
+
+    <script>
+        /* 
+           DATA CONFIGURATION: 
+           - Chỉ 3 câu hỏi (Tính cách)
+           - Đã xóa Mini-Quiz
+        */
+        const questions = [
+            {
+                id: 1,
+                text: "Gặp bài Toán 'siêu khoai', phản xạ đầu tiên của bạn là?",
+                options: [
+                    { label: "A. Tự lực cánh sinh: Tra Google, xem sách, tự mò mới 'đã'.", score: 0 }, 
+                    { label: "B. Cầu cứu người thân: Chụp ảnh hỏi bạn bè/thầy cô ngay cho nhanh.", score: 1 }
+                ]
+            },
+            {
+                id: 2,
+                text: "Không gian 'tu luyện' lý tưởng giúp bạn tập trung 100%?",
+                options: [
+                    { label: "A. Ẩn danh: Yên tĩnh tuyệt đối, đeo tai nghe, không ai làm phiền.", score: 0 },
+                    { label: "B. Sôi động: Phải thấy bạn bè đang online, có BXH nhảy số mới vui.", score: 1 }
+                ]
+            },
+            {
+                id: 3,
+                text: "Tưởng tượng vừa đạt 9.5 điểm Toán. Cảm xúc lúc đó?",
+                options: [
+                    { label: "A. Vui thầm: Lưu lại để tự so sánh với chính mình thôi.", score: 0 },
+                    { label: "B. Phấn khích: Chụp màn hình khoe Story/Bạn bè ngay lập tức!", score: 1 }
+                ]
+            }
+        ];
+
+        /* DATABASE NHIỆM VỤ (Đã xóa quiz_easy) */
+        const tasksDB = {
+            attendance: { title: "Điểm danh", icon: "fa-calendar-check", sub: "+10 điểm ngày", btn: "Điểm danh", hot: true },
+            profile: { title: "Hoàn thành Profile", icon: "fa-user-pen", sub: "Cập nhật trường/lớp", btn: "Cập nhật", hot: false },
+            share_fb: { title: "Chia sẻ Facebook", icon: "fa-facebook", sub: "Khoe thành tích", btn: "Chia sẻ", hot: false },
+            invite: { title: "Mời bạn bè", icon: "fa-user-plus", sub: "Nhận 50 điểm/bạn", btn: "Mời ngay", hot: true },
+            share_result: { title: "Chia sẻ Kết quả học tập", icon: "fa-chart-line", sub: "Tăng khả năng đỗ ĐH", btn: "Chia sẻ", hot: true },
+            quiz_advanced: { title: "Thử thách nâng cao", icon: "fa-brain", sub: "Luyện đề khó", btn: "Chiến ngay", hot: false }
+        };
+
+        /* STATE */
+        let currentStep = 0;
+        let personalityScore = 0; 
+        
+        // GIẢ LẬP DỮ LIỆU ĐIỂM TỪ BACKEND/LMS (Vì không hỏi user nữa)
+        // userGradeValue: < 8.0 (average) hoặc >= 8.0 (good)
+        const userGradeValue = 7.5; // Bạn có thể đổi số này để test logic hiển thị task khác nhau
+        const userGradeCategory = userGradeValue >= 8.0 ? 'good' : 'average';
+
+        let finalSegment = null;
+        let countdownInterval;
+
+        const modal = document.getElementById('surveyModal');
+        const successModal = document.getElementById('successModal');
+        const board = document.getElementById('taskBoard');
+        const quizContent = document.getElementById('quizContent');
+        const progressBar = document.getElementById('progressBar');
+
+        /* FUNCTIONS */
+        function startSurvey() {
+            currentStep = 0;
+            personalityScore = 0;
+            renderQuestion();
+            modal.classList.add('show');
+        }
+
+        function renderQuestion() {
+            const q = questions[currentStep];
+            progressBar.style.width = `${((currentStep + 1) / questions.length) * 100}%`;
+            
+            let html = `<div class="question-text">Câu ${currentStep + 1}: ${q.text}</div>`;
+            
+            q.options.forEach((opt) => {
+                html += `
+                <div class="option-item" onclick="chooseAnswer(${opt.score})">
+                    <div class="radio-circle"></div>
+                    <div class="option-text">${opt.label}</div>
+                </div>`;
+            });
+            
+            quizContent.style.opacity = 0;
+            setTimeout(() => {
+                quizContent.innerHTML = html;
+                quizContent.style.opacity = 1;
+            }, 200);
+        }
+
+        function chooseAnswer(score) {
+            personalityScore += score;
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                renderQuestion();
+            } else {
+                calculateSegmentAndFinish();
+            }
+        }
+
+        // Logic phân loại (Core Logic)
+        function calculateSegmentAndFinish() {
+            modal.classList.remove('show');
+
+            // Introvert (Score 0-1), Extrovert (Score 2-3)
+            const isIntrovert = personalityScore <= 1;
+            const isGood = userGradeCategory === 'good'; // Lấy từ biến giả lập
+
+            // Mapping Segment để render task
+            if (isIntrovert && !isGood) finalSegment = 'introvert_average';
+            else if (isIntrovert && isGood) finalSegment = 'introvert_good';
+            else if (!isIntrovert && !isGood) finalSegment = 'extrovert_average';
+            else finalSegment = 'extrovert_good';
+
+            console.log("Segment detected:", finalSegment); // Để debug xem đang rơi vào nhóm nào
+            showSuccessPopup();
+        }
+
+        function showSuccessPopup() {
+            successModal.classList.add('show');
+            
+            // Logic đếm ngược 5s
+            let secondsLeft = 5;
+            const timerEl = document.getElementById('countdownTimer');
+            timerEl.innerText = secondsLeft;
+
+            if(countdownInterval) clearInterval(countdownInterval);
+
+            countdownInterval = setInterval(() => {
+                secondsLeft--;
+                timerEl.innerText = secondsLeft;
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    finalizeUnlock();
+                }
+            }, 1000);
+        }
+
+        function closeSurveyByX() {
+            modal.classList.remove('show');
+            showToast("Đã kích hoạt chế độ mặc định");
+            finalSegment = 'introvert_average'; // Default if closed
+            renderUnlockedBoard(finalSegment);
+        }
+
+        function finalizeUnlock() {
+            if(countdownInterval) clearInterval(countdownInterval);
+            successModal.classList.remove('show');
+            renderUnlockedBoard(finalSegment);
+            showToast("Mở khóa nhiệm vụ thành công!");
+            document.querySelector('.points-badge').innerText = "⚡ 50";
+        }
+
+        /* LOGIC RENDER NHIỆM VỤ THEO SEGMENT (PDF Logic) */
+        function renderUnlockedBoard(segment) {
+            let tasksToShow = [];
+
+            switch (segment) {
+                case 'introvert_average': 
+                    // Segment 2 (Hướng nội - TB):
+                    // Hiện: Điểm danh, 2 nhiệm vụ động (Profile, Quiz nâng cao - giả lập), Mời bạn bè
+                    // Ẩn: Share FB
+                    tasksToShow = [tasksDB.attendance, tasksDB.profile, tasksDB.invite];
+                    break;
+
+                case 'introvert_good':
+                    // Segment 3 (Hướng nội - Khá/Giỏi):
+                    // Hiện: Điểm danh, Nhiệm vụ học tập (Quiz advanced), Mời bạn bè
+                    // Share FB (Xuống cuối)
+                    tasksToShow = [tasksDB.attendance, tasksDB.quiz_advanced, tasksDB.invite, tasksDB.share_fb];
+                    break;
+
+                case 'extrovert_average':
+                    // Segment 4 (Hướng ngoại - TB):
+                    // Hiện Full: Điểm danh, Mời bạn bè, Share FB, 2 nhiệm vụ động
+                    tasksToShow = [tasksDB.attendance, tasksDB.invite, tasksDB.share_fb, tasksDB.profile];
+                    break;
+
+                case 'extrovert_good':
+                    // Segment 5 (Hướng ngoại - Khá/Giỏi):
+                    // Hiện: Điểm danh, Share Kết quả (share_result), Share FB, Mời bạn bè
+                    tasksToShow = [tasksDB.attendance, tasksDB.share_result, tasksDB.share_fb, tasksDB.invite, tasksDB.quiz_advanced];
+                    break;
+            }
+
+            let html = '';
+            tasksToShow.forEach((t, index) => {
+                let badge = t.hot ? `<span style="background:#FEF3C7; color:#D97706; padding:2px 6px; border-radius:4px; font-size:10px; border:1px solid #FCD34D; margin-left:6px;">HOT</span>` : '';
+                
+                // Logic làm mờ nút invite cho Introvert Average (User không bị áp lực)
+                let opacityStyle = (segment === 'introvert_average' && (t === tasksDB.invite)) ? 'opacity: 0.8;' : '';
+
+                html += `
+                <div class="task-card" style="animation-delay: ${index * 0.1}s; ${opacityStyle}">
+                    <div class="task-left">
+                        <div class="task-icon"><i class="fa-solid ${t.icon}"></i></div>
+                        <div class="task-info">
+                            <h3>${t.title} ${badge}</h3>
+                            <p>${t.sub}</p>
+                        </div>
+                    </div>
+                    <button class="btn-action">${t.btn}</button>
+                </div>`;
+            });
+
+            board.innerHTML = html;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+    </script>
+</body>
+</html>
